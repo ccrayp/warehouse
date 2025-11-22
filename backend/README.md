@@ -1,1 +1,1 @@
-backend on Python - Flask
+backend on Go - Gin

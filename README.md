@@ -35,14 +35,16 @@ FROM (
 		id_product AS id
 	FROM (
 		SELECT
-			id_product,
+			id_batch,
 			CASE
 				WHEN id_document IN (SELECT id FROM document WHERE id_document_category = 2) THEN quantity * -1
 				ELSE quantity
 			END AS quantity
 		FROM document_content
 		WHERE id_document NOT IN (SELECT id FROM document WHERE id_document_category = 3)
-	)
+	) AS t
+	JOIN batch AS b
+		ON b.id = t.id_batch
 	GROUP BY id_product
 	HAVING SUM(quantity) > 0
 ) AS l
@@ -62,14 +64,16 @@ FROM (
 		SUM(quantity) AS product_left
 	FROM (
 		SELECT
-			id_product,
+			id_batch,
 			CASE
 				WHEN id_document IN (SELECT id FROM document WHERE id_document_category = 2) THEN quantity * -1
 				ELSE quantity
 			END AS quantity
 		FROM document_content
 		WHERE id_document NOT IN (SELECT id FROM document WHERE id_document_category = 3)
-	)
+	) AS t
+	JOIN batch AS b
+		ON b.id = t.id_batch
 	GROUP BY id_product
 ) AS l
 JOIN product AS pt
@@ -102,4 +106,12 @@ JOIN (
 	WHERE d.id_document_category = 1 AND (d.date BETWEEN '2024-01-01' AND '2024-07-01')
 ) AS l
 ON l.id_batch = b.id
+```
+
+```bash
+# Создание дампа базы данны
+docker exec -i storage_db-warehouse_db-1 pg_dump -F p -U postgres -d warehouse > dump_$(date +%Y%m%d_%H%M%S).sql
+
+# Импорт дампа базы данных
+docker exec -i my_postgres psql -U postgres -d mydb < dump.sql
 ```
