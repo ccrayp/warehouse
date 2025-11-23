@@ -1,8 +1,49 @@
 --
+-- PostgreSQL database cluster dump
+--
+
+\restrict 433fUdQoqjkp4R8axtWvJt5IQ8ngmtUZ1AxX5yNQEglyCAQoWMIPc4FS08Puvdq
+
+SET default_transaction_read_only = off;
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE admin;
+ALTER ROLE admin WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:ffZA+yYKYXLWTdreqSEuew==$+DqdGprmAvlBNYJSXcy+94EGtZDO8i3McEIhCpw+qGI=:cNdBYaTXFuzm9JwjTZjbSkZEuM8QSklm6BI6DgiduIw=';
+CREATE ROLE manager;
+ALTER ROLE manager WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:2emf/uenXqfXghon8li9EQ==$ARHHic/ZOx1j8Xl6jMtT55kSJrWishV7ODUUHF/Ne68=:cstoUZ6yZvQa0LW8bUGepdgFm+a9xvZp0U0Vnk75B1E=';
+CREATE ROLE moderator;
+ALTER ROLE moderator WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:nP45xb7at4j+dqXvFVSEUw==$Yp8T7lLoOb+LueVhJFFS3m/eoCIQ5QblbuCtz/Z+0NE=:Le9YDr8tRJWWOiVsQBvWrhUa15XPx1mfTVncJ9J2iSU=';
+CREATE ROLE postgres;
+ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD 'SCRAM-SHA-256$4096:Lasxw30CxcO8KYWU0WRUPg==$9Wb4RVDiRah6gUm/sCODnWGxw/cR6raEjsxR3rHv2oI=:Aq8oSnGLQXTOISRQ/LqL0sTNONkzHWtD5pZp4Wry1Nw=';
+
+--
+-- User Configurations
+--
+
+
+
+
+
+
+
+
+\unrestrict 433fUdQoqjkp4R8axtWvJt5IQ8ngmtUZ1AxX5yNQEglyCAQoWMIPc4FS08Puvdq
+
+--
+-- PostgreSQL database cluster dump complete
+--
+
+--
 -- PostgreSQL database dump
 --
 
-\restrict 0pEVvul07Zjk0qStALaxOzW1YB969xg9FWFhoxhiDQfxx7ACS5TU7a5SbnPfmid
+\restrict mFgaYlXRPyRorsFutgTX8eCde11CDUTNBCuzkANjEHlBG0uzlo0IXGt7dIj5ORP
 
 -- Dumped from database version 15.14 (Debian 15.14-1.pgdg13+1)
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg13+1)
@@ -617,6 +658,25 @@ ALTER SEQUENCE public.sys_user_id_seq OWNED BY public.sys_user.id;
 
 
 --
+-- Name: system_users; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.system_users AS
+ SELECT e.surname AS "Фамилия",
+    e.firstname AS "Имя",
+    e.patronymic AS "Отчество",
+    ps.name AS "Должность",
+    r.sys_role AS "Роль в системе"
+   FROM (((public.employee e
+     JOIN public.sys_user su ON ((su.id_employee = e.id)))
+     JOIN public."position" ps ON ((e.id_position = ps.id)))
+     JOIN public.role r ON ((su.id_role = r.id)))
+  ORDER BY r.sys_role;
+
+
+ALTER TABLE public.system_users OWNER TO postgres;
+
+--
 -- Name: address id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -743,6 +803,10 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 3	role	UPDATE	{"id": 1, "name": "Модератор", "sys_role": null, "description": "Модерирование базы данных, выполнение CRUD операций"}	{"id": 1, "name": "Модератор", "sys_role": "moderator", "description": "Модерирование базы данных, выполнение CRUD операций"}	postgres	2025-11-22 10:15:56.404807
 4	role	UPDATE	{"id": 2, "name": "Менеджер", "sys_role": null, "description": "Пользование БД, использование готовых запросов"}	{"id": 2, "name": "Менеджер", "sys_role": "manager", "description": "Пользование БД, использование готовых запросов"}	postgres	2025-11-22 10:15:56.404807
 5	role	INSERT	\N	{"id": 4, "name": "Администратор", "sys_role": "admin", "description": "Администрирование база данные, полный доступ ко всем объектам"}	postgres	2025-11-22 10:15:56.404807
+6	position	INSERT	\N	{"id": 6, "name": "тест", "description": "тест"}	admin	2025-11-22 11:36:41.948224
+7	batch	INSERT	\N	{"id": 7, "cost": 0, "created_at": "2025-11-22T11:38:50.281229", "id_product": 1, "expiration_date": "2025-11-23", "production_date": "2025-11-22"}	manager	2025-11-22 11:38:50.281229
+8	batch	DELETE	{"id": 7, "cost": 0, "created_at": "2025-11-22T11:38:50.281229", "id_product": 1, "expiration_date": "2025-11-23", "production_date": "2025-11-22"}	\N	admin	2025-11-22 11:40:55.746764
+9	sys_user	UPDATE	{"id": 1, "login": "artem_volkov", "id_role": 1, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	postgres	2025-11-22 12:51:03.354121
 \.
 
 
@@ -833,6 +897,7 @@ COPY public."position" (id, name, description) FROM stdin;
 2	Кладовщик	Приёмка и отгрузка, учёт и сохранность
 3	Грузчик	Комплектация заказов, помощь при приёмке
 4	Не указано	Не указано
+6	тест	тест
 \.
 
 
@@ -887,8 +952,8 @@ COPY public.role (id, name, description, sys_role) FROM stdin;
 --
 
 COPY public.sys_user (id, login, password_hash, id_role, id_employee) FROM stdin;
-1	artem_volkov	$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q	1	1
 2	anna_sokolova	$2b$12$A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6 	2	2
+1	artem_volkov	$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q	4	1
 \.
 
 
@@ -903,14 +968,14 @@ SELECT pg_catalog.setval('public.address_id_seq', 15, true);
 -- Name: audit_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.audit_log_id_seq', 5, true);
+SELECT pg_catalog.setval('public.audit_log_id_seq', 9, true);
 
 
 --
 -- Name: batch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.batch_id_seq', 6, true);
+SELECT pg_catalog.setval('public.batch_id_seq', 7, true);
 
 
 --
@@ -952,7 +1017,7 @@ SELECT pg_catalog.setval('public.gender_id_seq', 3, true);
 -- Name: position_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.position_id_seq', 4, true);
+SELECT pg_catalog.setval('public.position_id_seq', 6, true);
 
 
 --
@@ -1392,6 +1457,221 @@ ALTER TABLE ONLY public.sys_user
 
 
 --
+-- Name: TABLE address; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.address TO admin;
+GRANT SELECT,UPDATE ON TABLE public.address TO moderator;
+GRANT SELECT ON TABLE public.address TO manager;
+
+
+--
+-- Name: SEQUENCE address_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.address_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.address_id_seq TO moderator;
+GRANT SELECT,USAGE ON SEQUENCE public.address_id_seq TO manager;
+
+
+--
+-- Name: TABLE audit_log; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.audit_log TO admin;
+
+
+--
+-- Name: TABLE batch; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.batch TO admin;
+GRANT SELECT,UPDATE ON TABLE public.batch TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.batch TO manager;
+
+
+--
+-- Name: SEQUENCE batch_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.batch_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.batch_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.batch_id_seq TO manager;
+
+
+--
+-- Name: TABLE product; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.product TO admin;
+GRANT SELECT,UPDATE ON TABLE public.product TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.product TO manager;
+
+
+--
+-- Name: TABLE document; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.document TO admin;
+GRANT SELECT,UPDATE ON TABLE public.document TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.document TO manager;
+
+
+--
+-- Name: TABLE document_category; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.document_category TO admin;
+GRANT SELECT,UPDATE ON TABLE public.document_category TO moderator;
+
+
+--
+-- Name: SEQUENCE document_category_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.document_category_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.document_category_id_seq TO moderator;
+
+
+--
+-- Name: TABLE document_content; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.document_content TO admin;
+GRANT SELECT,UPDATE ON TABLE public.document_content TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.document_content TO manager;
+
+
+--
+-- Name: SEQUENCE document_content_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.document_content_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.document_content_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.document_content_id_seq TO manager;
+
+
+--
+-- Name: SEQUENCE document_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.document_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.document_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.document_id_seq TO manager;
+
+
+--
+-- Name: TABLE employee; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.employee TO admin;
+GRANT SELECT,UPDATE ON TABLE public.employee TO moderator;
+GRANT SELECT ON TABLE public.employee TO manager;
+
+
+--
+-- Name: SEQUENCE employee_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.employee_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.employee_id_seq TO moderator;
+GRANT SELECT,USAGE ON SEQUENCE public.employee_id_seq TO manager;
+
+
+--
+-- Name: TABLE gender; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.gender TO admin;
+GRANT SELECT ON TABLE public.gender TO moderator;
+GRANT SELECT ON TABLE public.gender TO manager;
+
+
+--
+-- Name: TABLE "position"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public."position" TO admin;
+GRANT SELECT ON TABLE public."position" TO moderator;
+GRANT SELECT ON TABLE public."position" TO manager;
+
+
+--
+-- Name: SEQUENCE position_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.position_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.position_id_seq TO moderator;
+GRANT SELECT,USAGE ON SEQUENCE public.position_id_seq TO manager;
+
+
+--
+-- Name: TABLE producer; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.producer TO admin;
+GRANT SELECT ON TABLE public.producer TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.producer TO manager;
+
+
+--
+-- Name: SEQUENCE producer_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.producer_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.producer_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.producer_id_seq TO manager;
+
+
+--
+-- Name: TABLE product_category; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.product_category TO admin;
+GRANT SELECT ON TABLE public.product_category TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.product_category TO manager;
+
+
+--
+-- Name: SEQUENCE product_category_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.product_category_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.product_category_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.product_category_id_seq TO manager;
+
+
+--
+-- Name: SEQUENCE product_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.product_id_seq TO admin;
+GRANT SELECT,USAGE ON SEQUENCE public.product_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.product_id_seq TO manager;
+
+
+--
+-- Name: TABLE role; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.role TO admin;
+
+
+--
+-- Name: TABLE sys_user; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.sys_user TO admin;
+
+
+--
+-- Name: SEQUENCE sys_user_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.sys_user_id_seq TO admin;
+
+
+--
 -- Name: batches_m; Type: MATERIALIZED VIEW DATA; Schema: public; Owner: postgres
 --
 
@@ -1402,5 +1682,5 @@ REFRESH MATERIALIZED VIEW public.batches_m;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 0pEVvul07Zjk0qStALaxOzW1YB969xg9FWFhoxhiDQfxx7ACS5TU7a5SbnPfmid
+\unrestrict mFgaYlXRPyRorsFutgTX8eCde11CDUTNBCuzkANjEHlBG0uzlo0IXGt7dIj5ORP
 

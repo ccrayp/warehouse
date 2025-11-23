@@ -57,7 +57,7 @@ JOIN product AS pt
 SELECT 
 	pt.id,
 	pt.name,
-	l.product_left
+	COALESCE(l.product_left, 0)
 FROM (
 	SELECT 
 		id_product,
@@ -76,7 +76,7 @@ FROM (
 		ON b.id = t.id_batch
 	GROUP BY id_product
 ) AS l
-JOIN product AS pt
+RIGHT JOIN product AS pt
 	ON pt.id = l.id_product
 
 

@@ -12,15 +12,16 @@ services:
     networks:
       - backend
 
-  # nginx:
-  #   build: ./nginx
-  #   ports:
-  #     - "8080:80"
-  #   depends_on:
-  #     - pgadmin
-  #     - warehouse_db
-  #   networks:
-  #     - backend
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - pgadmin
+      - warehouse_db
+      - server
+    networks:
+      - backend
 
   warehouse_db:
     image: postgres:15
@@ -35,16 +36,16 @@ services:
     networks:
       - backend
 
-  # server:
-  #   build: ./backend
-  #   ports:
-  #     - "8081:8080"
-  #   depends_on:
-  #     - warehouse_db
-  #   env_file:
-  #     - ./backend/.env
-  #   networks:
-  #     - backend
+  server:
+    build: ./backend
+    ports:
+      - "8081:8080"
+    depends_on:
+      - warehouse_db
+    # env_file:
+    #   - ./backend/.env
+    networks:
+      - backend
 
 volumes:
   warehouse_db_data:
