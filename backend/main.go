@@ -1,36 +1,31 @@
-// main.go
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
-	warehouse "warehouse/internal/utils"
+	"warehouse/internal/auth"
+	"warehouse/pkg/config"
+	"warehouse/pkg/database"
+	"warehouse/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	connStr := "postgres://admin:admin@warehouse_db:5432/warehouse"
-	conn, err := warehouse.ConnectDB(connStr)
+	cfg := config.LoadConfig()
+
+	db, err := database.NewConnector(cfg)
 	if err != nil {
-		fmt.Printf("ERROR %s", err.Error())
-		return
+		fmt.Println("Connection aborted")
 	}
-	defer conn.Close(context.Background())
 
-	server := gin.Default()
+	s := gin.Default()
 
-	server.GET("/request", func(ctx *gin.Context) {
-		query := ctx.Query("query")
-		results, err := warehouse.GetResponseFromQuery(conn, query)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		ctx.JSON(http.StatusOK, results)
+	s.GET("/auth/health-check", func(ctx *gin.Context) {
+		utils.RespondSuccess(ctx, http.StatusOK, "server is working correctly", gin.H{})
 	})
 
-	server.Run(":8080")
+	auth.InitRoutes(s, db)
+
+	s.Run(":8080")
 }

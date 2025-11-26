@@ -42,8 +42,8 @@ services:
       - "8081:8080"
     depends_on:
       - warehouse_db
-    # env_file:
-    #   - ./backend/.env
+    env_file:
+       - ./backend/.env
     networks:
       - backend
 
