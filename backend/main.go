@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"warehouse/internal/audit"
 	"warehouse/internal/auth"
 	"warehouse/pkg/config"
 	"warehouse/pkg/database"
@@ -26,6 +27,7 @@ func main() {
 	})
 
 	auth.InitRoutes(s, db)
+	audit.InitRoutes(s, db)
 
 	s.Run(":8080")
 }
