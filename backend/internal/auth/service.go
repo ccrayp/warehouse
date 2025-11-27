@@ -104,3 +104,19 @@ func AuthMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func GetClaims(ctx *gin.Context) *Claims {
+	claimsValue, exists := ctx.Get("claims")
+	if !exists {
+		utils.RespondError(ctx, http.StatusUnauthorized, "claims missing in request context", "claims not exixts", nil)
+		return nil
+	}
+
+	claims, ok := claimsValue.(*Claims)
+	if !ok {
+		utils.RespondError(ctx, http.StatusInternalServerError, "invalid claims type", "invalid claims type", nil)
+		return nil
+	}
+
+	return claims
+}

@@ -79,17 +79,20 @@ func (h *AuthHandler) Refresh(ctx *gin.Context) {
 		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "refresh token required", gin.H{
 			"required_data": RefreshRequest{
 				RefreshToken: "string",
-				Role:         "string",
 			}})
 		return
 	}
 
-	newAccessToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken, data.Role)
+	claims := GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	newAccessToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusUnauthorized, err.Error(), "invalid refresh token", gin.H{
 			"required_data": RefreshRequest{
 				RefreshToken: "string",
-				Role:         "string",
 			}})
 		return
 	}

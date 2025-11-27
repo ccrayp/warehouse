@@ -3,6 +3,7 @@ package audit
 import (
 	"net/http"
 	"strconv"
+	"warehouse/internal/auth"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
 
@@ -20,6 +21,13 @@ func NewAuditHandler(db *database.Connector) *AuditHandler {
 }
 
 func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
+	if ctx.Query("limit") == "" || ctx.Query("offset") == "" {
+		utils.RespondError(ctx, http.StatusBadRequest, "", "missing pagination params", gin.H{
+			"required_data": "?limit=int&offset=int",
+		})
+		return
+	}
+
 	limit, err := strconv.Atoi(ctx.Query("limit"))
 	if err != nil || limit < 0 {
 		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid limit", gin.H{
@@ -36,20 +44,14 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 		return
 	}
 
-	var role PaginationRequest
-	err = ctx.BindJSON(&role)
-	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to parse role", gin.H{
-			"required_data": PaginationRequest{},
-		})
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
 		return
 	}
 
-	logs, err := h.AuditRepository.GetPagination(limit, offset, role.Role)
+	logs, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to parse role", gin.H{
-			"required_data": PaginationRequest{},
-		})
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to parse role", nil)
 		return
 	}
 
