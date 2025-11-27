@@ -51,9 +51,11 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 
 	logs, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to parse role", nil)
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
 		return
 	}
 
-	utils.RespondSuccess(ctx, http.StatusOK, "logs selected successfully", logs)
+	utils.RespondSuccess(ctx, http.StatusOK, "logs selected successfully", gin.H{
+		"logs": logs,
+	})
 }

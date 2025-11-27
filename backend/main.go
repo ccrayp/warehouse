@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"warehouse/internal/audit"
 	"warehouse/internal/auth"
+	"warehouse/internal/employee"
 	"warehouse/pkg/config"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
@@ -28,6 +29,7 @@ func main() {
 
 	auth.InitRoutes(s, db)
 	audit.InitRoutes(s, db)
+	employee.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

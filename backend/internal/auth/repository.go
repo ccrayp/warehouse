@@ -15,8 +15,8 @@ func NewAuthRepository(db *database.Connector) *AuthRepository {
 	}
 }
 
-func (r *AuthRepository) SaveRefreshToken(token, username, role string) error {
-	pool, err := r.Db.GetPool(role)
+func (r *AuthRepository) SaveRefreshToken(token, username string) error {
+	pool, err := r.Db.GetAdminPool()
 	if err != nil {
 		return err
 	}
@@ -24,13 +24,13 @@ func (r *AuthRepository) SaveRefreshToken(token, username, role string) error {
 	_, err = pool.Exec(context.Background(),
 		`INSERT INTO refresh_tokens(token, username, role, created_at) 
          VALUES($1,$2,$3,NOW())`,
-		token, username, role,
+		token, username, "admin",
 	)
 	return err
 }
 
-func (r *AuthRepository) GetRefreshToken(token string, role string) (*RefreshTokens, error) {
-	pool, err := r.Db.GetPool(role)
+func (r *AuthRepository) GetRefreshToken(token string) (*RefreshTokens, error) {
+	pool, err := r.Db.GetAdminPool()
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +48,8 @@ func (r *AuthRepository) GetRefreshToken(token string, role string) (*RefreshTok
 	return &rt, nil
 }
 
-func (r *AuthRepository) DeleteRefreshToken(token string, role string) error {
-	pool, err := r.Db.GetPool(role)
+func (r *AuthRepository) DeleteRefreshToken(token string) error {
+	pool, err := r.Db.GetAdminPool()
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (r *AuthRepository) DeleteRefreshToken(token string, role string) error {
 	return err
 }
 
-func (r *AuthRepository) GetPassword(useranme string) ([]byte, error) {
+func (r *AuthRepository) GetPassword(username string) ([]byte, error) {
 	pool, err := r.Db.GetAdminPool()
 	if err != nil {
 		return nil, err
@@ -67,11 +67,28 @@ func (r *AuthRepository) GetPassword(useranme string) ([]byte, error) {
 
 	var password []byte
 	err = pool.QueryRow(context.Background(),
-		`SELECT password_hash FROM sys_user WHERE login=$1`, useranme,
+		`SELECT password_hash FROM sys_user WHERE login=$1`, username,
 	).Scan(&password)
 	if err != nil {
 		return nil, err
 	}
 
 	return password, nil
+}
+
+func (r *AuthRepository) GetRoleByUsername(username string) (string, error) {
+	pool, err := r.Db.GetAdminPool()
+	if err != nil {
+		return "", err
+	}
+
+	var role string
+	err = pool.QueryRow(context.Background(),
+		`SELECT r.sys_role FROM sys_user AS su JOIN role AS r ON su.id_role = r.id WHERE login=$1`, username,
+	).Scan(&role)
+	if err != nil {
+		return "", err
+	}
+
+	return role, nil
 }

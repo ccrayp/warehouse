@@ -24,13 +24,22 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 
 	ctx.BindJSON(&data)
 
+	role, err := h.AuthRepository.GetRoleByUsername(data.Username)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusUnauthorized, err.Error(), "user with such username not found", gin.H{
+			"required_data": LoginRequest{
+				Username: "string",
+				Password: "string",
+			}})
+		return
+	}
+
 	hash, err := h.AuthRepository.GetPassword(data.Username)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusUnauthorized, err.Error(), "wrong login or password", gin.H{
 			"required_data": LoginRequest{
 				Username: "string",
 				Password: "string",
-				Role:     "string",
 			}})
 		return
 	}
@@ -40,28 +49,25 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 			"required_data": LoginRequest{
 				Username: "string",
 				Password: "string",
-				Role:     "string",
 			}})
 		return
 	}
 
-	accessToken, err := GenerateToken(data.Username, data.Role)
+	accessToken, err := GenerateToken(data.Username, role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to generate access token", gin.H{
 			"required_data": LoginRequest{
 				Username: "string",
 				Password: "string",
-				Role:     "string",
 			}})
 	}
 
-	refreshToken, err := GenerateRefreshToken(h.AuthRepository, data.Username, data.Role)
+	refreshToken, err := GenerateRefreshToken(h.AuthRepository, data.Username)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to generate refresh token", gin.H{
 			"required_data": LoginRequest{
 				Username: "string",
 				Password: "string",
-				Role:     "string",
 			}})
 		return
 	}
@@ -83,12 +89,7 @@ func (h *AuthHandler) Refresh(ctx *gin.Context) {
 		return
 	}
 
-	claims := GetClaims(ctx)
-	if claims == nil {
-		return
-	}
-
-	newAccessToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken, claims.Role)
+	newAccessToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusUnauthorized, err.Error(), "invalid refresh token", gin.H{
 			"required_data": RefreshRequest{

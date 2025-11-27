@@ -29,27 +29,27 @@ func GenerateToken(username string, role string) (string, error) {
 	return token.SignedString(secretKey)
 }
 
-func GenerateRefreshToken(repo *AuthRepository, username, role string) (string, error) {
+func GenerateRefreshToken(repo *AuthRepository, username string) (string, error) {
 	b := make([]byte, 32)
 	if _, err := rand.Read(b); err != nil {
 		return "", err
 	}
 	refreshToken := hex.EncodeToString(b)
 
-	if err := repo.SaveRefreshToken(refreshToken, username, role); err != nil {
+	if err := repo.SaveRefreshToken(refreshToken, username); err != nil {
 		return "", err
 	}
 
 	return refreshToken, nil
 }
 
-func RefreshAccessToken(repo *AuthRepository, token string, role string) (string, error) {
-	rt, err := repo.GetRefreshToken(token, role)
+func RefreshAccessToken(repo *AuthRepository, token string) (string, error) {
+	rt, err := repo.GetRefreshToken(token)
 	if err != nil {
 		return "", err
 	}
 
-	if err := repo.DeleteRefreshToken(token, role); err != nil {
+	if err := repo.DeleteRefreshToken(token); err != nil {
 		return "", err
 	}
 
@@ -89,12 +89,12 @@ func AuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			c.AbortWithStatusJSON(401, utils.Response{
 				Success: false,
-				Message: "missing token",
+				Message: "token was not validated",
 				Status:  http.StatusUnauthorized,
 				Data: gin.H{
 					"required_data": "Authorization Bearer",
 				},
-				Error:    "invalid token",
+				Error:    "token was not validated",
 				Endpoint: c.FullPath(),
 			})
 			return

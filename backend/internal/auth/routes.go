@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"net/http"
 	"warehouse/pkg/database"
+	"warehouse/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,6 +12,13 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 	handler := NewAuthHandler(db)
 
 	r.POST("/auth/login", handler.Login)
-	r.POST("/auth/refresh", AuthMiddleware(), handler.Refresh)
+	r.POST("/auth/refresh", handler.Refresh)
 	r.POST("/auth/validate", AuthMiddleware(), handler.Validate)
+	r.GET("/auth/hash", func(ctx *gin.Context) {
+		hash, _ := utils.HashPassword(ctx.Query("password"))
+		utils.RespondSuccess(ctx, http.StatusOK, "hash seccessfully gotten", gin.H{
+			"password":      ctx.Query("password"),
+			"password_hash": hash,
+		})
+	})
 }

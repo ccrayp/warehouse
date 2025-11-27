@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"context"
+	"fmt"
 	"net/http"
+	"warehouse/pkg/database"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -49,4 +52,34 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func CheckExists(id int, table string, role string, db *database.Connector) (bool, error) {
+	pool, err := db.GetPool(role)
+	if err != nil {
+		return false, err
+	}
+
+	sql := fmt.Sprintf(`SELECT EXISTS (SELECT 1 FROM %s WHERE id=$1)`, table)
+
+	var exists bool
+	err = pool.QueryRow(context.Background(), sql, id).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
+func CheckFK(ctx *gin.Context, id int, table string, role string, db *database.Connector) bool {
+	exists, err := CheckExists(id, table, role, db)
+	if err != nil {
+		RespondError(ctx, http.StatusInternalServerError, err.Error(), fmt.Sprintf("error checking %s", table), nil)
+		return false
+	}
+	if !exists {
+		RespondError(ctx, http.StatusBadRequest, fmt.Sprintf("%s with such id doesn't exist", table), fmt.Sprintf("%s not found", table), nil)
+		return false
+	}
+	return true
 }
