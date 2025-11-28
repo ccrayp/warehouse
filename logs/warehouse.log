@@ -1,78 +1,64 @@
+nginx-1  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+nginx-1  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+nginx-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+nginx-1  | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf is not a file or does not exist
+nginx-1  | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+nginx-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx-1  | /docker-entrypoint.sh: Configuration complete; ready for start up
 server-1  | [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-server-1  | 
-server-1  | [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
-server-1  |  - using env:	export GIN_MODE=release
-server-1  |  - using code:	gin.SetMode(gin.ReleaseMode)
-server-1  | 
-server-1  | [GIN-debug] GET    /auth/health-check        --> main.main.func1 (3 handlers)
-server-1  | [GIN-debug] POST   /auth/login               --> warehouse/internal/auth.(*AuthHandler).Login-fm (3 handlers)
-server-1  | [GIN-debug] POST   /auth/refresh             --> warehouse/internal/auth.(*AuthHandler).Refresh-fm (3 handlers)
-server-1  | [GIN-debug] POST   /auth/validate            --> warehouse/internal/auth.(*AuthHandler).Validate-fm (4 handlers)
-server-1  | [GIN-debug] GET    /auth/hash                --> warehouse/internal/auth.InitRoutes.func1 (3 handlers)
-server-1  | [GIN-debug] GET    /audit                    --> warehouse/internal/audit.(*AuditHandler).GetAuditPagination-fm (4 handlers)
-server-1  | [GIN-debug] GET    /employees                --> warehouse/internal/employee.(*EmployeeHandler).GetEmployeesPagination-fm (4 handlers)
-server-1  | [GIN-debug] GET    /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).GetEmployeeById-fm (4 handlers)
-server-1  | [GIN-debug] POST   /employees                --> warehouse/internal/employee.(*EmployeeHandler).CreateEmployee-fm (4 handlers)
-server-1  | [GIN-debug] PUT    /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).UpdateEmployee-fm (4 handlers)
-server-1  | [GIN-debug] DELETE /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).DeleteEmployee-fm (4 handlers)
-server-1  | [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
-server-1  | Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
-server-1  | [GIN-debug] Listening and serving HTTP on :8080
-nginx-1   | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
-nginx-1   | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
-nginx-1   | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
-nginx-1   | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf is not a file or does not exist
-nginx-1   | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
-nginx-1   | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
-nginx-1   | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
-nginx-1   | /docker-entrypoint.sh: Configuration complete; ready for start up
+server-1        | 
+server-1        | [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
 warehouse_db-1  | 
 warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+server-1        |  - using env:	export GIN_MODE=release
+server-1        |  - using code:	gin.SetMode(gin.ReleaseMode)
+server-1        | 
+server-1        | [GIN-debug] GET    /auth/health-check        --> main.main.func1 (3 handlers)
+server-1        | [GIN-debug] POST   /auth/login               --> warehouse/internal/auth.(*AuthHandler).Login-fm (3 handlers)
+server-1        | [GIN-debug] POST   /auth/refresh             --> warehouse/internal/auth.(*AuthHandler).Refresh-fm (3 handlers)
+server-1        | [GIN-debug] POST   /auth/validate            --> warehouse/internal/auth.(*AuthHandler).Validate-fm (4 handlers)
 warehouse_db-1  | 
-warehouse_db-1  | 2025-11-28 09:32:43.441 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-warehouse_db-1  | 2025-11-28 09:32:43.442 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-warehouse_db-1  | 2025-11-28 09:32:43.442 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-warehouse_db-1  | 2025-11-28 09:32:43.445 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-warehouse_db-1  | 2025-11-28 09:32:43.449 UTC [29] LOG:  database system was shut down at 2025-11-28 09:31:26 UTC
-warehouse_db-1  | 2025-11-28 09:32:43.453 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-11-28 11:56:07.687 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+server-1        | [GIN-debug] GET    /auth/hash                --> warehouse/internal/auth.InitRoutes.func1 (3 handlers)
+server-1        | [GIN-debug] GET    /audit                    --> warehouse/internal/audit.(*AuditHandler).GetAuditPagination-fm (4 handlers)
+server-1        | [GIN-debug] GET    /employees                --> warehouse/internal/employee.(*EmployeeHandler).GetEmployeesPagination-fm (4 handlers)
+server-1        | [GIN-debug] GET    /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).GetEmployeeById-fm (4 handlers)
+server-1        | [GIN-debug] POST   /employees                --> warehouse/internal/employee.(*EmployeeHandler).CreateEmployee-fm (4 handlers)
+server-1        | [GIN-debug] PUT    /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).UpdateEmployee-fm (4 handlers)
+server-1        | [GIN-debug] DELETE /employees/:id            --> warehouse/internal/employee.(*EmployeeHandler).DeleteEmployee-fm (4 handlers)
+warehouse_db-1  | 2025-11-28 11:56:07.688 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-11-28 11:56:07.688 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-11-28 11:56:07.690 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-11-28 11:56:07.695 UTC [29] LOG:  database system was shut down at 2025-11-28 09:34:05 UTC
+warehouse_db-1  | 2025-11-28 11:56:07.708 UTC [1] LOG:  database system is ready to accept connections
+server-1        | [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+server-1        | Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+server-1        | [GIN-debug] Listening and serving HTTP on :8080
 pgadmin-1       | postfix/postlog: starting the Postfix mail system
 pgadmin-1       | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1       |   import pkg_resources
+server-1        | [GIN] 2025/11/28 - 11:56:11 | 200 |    71.08775ms |      172.20.0.5 | POST     "/auth/refresh"
+nginx-1         | 192.168.65.1 - - [28/Nov/2025:11:56:11 +0000] "POST /api/auth/refresh HTTP/1.1" 200 280 "-" "PostmanRuntime/7.49.1"
 pgadmin-1       | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1       |   import pkg_resources
-server-1        | [GIN] 2025/11/28 - 09:32:47 | 200 |   46.922542ms |      172.20.0.5 | PUT      "/employees/10"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:32:47 +0000] "PUT /api/employees/10 HTTP/1.1" 200 339 "-" "PostmanRuntime/7.49.1"
-pgadmin-1       | [2025-11-28 09:32:48 +0000] [1] [INFO] Starting gunicorn 23.0.0
-pgadmin-1       | [2025-11-28 09:32:48 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
-pgadmin-1       | [2025-11-28 09:32:48 +0000] [1] [INFO] Using worker: gthread
-pgadmin-1       | [2025-11-28 09:32:48 +0000] [88] [INFO] Booting worker with pid: 88
-server-1        | [GIN] 2025/11/28 - 09:32:59 | 200 |    2.887708ms |      172.20.0.5 | GET      "/employees/10"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:32:59 +0000] "GET /api/employees/10 HTTP/1.1" 200 340 "-" "PostmanRuntime/7.49.1"
-server-1        | [GIN-debug] redirecting request 301: /employees --> /employees
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:14 +0000] "GET /api/employees/ HTTP/1.1" 301 45 "-" "PostmanRuntime/7.49.1"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:14 +0000] "GET /employees HTTP/1.1" 404 153 "http://localhost:8080/api/employees/" "PostmanRuntime/7.49.1"
-nginx-1         | 2025/11/28 09:33:14 [error] 20#20: *1 open() "/etc/nginx/html/employees" failed (2: No such file or directory), client: 192.168.65.1, server: _, request: "GET /employees HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/api/employees/"
-server-1        | [GIN] 2025/11/28 - 09:33:17 | 400 |    1.201417ms |      172.20.0.5 | GET      "/employees"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:17 +0000] "GET /api/employees HTTP/1.1" 400 157 "-" "PostmanRuntime/7.49.1"
-server-1        | [GIN] 2025/11/28 - 09:33:23 | 200 |    4.148625ms |      172.20.0.5 | GET      "/employees?limit=100&offset=0"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:23 +0000] "GET /api/employees?limit=100&offset=0 HTTP/1.1" 200 1483 "-" "PostmanRuntime/7.49.1"
-server-1        | [GIN] 2025/11/28 - 09:33:46 | 200 |    3.816625ms |      172.20.0.5 | PUT      "/employees/10"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:46 +0000] "PUT /api/employees/10 HTTP/1.1" 200 339 "-" "PostmanRuntime/7.49.1"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:52 +0000] "GET /api/employees HTTP/1.1" 400 157 "-" "PostmanRuntime/7.49.1"
-server-1        | [GIN] 2025/11/28 - 09:33:52 | 400 |     238.917µs |      172.20.0.5 | GET      "/employees"
-server-1        | [GIN] 2025/11/28 - 09:33:56 | 200 |    1.603292ms |      172.20.0.5 | GET      "/employees?limit=100&offset=0"
-nginx-1         | 192.168.65.1 - - [28/Nov/2025:09:33:56 +0000] "GET /api/employees?limit=100&offset=0 HTTP/1.1" 200 1483 "-" "PostmanRuntime/7.49.1"
+pgadmin-1       | [2025-11-28 11:56:12 +0000] [1] [INFO] Starting gunicorn 23.0.0
+pgadmin-1       | [2025-11-28 11:56:12 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
+pgadmin-1       | [2025-11-28 11:56:12 +0000] [1] [INFO] Using worker: gthread
+pgadmin-1       | [2025-11-28 11:56:12 +0000] [88] [INFO] Booting worker with pid: 88
+server-1        | [GIN] 2025/11/28 - 11:56:28 | 200 |   16.380292ms |      172.20.0.5 | GET      "/employees?limit=100&offset=0"
+nginx-1         | 192.168.65.1 - - [28/Nov/2025:11:56:28 +0000] "GET /api/employees?limit=100&offset=0 HTTP/1.1" 200 1483 "-" "PostmanRuntime/7.49.1"
 [Knginx-1 exited with code 0
-pgadmin-1       | [2025-11-28 09:34:05 +0000] [1] [INFO] Handling signal: term
+pgadmin-1       | [2025-11-28 12:00:57 +0000] [1] [INFO] Handling signal: term
 [Kserver-1 exited with code 2
-warehouse_db-1  | 2025-11-28 09:34:05.244 UTC [1] LOG:  received fast shutdown request
-warehouse_db-1  | 2025-11-28 09:34:05.246 UTC [1] LOG:  aborting any active transactions
-warehouse_db-1  | 2025-11-28 09:34:05.248 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
-warehouse_db-1  | 2025-11-28 09:34:05.248 UTC [27] LOG:  shutting down
-warehouse_db-1  | 2025-11-28 09:34:05.248 UTC [27] LOG:  checkpoint starting: shutdown immediate
-warehouse_db-1  | 2025-11-28 09:34:05.254 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.002 s, total=0.007 s; sync files=7, longest=0.002 s, average=0.001 s; distance=6 kB, estimate=6 kB
-warehouse_db-1  | 2025-11-28 09:34:05.256 UTC [1] LOG:  database system is shut down
+warehouse_db-1  | 2025-11-28 12:00:57.463 UTC [1] LOG:  received fast shutdown request
+warehouse_db-1  | 2025-11-28 12:00:57.464 UTC [1] LOG:  aborting any active transactions
+warehouse_db-1  | 2025-11-28 12:00:57.465 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+warehouse_db-1  | 2025-11-28 12:00:57.465 UTC [27] LOG:  shutting down
+warehouse_db-1  | 2025-11-28 12:00:57.466 UTC [27] LOG:  checkpoint starting: shutdown immediate
+warehouse_db-1  | 2025-11-28 12:00:57.473 UTC [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.008 s; sync files=6, longest=0.002 s, average=0.001 s; distance=8 kB, estimate=8 kB
+warehouse_db-1  | 2025-11-28 12:00:57.474 UTC [1] LOG:  database system is shut down
 [Kwarehouse_db-1 exited with code 0
-pgadmin-1       | [2025-11-28 09:34:06 +0000] [88] [INFO] Worker exiting (pid: 88)
-pgadmin-1       | [2025-11-28 09:34:06 +0000] [1] [INFO] Shutting down: Master
+pgadmin-1       | [2025-11-28 12:00:57 +0000] [88] [INFO] Worker exiting (pid: 88)
+pgadmin-1       | [2025-11-28 12:00:58 +0000] [1] [INFO] Shutting down: Master
 [Kpgadmin-1 exited with code 0
