@@ -152,31 +152,41 @@ func (h *EmployeeHandler) UpdateEmployee(ctx *gin.Context) {
 		return
 	}
 
-	employeeIdString := ctx.Param("id")
-	if employeeIdString == "" {
-		utils.RespondError(ctx, http.StatusBadRequest, "id was not recieved", "id was not recieved", gin.H{
-			"required_data": "id",
+	var employeeData Employee
+	err := ctx.BindJSON(&employeeData)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "fail to bind employee", gin.H{
+			"required_data": Employee{},
 		})
 		return
 	}
 
-	id, err := strconv.Atoi(employeeIdString)
+	if !utils.CheckFK(ctx, employeeData.IdGender, "gender", claims.Role, h.EmployeeRepository.db) {
+		return
+	}
+	if !utils.CheckFK(ctx, employeeData.IdPosition, "position", claims.Role, h.EmployeeRepository.db) {
+		return
+	}
+	if !utils.CheckFK(ctx, employeeData.IdAddress, "address", claims.Role, h.EmployeeRepository.db) {
+		return
+	}
+
+	if err := validateEmployee(employeeData); err != nil {
+		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid employee data", gin.H{"required_data": Employee{}})
+		return
+	}
+
+	employee, err := h.EmployeeRepository.Update(employeeData, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusBadRequest, "error parse id", "error parse id", nil)
+		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "error while updating", gin.H{
+			"required_data": Employee{},
+		})
 		return
 	}
 
-	exists, err := utils.CheckExists(id, h.EmployeeRepository.TableName, claims.Role, h.EmployeeRepository.db)
-	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while exist checking", nil)
-		return
-	}
-
-	if !exists {
-		utils.RespondError(ctx, http.StatusInternalServerError, "employee with such id doesn't eixst", "employee with such id doesn't eixst", nil)
-		return
-	}
-
+	utils.RespondSuccess(ctx, http.StatusCreated, "employee was successfully updated", gin.H{
+		"employee": employee,
+	})
 }
 
 func (h *EmployeeHandler) DeleteEmployee(ctx *gin.Context) {
