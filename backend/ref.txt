@@ -1,0 +1,29 @@
+
+dbURL := "postgres://admin:admin@localhost:8888/warehouse"
+
+pool, err := pgxpool.New(context.Background(), dbURL)
+if err != nil {
+	log.Fatalf("Unable to create connection pool: %v\n", err)
+}
+defer pool.Close()
+
+var name string
+err = pool.QueryRow(context.Background(), "SELECT firstname FROM employee WHERE id=$1", 1).Scan(&name)
+if err != nil {
+	// Проверяем ошибки PostgreSQL
+	if pgErr, ok := err.(*pgconn.PgError); ok {
+		if pgErr.Code == "42501" {
+			fmt.Println("Ошибка доступа: у вашей роли нет прав на эту таблицу")
+			// Можно обработать: показать сообщение, записать лог и т.д.
+		} else {
+			fmt.Printf("PostgreSQL ошибка: %s, %s\n", pgErr.Code, pgErr.Message)
+		}
+	} else if err == pgx.ErrNoRows {
+		fmt.Println("Запись не найдена")
+	} else {
+		fmt.Printf("Другая ошибка: %v\n", err)
+	}
+	return
+}
+
+fmt.Println("Имя:", name)

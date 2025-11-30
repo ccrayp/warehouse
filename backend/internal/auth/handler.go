@@ -62,7 +62,8 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 			}})
 	}
 
-	refreshToken, err := GenerateRefreshToken(h.AuthRepository, data.Username)
+	claims, _ := ValidateToken(accessToken)
+	refreshToken, err := GenerateRefreshToken(h.AuthRepository, data.Username, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "failed to generate refresh token", gin.H{
 			"required_data": LoginRequest{
@@ -89,7 +90,7 @@ func (h *AuthHandler) Refresh(ctx *gin.Context) {
 		return
 	}
 
-	newAccessToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken)
+	newAccessToken, newRefreshToken, err := RefreshAccessToken(h.AuthRepository, data.RefreshToken)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusUnauthorized, err.Error(), "invalid refresh token", gin.H{
 			"required_data": RefreshRequest{
@@ -98,7 +99,10 @@ func (h *AuthHandler) Refresh(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondSuccess(ctx, http.StatusOK, "successfully refreshed", gin.H{"access_token": newAccessToken})
+	utils.RespondSuccess(ctx, http.StatusOK, "successfully refreshed", gin.H{
+		"access_token":  newAccessToken,
+		"refresh_token": newRefreshToken,
+	})
 }
 
 func (h *AuthHandler) Validate(ctx *gin.Context) {

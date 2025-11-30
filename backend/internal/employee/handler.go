@@ -53,7 +53,13 @@ func (h *EmployeeHandler) GetEmployeesPagination(ctx *gin.Context) {
 
 	employees, err := h.EmployeeRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
+		return
+	}
+
+	if employees == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "query error", nil)
 		return
 	}
 
@@ -95,7 +101,8 @@ func (h *EmployeeHandler) GetEmployeeById(ctx *gin.Context) {
 
 	employee, err := h.EmployeeRepository.GetById(id, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while query", nil)
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
 		return
 	}
 
@@ -135,7 +142,8 @@ func (h *EmployeeHandler) CreateEmployee(ctx *gin.Context) {
 
 	employee, err := h.EmployeeRepository.Create(employeeData, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "error while creating", gin.H{
+		status, message := utils.CheckPermissionDenied(err, http.StatusBadRequest, "error while creating")
+		utils.RespondError(ctx, status, err.Error(), message, gin.H{
 			"required_data": Employee{},
 		})
 		return
@@ -178,7 +186,8 @@ func (h *EmployeeHandler) UpdateEmployee(ctx *gin.Context) {
 
 	employee, err := h.EmployeeRepository.Update(employeeData, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "error while updating", gin.H{
+		status, message := utils.CheckPermissionDenied(err, http.StatusBadRequest, "error while updating")
+		utils.RespondError(ctx, status, err.Error(), message, gin.H{
 			"required_data": Employee{},
 		})
 		return
@@ -222,7 +231,8 @@ func (h *EmployeeHandler) DeleteEmployee(ctx *gin.Context) {
 
 	err = h.EmployeeRepository.Delete(id, claims.Role)
 	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while deleting", nil)
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while deleting")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
 		return
 	}
 

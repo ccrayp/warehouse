@@ -29,31 +29,41 @@ func GenerateToken(username string, role string) (string, error) {
 	return token.SignedString(secretKey)
 }
 
-func GenerateRefreshToken(repo *AuthRepository, username string) (string, error) {
+func GenerateRefreshToken(repo *AuthRepository, username, role string) (string, error) {
 	b := make([]byte, 32)
 	if _, err := rand.Read(b); err != nil {
 		return "", err
 	}
 	refreshToken := hex.EncodeToString(b)
 
-	if err := repo.SaveRefreshToken(refreshToken, username); err != nil {
+	if err := repo.SaveRefreshToken(refreshToken, username, role); err != nil {
 		return "", err
 	}
 
 	return refreshToken, nil
 }
 
-func RefreshAccessToken(repo *AuthRepository, token string) (string, error) {
+func RefreshAccessToken(repo *AuthRepository, token string) (string, string, error) {
 	rt, err := repo.GetRefreshToken(token)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if err := repo.DeleteRefreshToken(token); err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return GenerateToken(rt.Username, rt.Role)
+	accessToken, err := GenerateToken(rt.Username, rt.Role)
+	if err != nil {
+		return "", "", err
+	}
+
+	refreshToken, err := GenerateRefreshToken(repo, rt.Username, rt.Role)
+	if err != nil {
+		return "", "", err
+	}
+
+	return accessToken, refreshToken, nil
 }
 
 func ValidateToken(tokenStr string) (*Claims, error) {

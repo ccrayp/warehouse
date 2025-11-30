@@ -13,7 +13,7 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 
 	r.POST("/auth/login", handler.Login)
 	r.POST("/auth/refresh", handler.Refresh)
-	r.POST("/auth/validate", AuthMiddleware(), handler.Validate)
+	r.POST("/auth/validate", handler.Validate)
 	r.GET("/auth/hash", func(ctx *gin.Context) {
 		hash, _ := utils.HashPassword(ctx.Query("password"))
 		utils.RespondSuccess(ctx, http.StatusOK, "hash seccessfully gotten", gin.H{

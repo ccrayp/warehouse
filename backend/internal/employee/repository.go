@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"warehouse/pkg/database"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type EmployeeRepository struct {
@@ -46,10 +48,10 @@ func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) (
 	return employees, nil
 }
 
-func (r *EmployeeRepository) GetById(id int, role string) (Employee, error) {
+func (r *EmployeeRepository) GetById(id int, role string) (*Employee, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return Employee{}, err
+		return nil, err
 	}
 
 	var employee Employee
@@ -57,16 +59,24 @@ func (r *EmployeeRepository) GetById(id int, role string) (Employee, error) {
 	err = pool.QueryRow(context.Background(), `SELECT * FROM employee WHERE id=$1`, id).Scan(&employee.ID, &employee.Surname, &employee.Firstname, &employee.Patronymic, &employee.IdGender, &employee.INN, &employee.PhoneNumber, &employee.IdAddress, &employee.BirthDate, &employee.IdPosition)
 
 	if err != nil {
-		return Employee{}, err
+		var message string
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			if pgErr.Code == "42501" {
+				message = "Ошибка доступа: у вашей роли нет прав на эту таблицу"
+			} else {
+				message = fmt.Sprintf("PostgreSQL ошибка: %s, %s\n", pgErr.Code, pgErr.Message)
+			}
+		}
+		return nil, fmt.Errorf(message)
 	}
 
-	return employee, nil
+	return &employee, nil
 }
 
-func (r *EmployeeRepository) Create(employee Employee, role string) (int, error) {
+func (r *EmployeeRepository) Create(employee Employee, role string) (*int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
 	var id int
@@ -82,16 +92,16 @@ func (r *EmployeeRepository) Create(employee Employee, role string) (int, error)
 		employee.IdPosition,
 	).Scan(&id)
 	if err != nil {
-		return -1, err
+		return nil, err
 	}
 
-	return id, nil
+	return &id, nil
 }
 
-func (r *EmployeeRepository) Update(employee Employee, role string) (Employee, error) {
+func (r *EmployeeRepository) Update(employee Employee, role string) (*Employee, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return Employee{}, fmt.Errorf("failed to get db pool: %w", err)
+		return nil, fmt.Errorf("failed to get db pool: %w", err)
 	}
 
 	const queryUpdate = `
@@ -121,11 +131,11 @@ func (r *EmployeeRepository) Update(employee Employee, role string) (Employee, e
 		employee.ID,
 	)
 	if err != nil {
-		return Employee{}, fmt.Errorf("failed to update employee: %w", err)
+		return nil, fmt.Errorf("failed to update employee: %w", err)
 	}
 
 	if cmdTag.RowsAffected() == 0 {
-		return Employee{}, fmt.Errorf("no employee found with id %d", employee.ID)
+		return nil, fmt.Errorf("no employee found with id %d", employee.ID)
 	}
 
 	const querySelect = `
@@ -148,10 +158,10 @@ func (r *EmployeeRepository) Update(employee Employee, role string) (Employee, e
 		&updated.IdPosition,
 	)
 	if err != nil {
-		return Employee{}, fmt.Errorf("failed to fetch updated employee: %w", err)
+		return nil, fmt.Errorf("failed to fetch updated employee: %w", err)
 	}
 
-	return updated, nil
+	return &updated, nil
 }
 
 func (r *EmployeeRepository) Delete(id int, role string) error {

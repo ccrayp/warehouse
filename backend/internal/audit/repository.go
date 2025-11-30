@@ -3,7 +3,11 @@ package audit
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"warehouse/pkg/database"
+
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type AuditRepository struct {
@@ -16,17 +20,25 @@ func NewAuditRepository(db *database.Connector) *AuditRepository {
 	}
 }
 
-func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]Audit, error) {
+func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]Audit, string, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, role, err
 	}
 
 	var logs []Audit
 
-	rows, err := pool.Query(context.Background(), `SELECT *FROM audit_log ORDER BY changed_at DESC LIMIT $1 OFFSET $2`, limit, offset)
+	rows, err := pool.Query(context.Background(), `
+        SELECT * FROM audit_log ORDER BY changed_at DESC LIMIT $1 OFFSET $2`, limit, offset)
 	if err != nil {
-		return nil, err
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "42501" {
+				return nil, role, fmt.Errorf("permission denied: %s", pgErr.Message)
+			}
+			return nil, role, fmt.Errorf("PostgreSQL error %s: %s", pgErr.Code, pgErr.Message)
+		}
+		return nil, role, err
 	}
 	defer rows.Close()
 
@@ -34,26 +46,23 @@ func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]A
 		var log Audit
 		var oldData, newData []byte
 
-		err := rows.Scan(&log.ID, &log.TableName, &log.Action, &oldData, &newData, &log.ChangedBy, &log.ChangetAt)
-		if err != nil {
-			return nil, err
+		if err := rows.Scan(&log.ID, &log.TableName, &log.Action, &oldData, &newData, &log.ChangedBy, &log.ChangetAt); err != nil {
+			return nil, role, err
 		}
 
 		if len(oldData) > 0 {
 			var o any
-			if err := json.Unmarshal(oldData, &o); err == nil {
-				log.OldData = o
-			}
+			_ = json.Unmarshal(oldData, &o)
+			log.OldData = o
 		}
 		if len(newData) > 0 {
 			var n any
-			if err := json.Unmarshal(newData, &n); err == nil {
-				log.NewData = n
-			}
+			_ = json.Unmarshal(newData, &n)
+			log.NewData = n
 		}
 
 		logs = append(logs, log)
 	}
 
-	return logs, nil
+	return logs, role, nil
 }

@@ -49,13 +49,19 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 		return
 	}
 
-	logs, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
+	logs, role, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
 		return
 	}
 
+	if logs == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "query error", nil)
+		return
+	}
+
 	utils.RespondSuccess(ctx, http.StatusOK, "logs selected successfully", gin.H{
 		"logs": logs,
+		"role": role,
 	})
 }

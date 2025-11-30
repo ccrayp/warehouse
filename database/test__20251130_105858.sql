@@ -2,7 +2,7 @@
 -- PostgreSQL database cluster dump
 --
 
-\restrict 433fUdQoqjkp4R8axtWvJt5IQ8ngmtUZ1AxX5yNQEglyCAQoWMIPc4FS08Puvdq
+\restrict 7x0DYIziLOFlOr4B4m3YpfDKZPezY7k1HE5gxCNOJsoWiCHxin59jSANResqssN
 
 SET default_transaction_read_only = off;
 
@@ -33,7 +33,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 
 
 
-\unrestrict 433fUdQoqjkp4R8axtWvJt5IQ8ngmtUZ1AxX5yNQEglyCAQoWMIPc4FS08Puvdq
+\unrestrict 7x0DYIziLOFlOr4B4m3YpfDKZPezY7k1HE5gxCNOJsoWiCHxin59jSANResqssN
 
 --
 -- PostgreSQL database cluster dump complete
@@ -43,10 +43,10 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- PostgreSQL database dump
 --
 
-\restrict mFgaYlXRPyRorsFutgTX8eCde11CDUTNBCuzkANjEHlBG0uzlo0IXGt7dIj5ORP
+\restrict s3HcvXPRbtQ7JgKrUYB7YWvbafwp71wlBxbxzmPcTCbCAsjMHCf3Ymcg64Y9JcK
 
--- Dumped from database version 15.14 (Debian 15.14-1.pgdg13+1)
--- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg13+1)
+-- Dumped from database version 15.15 (Debian 15.15-1.pgdg13+1)
+-- Dumped by pg_dump version 15.15 (Debian 15.15-1.pgdg13+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -88,6 +88,60 @@ $$;
 
 
 ALTER FUNCTION public.audit_trigger() OWNER TO postgres;
+
+--
+-- Name: createdocument(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.createdocument(v_id_employee integer, v_id_document_category integer) RETURNS json
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM employee WHERE id = v_id_employee) THEN
+        RETURN generateResponse('error', 'EMP_NOT_FOUND', 'Сотрудник с таким идентификатором не найден');
+    ELSIF NOT EXISTS (
+        SELECT 1 
+        FROM employee e
+        JOIN position p ON e.id_position = p.id
+        WHERE e.id = v_id_employee AND p.name IN ('Начальник склада', 'Кладовщик')
+    ) THEN
+        RETURN generateResponse('error', 'NO_PERMISSION', 'Сотрудник не может создавать документы');
+	ELSIF NOT EXISTS (
+		SELECT 1 FROM document_category WHERE id = v_id_document_category
+	) THEN
+		RETURN generateResponse('error', 'EMP_NOT_FOUND', 'Категория документа с таким идентификатором не найдена');
+    END IF;
+
+    INSERT INTO document VALUES (DEFAULT, current_date, v_id_employee, v_id_document_category);
+
+    RETURN generateResponse('success', 'OK', 'Документ успешно создан');
+	
+EXCEPTION
+	WHEN others THEN RETURN generateResponse('error', 'DB_ERROR', SQLERRM);
+END;
+$$;
+
+
+ALTER FUNCTION public.createdocument(v_id_employee integer, v_id_document_category integer) OWNER TO postgres;
+
+--
+-- Name: generateresponse(text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.generateresponse(v_status text, v_code text, v_message text) RETURNS json
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	RETURN json_build_object(
+		'status', v_status,
+        'code', v_code,
+        'message', v_message
+	);
+END;
+$$;
+
+
+ALTER FUNCTION public.generateresponse(v_status text, v_code text, v_message text) OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -216,7 +270,8 @@ CREATE TABLE public.product (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
     id_product_category integer NOT NULL,
-    id_producer integer NOT NULL
+    id_producer integer NOT NULL,
+    image_url text DEFAULT 'placeholder.png'::text NOT NULL
 );
 
 
@@ -455,6 +510,55 @@ ALTER SEQUENCE public.gender_id_seq OWNED BY public.gender.id;
 
 
 --
+-- Name: producer; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.producer (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    id_address integer NOT NULL,
+    inn character varying(10) NOT NULL,
+    surname character varying(50) NOT NULL,
+    firstname character varying(50) NOT NULL,
+    patronymic character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.producer OWNER TO postgres;
+
+--
+-- Name: no_products; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.no_products AS
+ SELECT pt.id,
+    pt.name AS "Название товара",
+    pr.name AS "Название производителя"
+   FROM ((( SELECT product.id
+           FROM public.product
+        EXCEPT
+         SELECT b.id_product AS id
+           FROM (( SELECT document_content.id_batch,
+                        CASE
+                            WHEN (document_content.id_document IN ( SELECT document.id
+                               FROM public.document
+                              WHERE (document.id_document_category = 2))) THEN (document_content.quantity * '-1'::integer)
+                            ELSE document_content.quantity
+                        END AS quantity
+                   FROM public.document_content
+                  WHERE (NOT (document_content.id_document IN ( SELECT document.id
+                           FROM public.document
+                          WHERE (document.id_document_category = 3))))) t
+             JOIN public.batch b ON ((b.id = t.id_batch)))
+          GROUP BY b.id_product
+         HAVING (sum(t.quantity) > 0)) l
+     JOIN public.product pt ON ((pt.id = l.id)))
+     JOIN public.producer pr ON ((pr.id = pt.id_producer)));
+
+
+ALTER TABLE public.no_products OWNER TO postgres;
+
+--
 -- Name: position; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -488,23 +592,6 @@ ALTER TABLE public.position_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.position_id_seq OWNED BY public."position".id;
 
-
---
--- Name: producer; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.producer (
-    id integer NOT NULL,
-    name character varying(100) NOT NULL,
-    id_address integer NOT NULL,
-    inn character varying(10) NOT NULL,
-    surname character varying(50) NOT NULL,
-    firstname character varying(50) NOT NULL,
-    patronymic character varying(50) NOT NULL
-);
-
-
-ALTER TABLE public.producer OWNER TO postgres;
 
 --
 -- Name: producer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -582,6 +669,73 @@ ALTER TABLE public.product_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
+
+
+--
+-- Name: products_left; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.products_left AS
+ SELECT pt.id,
+    pt.name AS "Название товара",
+    pr.name AS "Название производителя",
+    COALESCE(l.product_left, (0)::bigint) AS "Остатки на складе"
+   FROM ((( SELECT b.id_product,
+            sum(t.quantity) AS product_left
+           FROM (( SELECT document_content.id_batch,
+                        CASE
+                            WHEN (document_content.id_document IN ( SELECT document.id
+                               FROM public.document
+                              WHERE (document.id_document_category = 2))) THEN (document_content.quantity * '-1'::integer)
+                            ELSE document_content.quantity
+                        END AS quantity
+                   FROM public.document_content
+                  WHERE (NOT (document_content.id_document IN ( SELECT document.id
+                           FROM public.document
+                          WHERE (document.id_document_category = 3))))) t
+             JOIN public.batch b ON ((b.id = t.id_batch)))
+          GROUP BY b.id_product) l
+     RIGHT JOIN public.product pt ON ((pt.id = l.id_product)))
+     JOIN public.producer pr ON ((pr.id = pt.id_producer)));
+
+
+ALTER TABLE public.products_left OWNER TO postgres;
+
+--
+-- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.refresh_tokens (
+    id integer NOT NULL,
+    token text NOT NULL,
+    username text NOT NULL,
+    role text NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.refresh_tokens OWNER TO postgres;
+
+--
+-- Name: refresh_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.refresh_tokens_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.refresh_tokens_id_seq OWNER TO postgres;
+
+--
+-- Name: refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.refresh_tokens_id_seq OWNED BY public.refresh_tokens.id;
 
 
 --
@@ -761,6 +915,13 @@ ALTER TABLE ONLY public.product_category ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: refresh_tokens id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens ALTER COLUMN id SET DEFAULT nextval('public.refresh_tokens_id_seq'::regclass);
+
+
+--
 -- Name: role id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -798,15 +959,49 @@ COPY public.address (id, subject, region, city, street, building) FROM stdin;
 --
 
 COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, changed_at) FROM stdin;
-1	role	INSERT	\N	{"id": 3, "name": "тест", "description": "тест"}	postgres	2025-11-22 09:49:45.652644
-2	role	DELETE	{"id": 3, "name": "тест", "description": "тест"}	\N	postgres	2025-11-22 09:50:54.929993
-3	role	UPDATE	{"id": 1, "name": "Модератор", "sys_role": null, "description": "Модерирование базы данных, выполнение CRUD операций"}	{"id": 1, "name": "Модератор", "sys_role": "moderator", "description": "Модерирование базы данных, выполнение CRUD операций"}	postgres	2025-11-22 10:15:56.404807
-4	role	UPDATE	{"id": 2, "name": "Менеджер", "sys_role": null, "description": "Пользование БД, использование готовых запросов"}	{"id": 2, "name": "Менеджер", "sys_role": "manager", "description": "Пользование БД, использование готовых запросов"}	postgres	2025-11-22 10:15:56.404807
-5	role	INSERT	\N	{"id": 4, "name": "Администратор", "sys_role": "admin", "description": "Администрирование база данные, полный доступ ко всем объектам"}	postgres	2025-11-22 10:15:56.404807
-6	position	INSERT	\N	{"id": 6, "name": "тест", "description": "тест"}	admin	2025-11-22 11:36:41.948224
-7	batch	INSERT	\N	{"id": 7, "cost": 0, "created_at": "2025-11-22T11:38:50.281229", "id_product": 1, "expiration_date": "2025-11-23", "production_date": "2025-11-22"}	manager	2025-11-22 11:38:50.281229
-8	batch	DELETE	{"id": 7, "cost": 0, "created_at": "2025-11-22T11:38:50.281229", "id_product": 1, "expiration_date": "2025-11-23", "production_date": "2025-11-22"}	\N	admin	2025-11-22 11:40:55.746764
-9	sys_user	UPDATE	{"id": 1, "login": "artem_volkov", "id_role": 1, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	postgres	2025-11-22 12:51:03.354121
+2	producer	UPDATE	{"id": 3, "inn": "8901234567", "name": "ООО \\"МикроТех\\"", "surname": "Белов", "firstname": "Дмитрий", "id_address": 8, "patronymic": "Игоревич"}	{"id": 3, "inn": "8901234567", "name": "ООО \\"МикроТех\\"", "surname": "Белочкин", "firstname": "Дмитрий", "id_address": 8, "patronymic": "Игоревич"}	postgres	2025-11-23 09:01:25.747191
+3	refresh_tokens	INSERT	\N	{"id": 5, "role": "admin", "token": "cba4fd00c94d24c294c03e229c32c26a883f21d7b64090e1b4e8c84b7fea8d77", "username": "roman", "created_at": "2025-11-26T13:44:34.193637"}	admin	2025-11-26 13:44:34.193637
+4	refresh_tokens	INSERT	\N	{"id": 6, "role": "admin", "token": "331f7d0e39b7208afda01cc0de9c9eee633ba0b8ab4e593ea5290ca95d978007", "username": "roman", "created_at": "2025-11-26T13:53:17.617212"}	admin	2025-11-26 13:53:17.617212
+5	refresh_tokens	INSERT	\N	{"id": 7, "role": "admin", "token": "94b73e8c98bd3c09f277f15c0bc6b5d25bc139c87dc067cf3e1061a39b76c68a", "username": "roman", "created_at": "2025-11-26T13:53:20.513858"}	admin	2025-11-26 13:53:20.513858
+6	refresh_tokens	INSERT	\N	{"id": 8, "role": "admin", "token": "49daff6915a3f11892764200b755529cf7a0e3835acce53083d255d6c0ec3229", "username": "roman", "created_at": "2025-11-26T13:53:21.423941"}	admin	2025-11-26 13:53:21.423941
+7	sys_user	UPDATE	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2b$12$A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6 "}	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$rgYYBEQoDW9f3dxPAgweruahkWXVL/EaX85oJaTY.SxpLHVhrRWsC"}	postgres	2025-11-26 14:10:46.647639
+8	sys_user	UPDATE	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2a$10$FVCCd92Vbpubj1004.Df8eVP4LVbyttxm1wXserInQnEbHcE5oFLm"}	postgres	2025-11-26 14:10:46.647639
+9	refresh_tokens	INSERT	\N	{"id": 9, "role": "admin", "token": "943f03ab3a4f25a87cc71e5816dc1cadb987c215fb5ac55def363a9ee92bacbc", "username": "artem_volkov", "created_at": "2025-11-26T14:13:11.123677"}	admin	2025-11-26 14:13:11.123677
+10	refresh_tokens	INSERT	\N	{"id": 10, "role": "admin", "token": "97c6bfd5e9067a095070646cebe2751d3b3a7ada884fa670f0e55146a89a1d62", "username": "artem_volkov", "created_at": "2025-11-26T14:13:39.912611"}	admin	2025-11-26 14:13:39.912611
+11	refresh_tokens	DELETE	{"id": 10, "role": "admin", "token": "97c6bfd5e9067a095070646cebe2751d3b3a7ada884fa670f0e55146a89a1d62", "username": "artem_volkov", "created_at": "2025-11-26T14:13:39.912611"}	\N	admin	2025-11-26 14:14:54.969474
+12	refresh_tokens	INSERT	\N	{"id": 11, "role": "admin", "token": "1cbe2f88d2f2ae7f9f9830c50708a987b72746beb26f69714c481d4b68b2a63c", "username": "artem_volkov", "created_at": "2025-11-26T14:19:15.076778"}	admin	2025-11-26 14:19:15.076778
+13	refresh_tokens	INSERT	\N	{"id": 12, "role": "admin", "token": "4128f11f7639650ab58e66dc2de8c697259df3a0fff99ffefb1be1a135f82492", "username": "artem_volkov", "created_at": "2025-11-26T14:55:31.582029"}	admin	2025-11-26 14:55:31.582029
+14	refresh_tokens	INSERT	\N	{"id": 13, "role": "admin", "token": "ca2cf4331fb90f0dba3b72d21b2619f4c94e05806e17cc725f32d31db19b9639", "username": "artem_volkov", "created_at": "2025-11-26T15:00:45.651163"}	admin	2025-11-26 15:00:45.651163
+15	refresh_tokens	INSERT	\N	{"id": 14, "role": "admin", "token": "e69760612a8e12fc6b4c594aa6c91d43f360c7f741c3dc8d47a2b1f0d15d8012", "username": "artem_volkov", "created_at": "2025-11-27T06:29:01.211081"}	admin	2025-11-27 06:29:01.211081
+16	sys_user	INSERT	\N	{"id": 4, "login": "manager", "id_role": 2, "id_employee": 4, "password_hash": "$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu"}	postgres	2025-11-27 06:41:25.719506
+17	sys_user	INSERT	\N	{"id": 5, "login": "moderator", "id_role": 2, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	postgres	2025-11-27 06:41:25.719506
+18	sys_user	UPDATE	{"id": 5, "login": "moderator", "id_role": 2, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	{"id": 5, "login": "moderator", "id_role": 1, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	postgres	2025-11-27 06:41:43.393199
+19	refresh_tokens	INSERT	\N	{"id": 15, "role": "manager", "token": "a64ab6b5588249005d97f3620ffa83f3b6e2bf03e19463a0e5bffb667533caee", "username": "manager", "created_at": "2025-11-27T06:55:11.668623"}	manager	2025-11-27 06:55:11.668623
+20	refresh_tokens	INSERT	\N	{"id": 16, "role": "admin", "token": "938f447ec5bcc121a17ef5df648da8e40e4806bdae73462c2579e066e8d442a2", "username": "artem_volkov", "created_at": "2025-11-27T06:56:30.238745"}	admin	2025-11-27 06:56:30.238745
+21	refresh_tokens	INSERT	\N	{"id": 17, "role": "admin", "token": "10c6f457d5a4eea17421afbb0ba546956096905abded10a241a1330e31f1bf7a", "username": "artem_volkov", "created_at": "2025-11-27T07:09:46.021445"}	admin	2025-11-27 07:09:46.021445
+22	refresh_tokens	INSERT	\N	{"id": 18, "role": "manager", "token": "25d631c35949d6aea6bda090c8ba45265658fe0c16e37f0247e95e23c3f66776", "username": "manager", "created_at": "2025-11-27T07:12:43.617149"}	manager	2025-11-27 07:12:43.617149
+23	refresh_tokens	INSERT	\N	{"id": 19, "role": "manager", "token": "d369e960e74a00713ba90203a693fb21b2dda030689c52e1f698337c44a0980c", "username": "manager", "created_at": "2025-11-27T07:12:46.164956"}	manager	2025-11-27 07:12:46.164956
+24	refresh_tokens	INSERT	\N	{"id": 20, "role": "manager", "token": "5e6ba8e70891f90d174244ec3b80300f862a88a1116ccc2bfcdf19d4f73284e8", "username": "manager", "created_at": "2025-11-27T12:46:28.835829"}	manager	2025-11-27 12:46:28.835829
+25	refresh_tokens	DELETE	{"id": 20, "role": "manager", "token": "5e6ba8e70891f90d174244ec3b80300f862a88a1116ccc2bfcdf19d4f73284e8", "username": "manager", "created_at": "2025-11-27T12:46:28.835829"}	\N	admin	2025-11-27 14:41:24.553096
+26	refresh_tokens	INSERT	\N	{"id": 21, "role": "admin", "token": "c4047bf1b6a35318377d1d62e8c017eae155bef3a323ba8b3749df0c8f6e1d4e", "username": "manager", "created_at": "2025-11-27T14:42:41.252856"}	admin	2025-11-27 14:42:41.252856
+27	employee	INSERT	\N	{"id": 8, "inn": "111111111111", "surname": "test", "firstname": "test", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test", "id_position": 1, "phone_number": "1111111111111111"}	postgres	2025-11-27 15:27:41.815369
+28	sys_user	INSERT	\N	{"id": 6, "login": "admin", "id_role": 4, "id_employee": 2, "password_hash": "$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK"}	postgres	2025-11-27 15:37:02.562526
+29	refresh_tokens	INSERT	\N	{"id": 22, "role": "admin", "token": "a439faab054f288efe9c5355a01d02d21d61615c60a760b5aa0a7817e3de8413", "username": "admin", "created_at": "2025-11-27T15:37:15.190072"}	admin	2025-11-27 15:37:15.190072
+30	employee	DELETE	{"id": 8, "inn": "111111111111", "surname": "test", "firstname": "test", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test", "id_position": 1, "phone_number": "1111111111111111"}	\N	admin	2025-11-27 15:37:29.955842
+31	employee	INSERT	\N	{"id": 9, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-27 16:11:16.739013
+32	employee	DELETE	{"id": 9, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	\N	admin	2025-11-27 16:11:29.296145
+33	refresh_tokens	INSERT	\N	{"id": 23, "role": "admin", "token": "a64188161c526a29d54cf5007846a90dd8dd9567e8fed04aaa2a2a46dfb26ba8", "username": "admin", "created_at": "2025-11-28T08:31:54.748409"}	admin	2025-11-28 08:31:54.748409
+34	refresh_tokens	INSERT	\N	{"id": 24, "role": "admin", "token": "4641efb53de98e5bb5a3c97adb117e1336bd4b8ed70e5178d649132074425e5a", "username": "manager", "created_at": "2025-11-28T08:32:56.011581"}	admin	2025-11-28 08:32:56.011581
+35	refresh_tokens	INSERT	\N	{"id": 25, "role": "admin", "token": "9185d5b6e4de2a57af618f62cf5f5cde1719477e46834a4794941620275fe6ee", "username": "admin", "created_at": "2025-11-28T09:23:53.178776"}	admin	2025-11-28 09:23:53.178776
+36	employee	INSERT	\N	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 09:25:01.630915
+37	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 09:28:41.22616
+38	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 09:32:47.599062
+39	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 09:33:46.830059
+40	refresh_tokens	DELETE	{"id": 25, "role": "admin", "token": "9185d5b6e4de2a57af618f62cf5f5cde1719477e46834a4794941620275fe6ee", "username": "admin", "created_at": "2025-11-28T09:23:53.178776"}	\N	admin	2025-11-28 11:56:11.112342
+41	refresh_tokens	INSERT	\N	{"id": 26, "role": "admin", "token": "c93bd7b4e8e4f62db2eb2435e4e3ad002f45038ac88d01afb8e110d3065a186a", "username": "admin", "created_at": "2025-11-30T07:12:15.150566"}	admin	2025-11-30 07:12:15.150566
+42	refresh_tokens	DELETE	{"id": 26, "role": "admin", "token": "c93bd7b4e8e4f62db2eb2435e4e3ad002f45038ac88d01afb8e110d3065a186a", "username": "admin", "created_at": "2025-11-30T07:12:15.150566"}	\N	admin	2025-11-30 07:12:48.338728
+43	refresh_tokens	INSERT	\N	{"id": 27, "role": "admin", "token": "00633a60c1c4944e9f0d4fa9c1d42bab3dc4285613dfe830d2ca69ef64b2b4b1", "username": "manager", "created_at": "2025-11-30T07:32:39.664678"}	admin	2025-11-30 07:32:39.664678
+44	refresh_tokens	INSERT	\N	{"id": 28, "role": "admin", "token": "05910c7f2a0f650e7dc2d80ba4d7466d45678aa6e33ee453585057d99df4816b", "username": "manager", "created_at": "2025-11-30T07:44:25.200399"}	admin	2025-11-30 07:44:25.200399
 \.
 
 
@@ -831,6 +1026,9 @@ COPY public.document (id, date, id_employee, id_document_category) FROM stdin;
 1	2024-03-10	2	1
 2	2024-03-18	2	2
 3	2024-03-25	2	3
+4	2025-11-22	1	1
+5	2025-11-22	1	1
+6	2025-11-22	1	3
 \.
 
 
@@ -874,6 +1072,7 @@ COPY public.employee (id, surname, firstname, patronymic, id_gender, inn, phone_
 4	Орлов	Денис	Романович	1	525203456789	+7 911 234-56-78	4	1995-02-17	3
 5	Никитин	Петр	Алексеевич	1	525201987654	+7 911 765-43-21	5	1983-07-30	3
 1	Волчков	Артем	Дмитриевич	1	525201234567	+7 911 123-45-67	1	1985-05-12	1
+10	test1	test1	test1	1	111111111111	1111111111111111	1	2025-11-27	1
 \.
 
 
@@ -908,7 +1107,7 @@ COPY public."position" (id, name, description) FROM stdin;
 COPY public.producer (id, name, id_address, inn, surname, firstname, patronymic) FROM stdin;
 1	ООО "СтильДрев"	6	2547890123	Громов	Алексей	Викторович
 2	АО "БытМашПром"	7	6634517890	Захарова	Ольга	Николаевич
-3	ООО "МикроТех"	8	8901234567	Белов	Дмитрий	Игоревич
+3	ООО "МикроТех"	8	8901234567	Белочкин	Дмитрий	Игоревич
 \.
 
 
@@ -916,12 +1115,12 @@ COPY public.producer (id, name, id_address, inn, surname, firstname, patronymic)
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.product (id, name, id_product_category, id_producer) FROM stdin;
-1	Кухонный гарнитур "Уют"	1	1
-2	Стиральная машина "SM-5000"	2	2
-3	Материнская плата "Gamer XTREME"	3	3
-4	Офисное кресло "Director"	1	1
-5	Холодильник "Frost+ 300"	2	2
+COPY public.product (id, name, id_product_category, id_producer, image_url) FROM stdin;
+1	Кухонный гарнитур "Уют"	1	1	placeholder.png
+2	Стиральная машина "SM-5000"	2	2	placeholder.png
+3	Материнская плата "Gamer XTREME"	3	3	placeholder.png
+4	Офисное кресло "Director"	1	1	placeholder.png
+5	Холодильник "Frost+ 300"	2	2	placeholder.png
 \.
 
 
@@ -933,6 +1132,35 @@ COPY public.product_category (id, name) FROM stdin;
 1	Мебель
 2	Электроника
 3	Бытовая техника
+\.
+
+
+--
+-- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.refresh_tokens (id, token, username, role, created_at) FROM stdin;
+1	813c16031039ae8b4284501b980c8aada2a1a1bdce4070b7ed71f56c719b62a9	roman	admin	2025-11-26 13:41:27.891585
+5	cba4fd00c94d24c294c03e229c32c26a883f21d7b64090e1b4e8c84b7fea8d77	roman	admin	2025-11-26 13:44:34.193637
+6	331f7d0e39b7208afda01cc0de9c9eee633ba0b8ab4e593ea5290ca95d978007	roman	admin	2025-11-26 13:53:17.617212
+7	94b73e8c98bd3c09f277f15c0bc6b5d25bc139c87dc067cf3e1061a39b76c68a	roman	admin	2025-11-26 13:53:20.513858
+8	49daff6915a3f11892764200b755529cf7a0e3835acce53083d255d6c0ec3229	roman	admin	2025-11-26 13:53:21.423941
+9	943f03ab3a4f25a87cc71e5816dc1cadb987c215fb5ac55def363a9ee92bacbc	artem_volkov	admin	2025-11-26 14:13:11.123677
+11	1cbe2f88d2f2ae7f9f9830c50708a987b72746beb26f69714c481d4b68b2a63c	artem_volkov	admin	2025-11-26 14:19:15.076778
+12	4128f11f7639650ab58e66dc2de8c697259df3a0fff99ffefb1be1a135f82492	artem_volkov	admin	2025-11-26 14:55:31.582029
+13	ca2cf4331fb90f0dba3b72d21b2619f4c94e05806e17cc725f32d31db19b9639	artem_volkov	admin	2025-11-26 15:00:45.651163
+14	e69760612a8e12fc6b4c594aa6c91d43f360c7f741c3dc8d47a2b1f0d15d8012	artem_volkov	admin	2025-11-27 06:29:01.211081
+15	a64ab6b5588249005d97f3620ffa83f3b6e2bf03e19463a0e5bffb667533caee	manager	manager	2025-11-27 06:55:11.668623
+16	938f447ec5bcc121a17ef5df648da8e40e4806bdae73462c2579e066e8d442a2	artem_volkov	admin	2025-11-27 06:56:30.238745
+17	10c6f457d5a4eea17421afbb0ba546956096905abded10a241a1330e31f1bf7a	artem_volkov	admin	2025-11-27 07:09:46.021445
+18	25d631c35949d6aea6bda090c8ba45265658fe0c16e37f0247e95e23c3f66776	manager	manager	2025-11-27 07:12:43.617149
+19	d369e960e74a00713ba90203a693fb21b2dda030689c52e1f698337c44a0980c	manager	manager	2025-11-27 07:12:46.164956
+21	c4047bf1b6a35318377d1d62e8c017eae155bef3a323ba8b3749df0c8f6e1d4e	manager	admin	2025-11-27 14:42:41.252856
+22	a439faab054f288efe9c5355a01d02d21d61615c60a760b5aa0a7817e3de8413	admin	admin	2025-11-27 15:37:15.190072
+23	a64188161c526a29d54cf5007846a90dd8dd9567e8fed04aaa2a2a46dfb26ba8	admin	admin	2025-11-28 08:31:54.748409
+24	4641efb53de98e5bb5a3c97adb117e1336bd4b8ed70e5178d649132074425e5a	manager	admin	2025-11-28 08:32:56.011581
+27	00633a60c1c4944e9f0d4fa9c1d42bab3dc4285613dfe830d2ca69ef64b2b4b1	manager	admin	2025-11-30 07:32:39.664678
+28	05910c7f2a0f650e7dc2d80ba4d7466d45678aa6e33ee453585057d99df4816b	manager	admin	2025-11-30 07:44:25.200399
 \.
 
 
@@ -952,8 +1180,11 @@ COPY public.role (id, name, description, sys_role) FROM stdin;
 --
 
 COPY public.sys_user (id, login, password_hash, id_role, id_employee) FROM stdin;
-2	anna_sokolova	$2b$12$A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6 	2	2
-1	artem_volkov	$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q	4	1
+2	anna_sokolova	$2a$10$rgYYBEQoDW9f3dxPAgweruahkWXVL/EaX85oJaTY.SxpLHVhrRWsC	2	2
+1	artem_volkov	$2a$10$FVCCd92Vbpubj1004.Df8eVP4LVbyttxm1wXserInQnEbHcE5oFLm	4	1
+4	manager	$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu	2	4
+5	moderator	$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK	1	5
+6	admin	$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK	4	2
 \.
 
 
@@ -968,7 +1199,7 @@ SELECT pg_catalog.setval('public.address_id_seq', 15, true);
 -- Name: audit_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.audit_log_id_seq', 9, true);
+SELECT pg_catalog.setval('public.audit_log_id_seq', 44, true);
 
 
 --
@@ -996,14 +1227,14 @@ SELECT pg_catalog.setval('public.document_content_id_seq', 11, true);
 -- Name: document_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_id_seq', 3, true);
+SELECT pg_catalog.setval('public.document_id_seq', 6, true);
 
 
 --
 -- Name: employee_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.employee_id_seq', 7, true);
+SELECT pg_catalog.setval('public.employee_id_seq', 10, true);
 
 
 --
@@ -1042,6 +1273,13 @@ SELECT pg_catalog.setval('public.product_id_seq', 5, true);
 
 
 --
+-- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 28, true);
+
+
+--
 -- Name: role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1052,7 +1290,7 @@ SELECT pg_catalog.setval('public.role_id_seq', 4, true);
 -- Name: sys_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sys_user_id_seq', 2, true);
+SELECT pg_catalog.setval('public.sys_user_id_seq', 6, true);
 
 
 --
@@ -1173,6 +1411,22 @@ ALTER TABLE ONLY public.product_category
 
 ALTER TABLE ONLY public.product
     ADD CONSTRAINT product_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_token_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_token_key UNIQUE (token);
 
 
 --
@@ -1331,6 +1585,13 @@ CREATE TRIGGER audit_product_category AFTER INSERT OR DELETE OR UPDATE ON public
 
 
 --
+-- Name: refresh_tokens audit_refresh_tokens; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER audit_refresh_tokens AFTER INSERT OR DELETE OR UPDATE ON public.refresh_tokens FOR EACH ROW EXECUTE FUNCTION public.audit_trigger();
+
+
+--
 -- Name: role audit_role; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -1457,6 +1718,13 @@ ALTER TABLE ONLY public.sys_user
 
 
 --
+-- Name: FUNCTION generateresponse(v_status text, v_code text, v_message text); Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON FUNCTION public.generateresponse(v_status text, v_code text, v_message text) TO admin;
+
+
+--
 -- Name: TABLE address; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -1478,7 +1746,18 @@ GRANT SELECT,USAGE ON SEQUENCE public.address_id_seq TO manager;
 -- Name: TABLE audit_log; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.audit_log TO admin;
+GRANT SELECT,INSERT ON TABLE public.audit_log TO admin;
+GRANT INSERT ON TABLE public.audit_log TO moderator;
+GRANT INSERT ON TABLE public.audit_log TO manager;
+
+
+--
+-- Name: SEQUENCE audit_log_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.audit_log_id_seq TO admin;
+GRANT ALL ON SEQUENCE public.audit_log_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.audit_log_id_seq TO manager;
 
 
 --
@@ -1506,6 +1785,14 @@ GRANT ALL ON SEQUENCE public.batch_id_seq TO manager;
 GRANT ALL ON TABLE public.product TO admin;
 GRANT SELECT,UPDATE ON TABLE public.product TO moderator;
 GRANT SELECT,INSERT,UPDATE ON TABLE public.product TO manager;
+
+
+--
+-- Name: TABLE batches; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.batches TO manager;
+GRANT SELECT ON TABLE public.batches TO moderator;
 
 
 --
@@ -1579,12 +1866,39 @@ GRANT SELECT,USAGE ON SEQUENCE public.employee_id_seq TO manager;
 
 
 --
+-- Name: TABLE employees; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.employees TO admin;
+GRANT SELECT ON TABLE public.employees TO moderator;
+GRANT SELECT ON TABLE public.employees TO manager;
+
+
+--
 -- Name: TABLE gender; Type: ACL; Schema: public; Owner: postgres
 --
 
 GRANT SELECT ON TABLE public.gender TO admin;
 GRANT SELECT ON TABLE public.gender TO moderator;
 GRANT SELECT ON TABLE public.gender TO manager;
+
+
+--
+-- Name: TABLE producer; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.producer TO admin;
+GRANT SELECT ON TABLE public.producer TO moderator;
+GRANT SELECT,INSERT,UPDATE ON TABLE public.producer TO manager;
+
+
+--
+-- Name: TABLE no_products; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.no_products TO manager;
+GRANT SELECT ON TABLE public.no_products TO admin;
+GRANT SELECT ON TABLE public.no_products TO moderator;
 
 
 --
@@ -1603,15 +1917,6 @@ GRANT SELECT ON TABLE public."position" TO manager;
 GRANT ALL ON SEQUENCE public.position_id_seq TO admin;
 GRANT SELECT,USAGE ON SEQUENCE public.position_id_seq TO moderator;
 GRANT SELECT,USAGE ON SEQUENCE public.position_id_seq TO manager;
-
-
---
--- Name: TABLE producer; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.producer TO admin;
-GRANT SELECT ON TABLE public.producer TO moderator;
-GRANT SELECT,INSERT,UPDATE ON TABLE public.producer TO manager;
 
 
 --
@@ -1651,6 +1956,33 @@ GRANT ALL ON SEQUENCE public.product_id_seq TO manager;
 
 
 --
+-- Name: TABLE products_left; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.products_left TO admin;
+GRANT SELECT ON TABLE public.products_left TO moderator;
+GRANT SELECT ON TABLE public.products_left TO manager;
+
+
+--
+-- Name: TABLE refresh_tokens; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT,INSERT,DELETE ON TABLE public.refresh_tokens TO admin;
+GRANT INSERT,DELETE ON TABLE public.refresh_tokens TO moderator;
+GRANT INSERT,DELETE ON TABLE public.refresh_tokens TO manager;
+
+
+--
+-- Name: SEQUENCE refresh_tokens_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.refresh_tokens_id_seq TO admin;
+GRANT ALL ON SEQUENCE public.refresh_tokens_id_seq TO moderator;
+GRANT ALL ON SEQUENCE public.refresh_tokens_id_seq TO manager;
+
+
+--
 -- Name: TABLE role; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -1672,6 +2004,13 @@ GRANT ALL ON SEQUENCE public.sys_user_id_seq TO admin;
 
 
 --
+-- Name: TABLE system_users; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.system_users TO admin;
+
+
+--
 -- Name: batches_m; Type: MATERIALIZED VIEW DATA; Schema: public; Owner: postgres
 --
 
@@ -1682,5 +2021,5 @@ REFRESH MATERIALIZED VIEW public.batches_m;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict mFgaYlXRPyRorsFutgTX8eCde11CDUTNBCuzkANjEHlBG0uzlo0IXGt7dIj5ORP
+\unrestrict s3HcvXPRbtQ7JgKrUYB7YWvbafwp71wlBxbxzmPcTCbCAsjMHCf3Ymcg64Y9JcK
 

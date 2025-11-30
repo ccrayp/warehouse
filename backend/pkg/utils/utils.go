@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"warehouse/pkg/database"
 
 	"github.com/gin-gonic/gin"
@@ -82,4 +83,12 @@ func CheckFK(ctx *gin.Context, id int, table string, role string, db *database.C
 		return false
 	}
 	return true
+}
+
+func CheckPermissionDenied(err error, defautStatus int, defaultMessage string) (int, string) {
+	if strings.Contains(err.Error(), "42501") {
+		return http.StatusForbidden, "permission denied for table"
+	}
+
+	return defautStatus, defaultMessage
 }

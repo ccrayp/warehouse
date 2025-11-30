@@ -15,7 +15,7 @@ func NewAuthRepository(db *database.Connector) *AuthRepository {
 	}
 }
 
-func (r *AuthRepository) SaveRefreshToken(token, username string) error {
+func (r *AuthRepository) SaveRefreshToken(token, username, role string) error {
 	pool, err := r.Db.GetAdminPool()
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func (r *AuthRepository) SaveRefreshToken(token, username string) error {
 	_, err = pool.Exec(context.Background(),
 		`INSERT INTO refresh_tokens(token, username, role, created_at) 
          VALUES($1,$2,$3,NOW())`,
-		token, username, "admin",
+		token, username, role,
 	)
 	return err
 }
