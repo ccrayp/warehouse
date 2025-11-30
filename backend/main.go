@@ -7,6 +7,7 @@ import (
 	"warehouse/internal/auth"
 	"warehouse/internal/batch"
 	"warehouse/internal/employee"
+	"warehouse/internal/gender"
 	"warehouse/pkg/config"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
@@ -32,6 +33,7 @@ func main() {
 	audit.InitRoutes(s, db)
 	employee.InitRoutes(s, db)
 	batch.InitRoutes(s, db)
+	gender.InitRoutes(s, db)
 
 	s.Run(":8080")
 }
