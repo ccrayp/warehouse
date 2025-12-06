@@ -15,6 +15,7 @@ import (
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,10 +29,17 @@ func main() {
 
 	s := gin.Default()
 
+	s.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:8082"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
+
 	s.Static("/static", "/app/uploads")
 
-	s.GET("/auth/health-check", func(ctx *gin.Context) {
-		utils.RespondSuccess(ctx, http.StatusOK, "server is working correctly", gin.H{})
+	s.GET("/", func(ctx *gin.Context) {
+		utils.RespondSuccess(ctx, http.StatusOK, "server is working correctly", nil)
 	})
 
 	auth.InitRoutes(s, db)
