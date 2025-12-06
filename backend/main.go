@@ -9,13 +9,13 @@ import (
 	"warehouse/internal/employee"
 	"warehouse/internal/gender"
 	"warehouse/internal/product"
+	productcategory "warehouse/internal/product_category"
 	"warehouse/internal/role"
 	"warehouse/internal/sys_user"
 	"warehouse/pkg/config"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,13 +28,6 @@ func main() {
 	}
 
 	s := gin.Default()
-
-	s.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:8082"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-	}))
 
 	s.Static("/static", "/app/uploads")
 
@@ -50,6 +43,7 @@ func main() {
 	sys_user.InitRoutes(s, db)
 	role.InitRoutes(s, db)
 	product.InitRoutes(s, db)
+	productcategory.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

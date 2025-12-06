@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 	"warehouse/pkg/database"
 
 	"github.com/gin-gonic/gin"
@@ -12,33 +13,36 @@ import (
 )
 
 type Response struct {
-	Success  bool   `json:"success"`
-	Message  string `json:"message"`
-	Status   int    `json:"status"`
-	Data     any    `json:"data"`
-	Error    string `json:"error"`
-	Endpoint string `json:"endpoint"`
+	Success      bool   `json:"success"`
+	Message      string `json:"message"`
+	Status       int    `json:"status"`
+	Data         any    `json:"data"`
+	Error        string `json:"error"`
+	Endpoint     string `json:"endpoint"`
+	ResponseTime string `json:"response_time"`
 }
 
 func RespondSuccess(ctx *gin.Context, httpStatus int, message string, data any) {
 	ctx.JSON(http.StatusOK, Response{
-		Success:  true,
-		Message:  message,
-		Status:   httpStatus,
-		Data:     data,
-		Error:    "",
-		Endpoint: ctx.FullPath(),
+		Success:      true,
+		Message:      message,
+		Status:       httpStatus,
+		Data:         data,
+		Error:        "",
+		Endpoint:     ctx.FullPath(),
+		ResponseTime: time.Now().Local().Format("2006-01-02 15:04:05 MST"),
 	})
 }
 
 func RespondError(ctx *gin.Context, httpStatus int, error string, message string, requestedStructure any) {
 	ctx.JSON(httpStatus, Response{
-		Success:  false,
-		Message:  message,
-		Status:   httpStatus,
-		Data:     requestedStructure,
-		Error:    error,
-		Endpoint: ctx.FullPath(),
+		Success:      false,
+		Message:      message,
+		Status:       httpStatus,
+		Data:         requestedStructure,
+		Error:        error,
+		Endpoint:     ctx.FullPath(),
+		ResponseTime: time.Now().Local().Format("2006-01-02 15:04:05 MST"),
 	})
 }
 

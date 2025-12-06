@@ -27,8 +27,8 @@ services:
 
   server:
     build: ./backend
-    ports:
-      - "8081:8080"
+    # ports:
+    #   - "8081:8080"
     depends_on:
       - warehouse_db
     env_file:

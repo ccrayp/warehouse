@@ -23,6 +23,8 @@ FROM golang:1.25-alpine
 
 WORKDIR /app
 
+ENV TZ=Europe/Moscow
+
 # Копируем только бинарник
 COPY --from=builder /app/main .
 

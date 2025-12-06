@@ -2,19 +2,18 @@
 import { useEffect, useState } from "react";
 
 const API_URL = "http://localhost:8080/api/products?limit=100&offset=0";
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZhbGVudGluX2FkbWluIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzY1MDE0MjY4fQ.EIcRqKgCogSYDvBPVCCTR6PzRAVJBOBH5UVBCQwAJYs";
 
 function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState();
 
-  useEffect(() => {
-    async function loadProducts() {
+  async function loadProducts() {
       try {
         const response = await fetch(API_URL, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${TOKEN}`,
+            "Authorization": `Bearer ${token}`,
           },
         });
 
@@ -34,11 +33,22 @@ function App() {
       }
     }
 
+  useEffect(() => {
     loadProducts();
   }, []);
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f7f7f7", padding: "20px" }}>
+      <div>
+        <form>
+          <input onChange={(e) => {
+            setToken(e.target.value);
+          }} name="token" placeholder="Введите JWT_token"></input>
+        </form>
+      </div>
+      <div>
+        <button onClick={loadProducts}>Обновить</button>
+      </div>
       <h1>Товары</h1>
       {loading ? (
         <p>Загрузка...</p>
@@ -67,6 +77,8 @@ function App() {
                   style={{ width: "100%", height: "150px", objectFit: "contain", borderRadius: "4px", marginBottom: "10px" }}
                 />
                 <h3 style={{ fontSize: "16px", margin: 0 }}>{product.name}</h3>
+                <div>Категория: {product.id_product_category}</div>
+                <div>Производитель: {product.id_producer}</div>
               </div>
             );
           })}

@@ -113,15 +113,11 @@ func (h *ProductHandler) CreateProduct(ctx *gin.Context) {
 		return
 	}
 
-	exists := utils.CheckFK(ctx, req.IdProducer, "producer", claims.Role, h.productRepository.db)
-	if !exists {
-		utils.RespondError(ctx, http.StatusBadRequest, "producer with such id doesn't eixst", "producer with such id doesn't eixst", nil)
+	if !utils.CheckFK(ctx, req.IdProducer, "producer", claims.Role, h.productRepository.db) {
 		return
 	}
 
-	exists = utils.CheckFK(ctx, req.IdProductCategory, "product_category", claims.Role, h.productRepository.db)
-	if !exists {
-		utils.RespondError(ctx, http.StatusBadRequest, "product_category with such id doesn't eixst", "product_category with such id doesn't eixst", nil)
+	if !utils.CheckFK(ctx, req.IdProductCategory, "product_category", claims.Role, h.productRepository.db) {
 		return
 	}
 

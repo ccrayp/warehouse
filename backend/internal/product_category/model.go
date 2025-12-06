@@ -1,6 +1,5 @@
-package models
+package productcategory
 
-// product_category
 type ProductCategory struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
