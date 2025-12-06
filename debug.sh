@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Запуск Docker Compose..."
-docker-compose up -d
+docker-compose up --build -d
 
 echo "Контейнеры запущены!"
 docker ps

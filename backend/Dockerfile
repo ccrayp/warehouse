@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     -o main main.go
 
 # Финальная стадия - пустой образ
-FROM scratch
+FROM golang:1.25-alpine
 
 WORKDIR /app
 

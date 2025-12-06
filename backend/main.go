@@ -8,6 +8,9 @@ import (
 	"warehouse/internal/batch"
 	"warehouse/internal/employee"
 	"warehouse/internal/gender"
+	"warehouse/internal/product"
+	"warehouse/internal/role"
+	"warehouse/internal/sys_user"
 	"warehouse/pkg/config"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
@@ -25,6 +28,8 @@ func main() {
 
 	s := gin.Default()
 
+	s.Static("/static", "/app/uploads")
+
 	s.GET("/auth/health-check", func(ctx *gin.Context) {
 		utils.RespondSuccess(ctx, http.StatusOK, "server is working correctly", gin.H{})
 	})
@@ -34,6 +39,9 @@ func main() {
 	employee.InitRoutes(s, db)
 	batch.InitRoutes(s, db)
 	gender.InitRoutes(s, db)
+	sys_user.InitRoutes(s, db)
+	role.InitRoutes(s, db)
+	product.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

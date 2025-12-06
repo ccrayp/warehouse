@@ -43,13 +43,16 @@ services:
     depends_on:
       - warehouse_db
     env_file:
-       - ./backend/.env
+      - ./backend/.env
+    volumes:
+      - product_images:/app/uploads/products
     networks:
       - backend
 
 volumes:
   warehouse_db_data:
   pgadmin_data:
+  product_images:
 
 networks:
   backend:
