@@ -1,0 +1,1152 @@
+warehouse_db-1  | The files belonging to this database system will be owned by user "postgres".
+warehouse_db-1  | This user must also own the server process.
+warehouse_db-1  | 
+warehouse_db-1  | The database cluster will be initialized with locale "en_US.utf8".
+warehouse_db-1  | The default database encoding has accordingly been set to "UTF8".
+warehouse_db-1  | The default text search configuration will be set to "english".
+warehouse_db-1  | 
+warehouse_db-1  | Data page checksums are disabled.
+warehouse_db-1  | 
+warehouse_db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+warehouse_db-1  | creating subdirectories ... ok
+warehouse_db-1  | selecting dynamic shared memory implementation ... posix
+warehouse_db-1  | selecting default max_connections ... 100
+warehouse_db-1  | selecting default shared_buffers ... 128MB
+warehouse_db-1  | selecting default time zone ... Etc/UTC
+warehouse_db-1  | creating configuration files ... ok
+warehouse_db-1  | running bootstrap script ... ok
+warehouse_db-1  | performing post-bootstrap initialization ... ok
+warehouse_db-1  | syncing data to disk ... ok
+warehouse_db-1  | 
+warehouse_db-1  | 
+warehouse_db-1  | Success. You can now start the database server using:
+warehouse_db-1  | 
+warehouse_db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+warehouse_db-1  | 
+warehouse_db-1  | initdb: warning: enabling "trust" authentication for local connections
+warehouse_db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+warehouse_db-1  | waiting for server to start....2025-12-06 09:14:00.642 UTC [53] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-06 09:14:00.643 UTC [53] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-06 09:14:00.646 UTC [56] LOG:  database system was shut down at 2025-12-06 09:14:00 UTC
+warehouse_db-1  | 2025-12-06 09:14:00.649 UTC [53] LOG:  database system is ready to accept connections
+warehouse_db-1  |  done
+warehouse_db-1  | server started
+warehouse_db-1  | CREATE DATABASE
+warehouse_db-1  | 
+warehouse_db-1  | 
+warehouse_db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+warehouse_db-1  | 
+warehouse_db-1  | waiting for server to shut down....2025-12-06 09:14:00.800 UTC [53] LOG:  received fast shutdown request
+warehouse_db-1  | 2025-12-06 09:14:00.804 UTC [53] LOG:  aborting any active transactions
+warehouse_db-1  | 2025-12-06 09:14:00.805 UTC [53] LOG:  background worker "logical replication launcher" (PID 59) exited with exit code 1
+warehouse_db-1  | 2025-12-06 09:14:00.805 UTC [54] LOG:  shutting down
+warehouse_db-1  | 2025-12-06 09:14:00.809 UTC [54] LOG:  checkpoint starting: shutdown immediate
+warehouse_db-1  | 2025-12-06 09:14:00.844 UTC [54] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.024 s, total=0.039 s; sync files=301, longest=0.015 s, average=0.001 s; distance=4239 kB, estimate=4239 kB
+warehouse_db-1  | 2025-12-06 09:14:00.847 UTC [53] LOG:  database system is shut down
+warehouse_db-1  |  done
+warehouse_db-1  | server stopped
+warehouse_db-1  | 
+warehouse_db-1  | PostgreSQL init process complete; ready for start up.
+warehouse_db-1  | 
+warehouse_db-1  | 2025-12-06 09:14:00.909 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-06 09:14:00.909 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-06 09:14:00.909 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-06 09:14:00.911 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-06 09:14:00.912 UTC [69] LOG:  database system was shut down at 2025-12-06 09:14:00 UTC
+warehouse_db-1  | 2025-12-06 09:14:00.914 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-06 09:14:01.784 UTC [86] ERROR:  role "postgres" already exists
+warehouse_db-1  | 2025-12-06 09:14:01.784 UTC [86] STATEMENT:  CREATE ROLE postgres;
+warehouse_db-1  | 2025-12-06 09:19:01.017 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 09:19:28.016 UTC [67] LOG:  checkpoint complete: wrote 262 buffers (1.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=26.972 s, sync=0.016 s, total=26.999 s; sync files=153, longest=0.002 s, average=0.001 s; distance=1299 kB, estimate=1299 kB
+warehouse_db-1  | 2025-12-06 10:49:02.445 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 10:49:04.872 UTC [67] LOG:  checkpoint complete: wrote 24 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.405 s, sync=0.009 s, total=2.428 s; sync files=14, longest=0.007 s, average=0.001 s; distance=36 kB, estimate=1173 kB
+warehouse_db-1  | 2025-12-06 10:59:02.903 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 10:59:03.649 UTC [67] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.731 s, sync=0.005 s, total=0.747 s; sync files=8, longest=0.004 s, average=0.001 s; distance=9 kB, estimate=1056 kB
+warehouse_db-1  | 2025-12-06 11:09:02.749 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 11:09:03.597 UTC [67] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.831 s, sync=0.006 s, total=0.849 s; sync files=9, longest=0.005 s, average=0.001 s; distance=10 kB, estimate=952 kB
+warehouse_db-1  | 2025-12-06 11:14:02.595 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 11:14:03.466 UTC [67] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.840 s, sync=0.015 s, total=0.872 s; sync files=9, longest=0.011 s, average=0.002 s; distance=11 kB, estimate=858 kB
+warehouse_db-1  | 2025-12-06 11:24:02.675 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 11:24:03.742 UTC [67] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.048 s, sync=0.007 s, total=1.068 s; sync files=11, longest=0.005 s, average=0.001 s; distance=15 kB, estimate=773 kB
+warehouse_db-1  | 2025-12-06 12:14:03.551 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 12:14:04.293 UTC [67] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.728 s, sync=0.003 s, total=0.742 s; sync files=8, longest=0.002 s, average=0.001 s; distance=13 kB, estimate=697 kB
+warehouse_db-1  | 2025-12-06 12:29:03.513 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 12:29:04.664 UTC [67] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.130 s, sync=0.010 s, total=1.152 s; sync files=12, longest=0.009 s, average=0.001 s; distance=15 kB, estimate=629 kB
+warehouse_db-1  | 2025-12-06 12:34:22.256 UTC [733] ERROR:  update or delete on table "product_category" violates foreign key constraint "product_id_product_category_fkey" on table "product"
+warehouse_db-1  | 2025-12-06 12:34:22.256 UTC [733] DETAIL:  Key (id)=(1) is still referenced from table "product".
+warehouse_db-1  | 2025-12-06 12:34:22.256 UTC [733] STATEMENT:  DELETE FROM product_category
+warehouse_db-1  | 2025-12-06 12:39:03.830 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 12:39:04.378 UTC [67] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.523 s, sync=0.005 s, total=0.549 s; sync files=6, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=567 kB
+warehouse_db-1  | 2025-12-06 13:14:03.882 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:14:05.141 UTC [67] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.248 s, sync=0.003 s, total=1.260 s; sync files=13, longest=0.002 s, average=0.001 s; distance=8 kB, estimate=511 kB
+warehouse_db-1  | 2025-12-06 13:14:43.161 UTC [862] ERROR:  duplicate key value violates unique constraint "product_category_name_key"
+warehouse_db-1  | 2025-12-06 13:14:43.161 UTC [862] DETAIL:  Key (name)=(Посуда) already exists.
+warehouse_db-1  | 2025-12-06 13:14:43.161 UTC [862] STATEMENT:  INSERT INTO product_category (name) VALUES ($1) RETURNING id
+warehouse_db-1  | 2025-12-06 13:15:27.970 UTC [862] ERROR:  duplicate key value violates unique constraint "product_category_name_key"
+warehouse_db-1  | 2025-12-06 13:15:27.970 UTC [862] DETAIL:  Key (name)=(Placehold) already exists.
+warehouse_db-1  | 2025-12-06 13:15:27.970 UTC [862] STATEMENT:  UPDATE product_category SET name = $1
+warehouse_db-1  | 2025-12-06 13:16:22.364 UTC [862] ERROR:  duplicate key value violates unique constraint "product_category_name_key"
+warehouse_db-1  | 2025-12-06 13:16:22.364 UTC [862] DETAIL:  Key (name)=(Посуд) already exists.
+warehouse_db-1  | 2025-12-06 13:16:22.364 UTC [862] STATEMENT:  UPDATE product_category SET name = $1
+warehouse_db-1  | 2025-12-06 13:19:03.249 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:19:03.999 UTC [67] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.731 s, sync=0.005 s, total=0.751 s; sync files=8, longest=0.004 s, average=0.001 s; distance=7 kB, estimate=461 kB
+warehouse_db-1  | 2025-12-06 13:24:04.104 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:24:04.547 UTC [67] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.421 s, sync=0.004 s, total=0.444 s; sync files=5, longest=0.003 s, average=0.001 s; distance=5 kB, estimate=415 kB
+warehouse_db-1  | 2025-12-06 13:39:04.815 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:39:06.411 UTC [67] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.573 s, sync=0.009 s, total=1.597 s; sync files=12, longest=0.007 s, average=0.001 s; distance=61 kB, estimate=380 kB
+warehouse_db-1  | 2025-12-06 13:39:16.688 UTC [368] ERROR:  column "exiration_date" does not exist at character 43
+warehouse_db-1  | 2025-12-06 13:39:16.688 UTC [368] HINT:  Perhaps you meant to reference the column "batch.expiration_date".
+warehouse_db-1  | 2025-12-06 13:39:16.688 UTC [368] STATEMENT:  SELECT * FROM batch WHERE CURRENT_DATE >= exiration_date
+warehouse_db-1  | 2025-12-06 13:44:04.515 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:44:04.746 UTC [67] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.212 s, sync=0.003 s, total=0.232 s; sync files=1, longest=0.003 s, average=0.003 s; distance=7 kB, estimate=343 kB
+warehouse_db-1  | 2025-12-06 13:46:00.509 UTC [368] ERROR:  syntax error at or near "SELECT" at character 21
+warehouse_db-1  | 2025-12-06 13:46:00.509 UTC [368] STATEMENT:  SELECT * FROM batch
+warehouse_db-1  | 	SELECT * FROM document
+warehouse_db-1  | 2025-12-06 13:49:04.845 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:49:07.375 UTC [67] LOG:  checkpoint complete: wrote 25 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.505 s, sync=0.010 s, total=2.531 s; sync files=25, longest=0.008 s, average=0.001 s; distance=56 kB, estimate=314 kB
+warehouse_db-1  | 2025-12-06 13:52:51.436 UTC [368] ERROR:  syntax error at or near ";" at character 146
+warehouse_db-1  | 2025-12-06 13:52:51.436 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 			id,
+warehouse_db-1  | 			id_document,
+warehouse_db-1  | 			id_batch,
+warehouse_db-1  | 			CASE
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN quantityt * -1;
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN quantityt;
+warehouse_db-1  | 			END
+warehouse_db-1  | 		FROM document_content AS dc
+warehouse_db-1  | 		JOIN batch AS b
+warehouse_db-1  | 			ON dc.id_batch = b.id
+warehouse_db-1  | 		WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 2025-12-06 13:53:05.581 UTC [368] ERROR:  syntax error at or near ";" at character 145
+warehouse_db-1  | 2025-12-06 13:53:05.581 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 			id,
+warehouse_db-1  | 			id_document,
+warehouse_db-1  | 			id_batch,
+warehouse_db-1  | 			CASE
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN quantity * -1;
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN quantity;
+warehouse_db-1  | 			END
+warehouse_db-1  | 		FROM document_content AS dc
+warehouse_db-1  | 		JOIN batch AS b
+warehouse_db-1  | 			ON dc.id_batch = b.id
+warehouse_db-1  | 		WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 2025-12-06 13:53:19.755 UTC [368] ERROR:  syntax error at or near "FROM" at character 259
+warehouse_db-1  | 2025-12-06 13:53:19.755 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 			id,
+warehouse_db-1  | 			id_document,
+warehouse_db-1  | 			id_batch,
+warehouse_db-1  | 			CASE
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN quantity * -1
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN quantity
+warehouse_db-1  | 			END AS quantity;
+warehouse_db-1  | 		FROM document_content AS dc
+warehouse_db-1  | 		JOIN batch AS b
+warehouse_db-1  | 			ON dc.id_batch = b.id
+warehouse_db-1  | 		WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 2025-12-06 13:53:26.595 UTC [368] ERROR:  column reference "id" is ambiguous at character 10
+warehouse_db-1  | 2025-12-06 13:53:26.595 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 			id,
+warehouse_db-1  | 			id_document,
+warehouse_db-1  | 			id_batch,
+warehouse_db-1  | 			CASE
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN quantity * -1
+warehouse_db-1  | 				WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN quantity
+warehouse_db-1  | 			END AS quantity
+warehouse_db-1  | 		FROM document_content AS dc
+warehouse_db-1  | 		JOIN batch AS b
+warehouse_db-1  | 			ON dc.id_batch = b.id
+warehouse_db-1  | 		WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 2025-12-06 13:54:04.359 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 13:54:05.636 UTC [67] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.259 s, sync=0.005 s, total=1.277 s; sync files=13, longest=0.004 s, average=0.001 s; distance=9 kB, estimate=284 kB
+warehouse_db-1  | 2025-12-06 13:54:42.388 UTC [368] ERROR:  subquery in FROM must have an alias at character 47
+warehouse_db-1  | 2025-12-06 13:54:42.388 UTC [368] HINT:  For example, FROM (SELECT ...) [AS] foo.
+warehouse_db-1  | 2025-12-06 13:54:42.388 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		)
+warehouse_db-1  | 	)
+warehouse_db-1  | 2025-12-06 13:55:00.333 UTC [368] ERROR:  subquery in FROM must have an alias at character 70
+warehouse_db-1  | 2025-12-06 13:55:00.333 UTC [368] HINT:  For example, FROM (SELECT ...) [AS] foo.
+warehouse_db-1  | 2025-12-06 13:55:00.333 UTC [368] STATEMENT:  SELECT id_batch FROM (
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		)
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 2025-12-06 13:55:04.625 UTC [368] ERROR:  subquery in FROM must have an alias at character 47
+warehouse_db-1  | 2025-12-06 13:55:04.625 UTC [368] HINT:  For example, FROM (SELECT ...) [AS] foo.
+warehouse_db-1  | 2025-12-06 13:55:04.625 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		)
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 2025-12-06 13:55:31.878 UTC [368] ERROR:  subquery in FROM must have an alias at character 47
+warehouse_db-1  | 2025-12-06 13:55:31.878 UTC [368] HINT:  For example, FROM (SELECT ...) [AS] foo.
+warehouse_db-1  | 2025-12-06 13:55:31.878 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		)
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 2025-12-06 13:55:46.298 UTC [368] ERROR:  subquery in FROM must have an alias at character 48
+warehouse_db-1  | 2025-12-06 13:55:46.298 UTC [368] HINT:  For example, FROM (SELECT ...) [AS] foo.
+warehouse_db-1  | 2025-12-06 13:55:46.298 UTC [368] STATEMENT:  
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		)
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 2025-12-06 13:56:00.665 UTC [368] ERROR:  column "t.id_batch" must appear in the GROUP BY clause or be used in an aggregate function at character 10
+warehouse_db-1  | 2025-12-06 13:56:00.665 UTC [368] STATEMENT:  
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 		id_batch,
+warehouse_db-1  | 		SUM(quantity) AS left
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 			SELECT
+warehouse_db-1  | 				dc.id,
+warehouse_db-1  | 				dc.id_document,
+warehouse_db-1  | 				dc.id_batch,
+warehouse_db-1  | 				CASE
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 					WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 				END AS quantity
+warehouse_db-1  | 			FROM document_content AS dc
+warehouse_db-1  | 			JOIN batch AS b
+warehouse_db-1  | 				ON dc.id_batch = b.id
+warehouse_db-1  | 			WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 2025-12-06 13:58:31.195 UTC [368] ERROR:  column b.left does not exist at character 45
+warehouse_db-1  | 2025-12-06 13:58:31.195 UTC [368] HINT:  Perhaps you meant to reference the column "t.left".
+warehouse_db-1  | 2025-12-06 13:58:31.195 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		b.id,
+warehouse_db-1  | 		b.expiration_date,
+warehouse_db-1  | 		p.name,
+warehouse_db-1  | 		b.left
+warehouse_db-1  | 	FROM batch AS b
+warehouse_db-1  | 	JOIN (
+warehouse_db-1  | 		SELECT
+warehouse_db-1  | 			id_batch AS id,
+warehouse_db-1  | 			SUM(quantity) AS left
+warehouse_db-1  | 		FROM (
+warehouse_db-1  | 				SELECT
+warehouse_db-1  | 					dc.id,
+warehouse_db-1  | 					dc.id_document,
+warehouse_db-1  | 					dc.id_batch,
+warehouse_db-1  | 					CASE
+warehouse_db-1  | 						WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 2 THEN dc.quantity * -1
+warehouse_db-1  | 						WHEN (SELECT id_document_category FROM document WHERE id = id_document) = 1 THEN dc.quantity
+warehouse_db-1  | 					END AS quantity
+warehouse_db-1  | 				FROM document_content AS dc
+warehouse_db-1  | 				JOIN batch AS b
+warehouse_db-1  | 					ON dc.id_batch = b.id
+warehouse_db-1  | 				WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 		) AS t
+warehouse_db-1  | 		GROUP BY id_batch
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 	USING(id)
+warehouse_db-1  | 	JOIN product AS p
+warehouse_db-1  | 	ON b.id_product = p.id
+warehouse_db-1  | 2025-12-06 14:01:26.521 UTC [368] ERROR:  column dc.quantit does not exist at character 224
+warehouse_db-1  | 2025-12-06 14:01:26.521 UTC [368] HINT:  Perhaps you meant to reference the column "dc.quantity".
+warehouse_db-1  | 2025-12-06 14:01:26.521 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 	    b.id AS batch_id,
+warehouse_db-1  | 	    b.expiration_date,
+warehouse_db-1  | 	    p.name AS product_name,
+warehouse_db-1  | 	    COALESCE(SUM(
+warehouse_db-1  | 	        CASE 
+warehouse_db-1  | 	            WHEN d.id_document_category = 1 THEN dc.quantity
+warehouse_db-1  | 	            WHEN d.id_document_category = 2 THEN -dc.quantit
+warehouse_db-1  | 	        END
+warehouse_db-1  | 	    ), 0) AS remaining_quantity
+warehouse_db-1  | 	FROM batch AS b
+warehouse_db-1  | 	JOIN product AS p
+warehouse_db-1  | 	    ON b.id_product = p.id
+warehouse_db-1  | 	LEFT JOIN document_content AS dc
+warehouse_db-1  | 	    ON dc.id_batch = b.id
+warehouse_db-1  | 	LEFT JOIN document AS d
+warehouse_db-1  | 	    ON d.id = dc.id_document
+warehouse_db-1  | 	WHERE b.expiration_date <= CURRENT_DATE
+warehouse_db-1  | 	GROUP BY b.id, b.expiration_date, p.name
+warehouse_db-1  | 	HAVING COALESCE(SUM(
+warehouse_db-1  | 	        CASE 
+warehouse_db-1  | 	            WHEN d.id_document_category = 1 THEN dc.quantity
+warehouse_db-1  | 	            WHEN d.id_document_category = 2 THEN -dc.quantity
+warehouse_db-1  | 	        END
+warehouse_db-1  | 	    ), 0) > 0
+warehouse_db-1  | 	ORDER BY b.expiration_date ASC;
+warehouse_db-1  | 	
+warehouse_db-1  | 2025-12-06 14:04:04.838 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:04:07.967 UTC [67] LOG:  checkpoint complete: wrote 31 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.110 s, sync=0.008 s, total=3.130 s; sync files=24, longest=0.006 s, average=0.001 s; distance=122 kB, estimate=267 kB
+warehouse_db-1  | 2025-12-06 14:04:46.628 UTC [368] ERROR:  column "refresh_tokens" does not exist at character 95
+warehouse_db-1  | 2025-12-06 14:04:46.628 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(changed_by, ', ')
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != refresh_tokens
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:05:03.975 UTC [368] ERROR:  syntax error at or near "DISTINCT" at character 31
+warehouse_db-1  | 2025-12-06 14:05:03.975 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		DISTINCT STRING_AGG(changed_by, ', ')
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens'
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:05:35.231 UTC [368] ERROR:  syntax error at or near "(" at character 75
+warehouse_db-1  | 2025-12-06 14:05:35.231 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ')
+warehouse_db-1  | 		COUNT(*) AS action_quatity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens'
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:08:01.679 UTC [368] ERROR:  syntax error at or near "'7 days'" at character 226
+warehouse_db-1  | 2025-12-06 14:08:01.679 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actor,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND CURRENT_TIMESTAMP - created_at < INTERVAL('7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:08:11.973 UTC [368] ERROR:  syntax error at or near "'7 days'" at character 227
+warehouse_db-1  | 2025-12-06 14:08:11.973 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actor,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (CURRENT_TIMESTAMP - created_at < INTERVAL('7 days'))
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:08:53.743 UTC [368] ERROR:  column "created_at" does not exist at character 186
+warehouse_db-1  | 2025-12-06 14:08:53.743 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (created_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:08:59.280 UTC [368] ERROR:  column "create_at" does not exist at character 186
+warehouse_db-1  | 2025-12-06 14:08:59.280 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (create_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 2025-12-06 14:09:23.818 UTC [368] ERROR:  syntax error at or near "SELECT" at character 263
+warehouse_db-1  | 2025-12-06 14:09:23.818 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (changed_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 	
+warehouse_db-1  | 	SELECT * FROM audit_log
+warehouse_db-1  | 2025-12-06 14:10:03.612 UTC [368] ERROR:  column "audit_log.changed_at" must appear in the GROUP BY clause or be used in an aggregate function at character 287
+warehouse_db-1  | 2025-12-06 14:10:03.612 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (changed_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 	ORDER BY table_name ASC, changed_at DESC
+warehouse_db-1  | 2025-12-06 14:10:13.736 UTC [368] ERROR:  column "audit_log.changed_at" must appear in the GROUP BY clause or be used in an aggregate function at character 131
+warehouse_db-1  | 2025-12-06 14:10:13.736 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity,
+warehouse_db-1  | 		changed_at
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (changed_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 	ORDER BY table_name ASC, changed_at DESC
+warehouse_db-1  | 2025-12-06 14:11:23.822 UTC [368] ERROR:  syntax error at or near "SELECT" at character 36
+warehouse_db-1  | 2025-12-06 14:11:23.822 UTC [368] STATEMENT:  CREATE VIEW report_tables_activity
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		action,
+warehouse_db-1  | 		STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors,
+warehouse_db-1  | 		COUNT(*) AS action_quantity
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens' AND (changed_at >= CURRENT_DATE - INTERVAL '7 days')
+warehouse_db-1  | 	GROUP BY table_name, action
+warehouse_db-1  | 	ORDER BY table_name ASC
+warehouse_db-1  | 2025-12-06 14:12:32.510 UTC [367] ERROR:  syntax error at or near "." at character 135
+warehouse_db-1  | 2025-12-06 14:12:32.510 UTC [367] STATEMENT:  DROP VIEW public.report_no_products;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_no_products
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name AS
+warehouse_db-1  | 	    pr.name AS
+warehouse_db-1  | 	   FROM ( SELECT product.id
+warehouse_db-1  | 	           FROM product
+warehouse_db-1  | 	        EXCEPT
+warehouse_db-1  | 	         SELECT b.id_product AS id
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product
+warehouse_db-1  | 	         HAVING sum(t.quantity) > 0) l
+warehouse_db-1  | 	     JOIN product pt ON pt.id = l.id
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_no_products
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO admin;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO moderator;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_no_products TO postgres;
+warehouse_db-1  | 2025-12-06 14:12:40.696 UTC [367] ERROR:  syntax error at or near "." at character 132
+warehouse_db-1  | 2025-12-06 14:12:40.696 UTC [367] STATEMENT:  DROP VIEW public.report_no_products;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_no_products
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name
+warehouse_db-1  | 	    pr.name
+warehouse_db-1  | 	   FROM ( SELECT product.id
+warehouse_db-1  | 	           FROM product
+warehouse_db-1  | 	        EXCEPT
+warehouse_db-1  | 	         SELECT b.id_product AS id
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product
+warehouse_db-1  | 	         HAVING sum(t.quantity) > 0) l
+warehouse_db-1  | 	     JOIN product pt ON pt.id = l.id
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_no_products
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO admin;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO moderator;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_no_products TO postgres;
+warehouse_db-1  | 2025-12-06 14:12:57.796 UTC [367] ERROR:  column "name" specified more than once
+warehouse_db-1  | 2025-12-06 14:12:57.796 UTC [367] STATEMENT:  DROP VIEW public.report_no_products;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_no_products
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name,
+warehouse_db-1  | 	    pr.name
+warehouse_db-1  | 	   FROM ( SELECT product.id
+warehouse_db-1  | 	           FROM product
+warehouse_db-1  | 	        EXCEPT
+warehouse_db-1  | 	         SELECT b.id_product AS id
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product
+warehouse_db-1  | 	         HAVING sum(t.quantity) > 0) l
+warehouse_db-1  | 	     JOIN product pt ON pt.id = l.id
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_no_products
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO admin;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO moderator;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_no_products TO postgres;
+warehouse_db-1  | 2025-12-06 14:13:19.260 UTC [367] ERROR:  syntax error at or near "pr" at character 146
+warehouse_db-1  | 2025-12-06 14:13:19.260 UTC [367] STATEMENT:  DROP VIEW public.report_no_products;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_no_products
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name AS product_name
+warehouse_db-1  | 	    pr.name AS producer_name
+warehouse_db-1  | 	   FROM ( SELECT product.id
+warehouse_db-1  | 	           FROM product
+warehouse_db-1  | 	        EXCEPT
+warehouse_db-1  | 	         SELECT b.id_product AS id
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product
+warehouse_db-1  | 	         HAVING sum(t.quantity) > 0) l
+warehouse_db-1  | 	     JOIN product pt ON pt.id = l.id
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_no_products
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO admin;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_no_products TO moderator;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_no_products TO postgres;
+warehouse_db-1  | 2025-12-06 14:14:05.114 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:14:10.431 UTC [67] LOG:  checkpoint complete: wrote 52 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=5.291 s, sync=0.006 s, total=5.317 s; sync files=27, longest=0.003 s, average=0.001 s; distance=290 kB, estimate=290 kB
+warehouse_db-1  | 2025-12-06 14:17:04.056 UTC [368] ERROR:  relation "addess" does not exist at character 15
+warehouse_db-1  | 2025-12-06 14:17:04.056 UTC [368] STATEMENT:  SELECT * FROM addess
+warehouse_db-1  | 2025-12-06 14:17:31.358 UTC [368] ERROR:  relation "addess" does not exist at character 55
+warehouse_db-1  | 2025-12-06 14:17:31.358 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		a.subject,
+warehouse_db-1  | 		COUNT(*)
+warehouse_db-1  | 	FROM producer AS pr
+warehouse_db-1  | 	JOIN addess AS a
+warehouse_db-1  | 		ON a.id = pr.id_address
+warehouse_db-1  | 	GROUP BY a.subject
+warehouse_db-1  | 2025-12-06 14:18:29.738 UTC [368] ERROR:  syntax error at or near "STRING_AGG" at character 52
+warehouse_db-1  | 2025-12-06 14:18:29.738 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		a.subject,
+warehouse_db-1  | 		COUNT(*) AS producer_quantity
+warehouse_db-1  | 		STRING_AGG(pr.name, ', ') AS producers
+warehouse_db-1  | 	FROM producer AS pr
+warehouse_db-1  | 	JOIN address AS a
+warehouse_db-1  | 		ON a.id = pr.id_address
+warehouse_db-1  | 	GROUP BY a.subject
+warehouse_db-1  | 2025-12-06 14:19:05.462 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:19:09.862 UTC [67] LOG:  checkpoint complete: wrote 43 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.379 s, sync=0.008 s, total=4.401 s; sync files=22, longest=0.005 s, average=0.001 s; distance=252 kB, estimate=286 kB
+warehouse_db-1  | 2025-12-06 14:22:19.743 UTC [368] ERROR:  cannot change name of view column "producers" to "producer_name"
+warehouse_db-1  | 2025-12-06 14:22:19.743 UTC [368] HINT:  Use ALTER VIEW ... RENAME COLUMN ... to change name of view column instead.
+warehouse_db-1  | 2025-12-06 14:22:19.743 UTC [368] STATEMENT:  CREATE OR REPLACE VIEW report_producer_subject_statistics AS
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 		a.subject,
+warehouse_db-1  | 		COUNT(*) AS producer_quantity,
+warehouse_db-1  | 		STRING_AGG(pr.name, ', ') AS producer_name
+warehouse_db-1  | 	FROM producer AS pr
+warehouse_db-1  | 	JOIN address AS a
+warehouse_db-1  | 		ON a.id = pr.id_address
+warehouse_db-1  | 	GROUP BY a.subject
+warehouse_db-1  | 2025-12-06 14:24:05.888 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:24:09.764 UTC [67] LOG:  checkpoint complete: wrote 38 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.849 s, sync=0.008 s, total=3.877 s; sync files=28, longest=0.006 s, average=0.001 s; distance=165 kB, estimate=274 kB
+warehouse_db-1  | 2025-12-06 14:24:14.026 UTC [368] ERROR:  column "created_at" does not exist at character 31
+warehouse_db-1  | 2025-12-06 14:24:14.026 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 	    DATE_TRUNC('hour', created_at) AS hour,
+warehouse_db-1  | 	    COUNT(*) AS action_count,
+warehouse_db-1  | 	    STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens'
+warehouse_db-1  | 	  AND created_at >= NOW() - INTERVAL '7 days'
+warehouse_db-1  | 	GROUP BY hour
+warehouse_db-1  | 	ORDER BY hour;
+warehouse_db-1  | 	
+warehouse_db-1  | 2025-12-06 14:27:02.555 UTC [368] ERROR:  relation "report_table_activity_per_hour" already exists
+warehouse_db-1  | 2025-12-06 14:27:02.555 UTC [368] STATEMENT:  CREATE VIEW report_table_activity_per_hour AS
+warehouse_db-1  | 	SELECT
+warehouse_db-1  | 	    EXTRACT(HOUR FROM changed_at) AS hour,
+warehouse_db-1  | 	    COUNT(*) AS action_count,
+warehouse_db-1  | 	    STRING_AGG(DISTINCT changed_by, ', ' ORDER BY changed_by) AS actors
+warehouse_db-1  | 	FROM audit_log
+warehouse_db-1  | 	WHERE table_name != 'refresh_tokens'
+warehouse_db-1  | 	  AND changed_at >= NOW() - INTERVAL '1 month'
+warehouse_db-1  | 	GROUP BY hour
+warehouse_db-1  | 	ORDER BY hour;
+warehouse_db-1  | 2025-12-06 14:29:05.868 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:29:08.903 UTC [67] LOG:  checkpoint complete: wrote 30 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.008 s, sync=0.008 s, total=3.036 s; sync files=21, longest=0.007 s, average=0.001 s; distance=138 kB, estimate=260 kB
+warehouse_db-1  | 2025-12-06 14:29:27.991 UTC [368] ERROR:  column d.id_emoloyee does not exist at character 53
+warehouse_db-1  | 2025-12-06 14:29:27.991 UTC [368] HINT:  Perhaps you meant to reference the column "d.id_employee".
+warehouse_db-1  | 2025-12-06 14:29:27.991 UTC [368] STATEMENT:  SELECT * 
+warehouse_db-1  | 	FROM document AS d
+warehouse_db-1  | 	JOIN employee AS e
+warehouse_db-1  | 		ON d.id_emoloyee = e.id
+warehouse_db-1  | 2025-12-06 14:29:40.361 UTC [368] ERROR:  relation "docuemnt" does not exist at character 15
+warehouse_db-1  | 2025-12-06 14:29:40.361 UTC [368] STATEMENT:  SELECT * FROM docuemnt
+warehouse_db-1  | 2025-12-06 14:34:06.005 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:34:06.231 UTC [67] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.207 s, sync=0.003 s, total=0.226 s; sync files=2, longest=0.003 s, average=0.002 s; distance=7 kB, estimate=235 kB
+warehouse_db-1  | 2025-12-06 14:35:43.405 UTC [368] ERROR:  syntax error at or near "(" at character 225
+warehouse_db-1  | 2025-12-06 14:35:43.405 UTC [368] STATEMENT:  SELECT
+warehouse_db-1  | 		e.surname || ' ' || e.firstname || ' ' || e.patronymic AS employee,
+warehouse_db-1  | 		p.name AS position,
+warehouse_db-1  | 		dc.name AS document_category,
+warehouse_db-1  | 		t.count AS documents
+warehouse_db-1  | 	FROM employee AS e
+warehouse_db-1  | 	JOIN (
+warehouse_db-1  | 		SELECT
+warehouse_db-1  | 			e.id,
+warehouse_db-1  | 			d.id_document_category
+warehouse_db-1  | 			COUNT(*)
+warehouse_db-1  | 		FROM document AS d
+warehouse_db-1  | 		JOIN employee AS e
+warehouse_db-1  | 			ON d.id_employee = e.id
+warehouse_db-1  | 		GROUP BY e.id, d.id_document_category
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 		ON e.id = t.id
+warehouse_db-1  | 	JOIN position AS p
+warehouse_db-1  | 		ON p.id = e.id_position
+warehouse_db-1  | 	JOIN document_category AS dc
+warehouse_db-1  | 		ON t.id_document_category = dc.id
+warehouse_db-1  | 2025-12-06 14:39:06.288 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:39:09.878 UTC [67] LOG:  checkpoint complete: wrote 35 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.558 s, sync=0.005 s, total=3.591 s; sync files=22, longest=0.003 s, average=0.001 s; distance=179 kB, estimate=229 kB
+warehouse_db-1  | 2025-12-06 14:43:36.988 UTC [368] ERROR:  relation "report_documents_by_employe" does not exist at character 15
+warehouse_db-1  | 2025-12-06 14:43:36.988 UTC [368] STATEMENT:  SELECT * FROM report_documents_by_employe
+warehouse_db-1  | 2025-12-06 14:47:09.880 UTC [368] ERROR:  syntax error at or near "SELECT" at character 46
+warehouse_db-1  | 2025-12-06 14:47:09.880 UTC [368] STATEMENT:  SELECT * FROM report_documents_by_employee
+warehouse_db-1  | 	
+warehouse_db-1  | 	 SELECT 
+warehouse_db-1  | 	    DENSE_RANK() OVER (ORDER BY e.id) AS employee_number,
+warehouse_db-1  | 	    ((e.surname || ' ' || e.firstname || ' ' || e.patronymic)) AS employee,
+warehouse_db-1  | 	    p.name AS position,
+warehouse_db-1  | 	    dc.name AS document_category,
+warehouse_db-1  | 	    t.count AS documents
+warehouse_db-1  | 	FROM employee e
+warehouse_db-1  | 	JOIN (
+warehouse_db-1  | 	    SELECT 
+warehouse_db-1  | 	        e_1.id AS employee_id,
+warehouse_db-1  | 	        d.id_document_category,
+warehouse_db-1  | 	        COUNT(*) AS count
+warehouse_db-1  | 	    FROM document d
+warehouse_db-1  | 	    JOIN employee e_1 ON d.id_employee = e_1.id
+warehouse_db-1  | 	    GROUP BY e_1.id, d.id_document_category
+warehouse_db-1  | 	) t ON e.id = t.employee_id
+warehouse_db-1  | 	JOIN position p ON p.id = e.id_position
+warehouse_db-1  | 	JOIN document_category dc ON t.id_document_category = dc.id
+warehouse_db-1  | 	ORDER BY t.count DESC, employee_number;
+warehouse_db-1  | 	
+warehouse_db-1  | 2025-12-06 14:48:04.985 UTC [368] ERROR:  relation "report_documents_by_employe" does not exist at character 15
+warehouse_db-1  | 2025-12-06 14:48:04.985 UTC [368] STATEMENT:  SELECT * FROM report_documents_by_employe
+warehouse_db-1  | 2025-12-06 14:54:07.108 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 14:54:10.043 UTC [67] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.915 s, sync=0.005 s, total=2.936 s; sync files=20, longest=0.004 s, average=0.001 s; distance=139 kB, estimate=220 kB
+warehouse_db-1  | 2025-12-06 16:33:35.665 UTC [368] ERROR:  syntax error at or near "." at character 42
+warehouse_db-1  | 2025-12-06 16:33:35.665 UTC [368] STATEMENT:   SELECT 
+warehouse_db-1  | 	 	ROW_NUMBER() OVER()
+warehouse_db-1  | 	 	employee.surname,
+warehouse_db-1  | 	    employee.firstname,
+warehouse_db-1  | 	    employee.patronymic,
+warehouse_db-1  | 	    employee.phone_number,
+warehouse_db-1  | 	    employee.birth_date
+warehouse_db-1  | 	   FROM employee;
+warehouse_db-1  | 2025-12-06 16:38:15.436 UTC [367] ERROR:  syntax error at or near "FROM" at character 383
+warehouse_db-1  | 2025-12-06 16:38:15.436 UTC [367] STATEMENT:  CREATE OR REPLACE VIEW public.report_employees
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT employee.surname,
+warehouse_db-1  | 	            employee.firstname,
+warehouse_db-1  | 	            employee.patronymic,
+warehouse_db-1  | 	            employee.phone_number,
+warehouse_db-1  | 	            employee.birth_date,
+warehouse_db-1  | 				position.name,
+warehouse_db-1  | 	           FROM employee
+warehouse_db-1  | 			   JOIN position
+warehouse_db-1  | 			   JOIN employee.id_position = position.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) t;
+warehouse_db-1  | 2025-12-06 16:38:25.446 UTC [367] ERROR:  syntax error at or near "FROM" at character 383
+warehouse_db-1  | 2025-12-06 16:38:25.446 UTC [367] STATEMENT:  CREATE OR REPLACE VIEW public.report_employees
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT employee.surname,
+warehouse_db-1  | 	            employee.firstname,
+warehouse_db-1  | 	            employee.patronymic,
+warehouse_db-1  | 	            employee.phone_number,
+warehouse_db-1  | 	            employee.birth_date,
+warehouse_db-1  | 				position.name,
+warehouse_db-1  | 	           FROM employee
+warehouse_db-1  | 			   JOIN position
+warehouse_db-1  | 			   ON employee.id_position = position.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) t;
+warehouse_db-1  | 2025-12-06 16:38:37.795 UTC [367] ERROR:  syntax error at or near "FROM" at character 383
+warehouse_db-1  | 2025-12-06 16:38:37.795 UTC [367] STATEMENT:  CREATE OR REPLACE VIEW public.report_employees
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT employee.surname,
+warehouse_db-1  | 	            employee.firstname,
+warehouse_db-1  | 	            employee.patronymic,
+warehouse_db-1  | 	            employee.phone_number,
+warehouse_db-1  | 	            employee.birth_date,
+warehouse_db-1  | 				position.name,
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON employee.id_position = position.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) t;
+warehouse_db-1  | 2025-12-06 16:38:59.116 UTC [368] ERROR:  syntax error at or near "FROM" at character 284
+warehouse_db-1  | 2025-12-06 16:38:59.116 UTC [368] STATEMENT:   SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT e.surname,
+warehouse_db-1  | 	            e.firstname,
+warehouse_db-1  | 	            e.patronymic,
+warehouse_db-1  | 	            e.phone_number,
+warehouse_db-1  | 	            e.birth_date,
+warehouse_db-1  | 				pn.name,
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON employee.id_position = position.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) t;
+warehouse_db-1  | 2025-12-06 16:39:04.830 UTC [368] ERROR:  invalid reference to FROM-clause entry for table "employee" at character 334
+warehouse_db-1  | 2025-12-06 16:39:04.830 UTC [368] HINT:  Perhaps you meant to reference the table alias "e".
+warehouse_db-1  | 2025-12-06 16:39:04.830 UTC [368] STATEMENT:   SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT e.surname,
+warehouse_db-1  | 	            e.firstname,
+warehouse_db-1  | 	            e.patronymic,
+warehouse_db-1  | 	            e.phone_number,
+warehouse_db-1  | 	            e.birth_date,
+warehouse_db-1  | 				pn.name
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON employee.id_position = position.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) t;
+warehouse_db-1  | 2025-12-06 16:39:08.597 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 16:39:11.613 UTC [67] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 1 WAL file(s) added, 0 removed, 0 recycled; write=2.928 s, sync=0.010 s, total=3.017 s; sync files=21, longest=0.008 s, average=0.001 s; distance=160 kB, estimate=214 kB
+warehouse_db-1  | 2025-12-06 16:39:28.549 UTC [368] ERROR:  missing FROM-clause entry for table "pn" at character 264
+warehouse_db-1  | 2025-12-06 16:39:28.549 UTC [368] STATEMENT:   SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT e.surname,
+warehouse_db-1  | 	            e.firstname,
+warehouse_db-1  | 	            e.patronymic,
+warehouse_db-1  | 	            e.phone_number,
+warehouse_db-1  | 	            e.birth_date,
+warehouse_db-1  | 				pn.name
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON e.id_position = p.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) AS t;
+warehouse_db-1  | 2025-12-06 16:39:35.672 UTC [368] ERROR:  invalid reference to FROM-clause entry for table "employee" at character 373
+warehouse_db-1  | 2025-12-06 16:39:35.672 UTC [368] HINT:  Perhaps you meant to reference the table alias "e".
+warehouse_db-1  | 2025-12-06 16:39:35.672 UTC [368] STATEMENT:   SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date
+warehouse_db-1  | 	   FROM ( SELECT e.surname,
+warehouse_db-1  | 	            e.firstname,
+warehouse_db-1  | 	            e.patronymic,
+warehouse_db-1  | 	            e.phone_number,
+warehouse_db-1  | 	            e.birth_date,
+warehouse_db-1  | 				p.name
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON e.id_position = p.id
+warehouse_db-1  | 	          ORDER BY employee.surname, employee.firstname, employee.patronymic) AS t;
+warehouse_db-1  | 2025-12-06 16:40:25.417 UTC [368] ERROR:  syntax error at or near "FROM" at character 141
+warehouse_db-1  | 2025-12-06 16:40:25.417 UTC [368] STATEMENT:   SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.surname,
+warehouse_db-1  | 	    t.firstname,
+warehouse_db-1  | 	    t.patronymic,
+warehouse_db-1  | 		t.name,
+warehouse_db-1  | 	    t.phone_number,
+warehouse_db-1  | 	    t.birth_date,
+warehouse_db-1  | 	   FROM ( SELECT e.surname,
+warehouse_db-1  | 	            e.firstname,
+warehouse_db-1  | 	            e.patronymic,
+warehouse_db-1  | 	            e.phone_number,
+warehouse_db-1  | 	            e.birth_date,
+warehouse_db-1  | 				p.name
+warehouse_db-1  | 	           FROM employee AS e
+warehouse_db-1  | 			   JOIN position AS p
+warehouse_db-1  | 			   ON e.id_position = p.id
+warehouse_db-1  | 	          ORDER BY e.surname, e.firstname, e.patronymic) AS t;
+warehouse_db-1  | 2025-12-06 16:44:08.717 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 16:44:11.667 UTC [67] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.925 s, sync=0.008 s, total=2.951 s; sync files=22, longest=0.006 s, average=0.001 s; distance=156 kB, estimate=209 kB
+warehouse_db-1  | 2025-12-06 16:49:08.771 UTC [67] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-06 16:49:13.380 UTC [67] LOG:  checkpoint complete: wrote 45 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.581 s, sync=0.006 s, total=4.609 s; sync files=27, longest=0.004 s, average=0.001 s; distance=278 kB, estimate=278 kB
+warehouse_db-1  | 
+warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+warehouse_db-1  | 
+warehouse_db-1  | 2025-12-07 06:36:52.074 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-07 06:36:52.075 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-07 06:36:52.075 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-07 06:36:52.080 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-07 06:36:52.089 UTC [28] LOG:  database system was interrupted; last known up at 2025-12-06 16:49:13 UTC
+warehouse_db-1  | 2025-12-07 06:36:52.445 UTC [28] LOG:  database system was not properly shut down; automatic recovery in progress
+warehouse_db-1  | 2025-12-07 06:36:52.448 UTC [28] LOG:  redo starts at 0/1C92358
+warehouse_db-1  | 2025-12-07 06:36:52.448 UTC [28] LOG:  invalid record length at 0/1C92440: wanted 24, got 0
+warehouse_db-1  | 2025-12-07 06:36:52.448 UTC [28] LOG:  redo done at 0/1C92408 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+warehouse_db-1  | 2025-12-07 06:36:52.466 UTC [26] LOG:  checkpoint starting: end-of-recovery immediate wait
+warehouse_db-1  | 2025-12-07 06:36:52.476 UTC [26] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.001 s, total=0.016 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+warehouse_db-1  | 2025-12-07 06:36:52.485 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-07 06:41:11.023 UTC [32] ERROR:  syntax error at or near "ORDER" at character 1119
+warehouse_db-1  | 2025-12-07 06:41:11.023 UTC [32] STATEMENT:  CREATE OR REPLACE VIEW public.report_products_left
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name AS product_name,
+warehouse_db-1  | 	    pr.name AS producer_name,
+warehouse_db-1  | 	    COALESCE(l.product_left, 0::bigint) AS left_quantity
+warehouse_db-1  | 	   FROM ( SELECT b.id_product,
+warehouse_db-1  | 	            sum(t.quantity) AS product_left
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product) l
+warehouse_db-1  | 	     RIGHT JOIN product pt ON pt.id = l.id_product
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 		 ORDER BY left_quantity DESC;
+warehouse_db-1  | 2025-12-07 06:41:35.387 UTC [32] ERROR:  syntax error at or near "ORDER" at character 1119
+warehouse_db-1  | 2025-12-07 06:41:35.387 UTC [32] STATEMENT:  CREATE OR REPLACE VIEW public.report_products_left
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT pt.id,
+warehouse_db-1  | 	    pt.name AS product_name,
+warehouse_db-1  | 	    pr.name AS producer_name,
+warehouse_db-1  | 	    COALESCE(l.product_left, 0::bigint) AS left_quantity
+warehouse_db-1  | 	   FROM ( SELECT b.id_product,
+warehouse_db-1  | 	            sum(t.quantity) AS product_left
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product) l
+warehouse_db-1  | 	     RIGHT JOIN product pt ON pt.id = l.id_product
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 		 ORDER BY left_quantity DESC;
+warehouse_db-1  | 2025-12-07 06:41:52.574 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 06:41:56.028 UTC [26] LOG:  checkpoint complete: wrote 34 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.442 s, sync=0.007 s, total=3.455 s; sync files=22, longest=0.005 s, average=0.001 s; distance=179 kB, estimate=179 kB
+warehouse_db-1  | 2025-12-07 06:43:36.892 UTC [32] ERROR:  column pt.id_product does not exist at character 147
+warehouse_db-1  | 2025-12-07 06:43:36.892 UTC [32] HINT:  Perhaps you meant to reference the column "l.id_product" or the column "pt.id_producer".
+warehouse_db-1  | 2025-12-07 06:43:36.892 UTC [32] STATEMENT:  DROP VIEW public.report_products_left;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_products_left
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    pt.id_product,
+warehouse_db-1  | 	    pt.name AS product_name,
+warehouse_db-1  | 	    pr.name AS producer_name,
+warehouse_db-1  | 	    COALESCE(l.product_left, 0::bigint) AS left_quantity
+warehouse_db-1  | 	   FROM ( SELECT b.id_product,
+warehouse_db-1  | 	            sum(t.quantity) AS product_left
+warehouse_db-1  | 	           FROM ( SELECT document_content.id_batch,
+warehouse_db-1  | 	                        CASE
+warehouse_db-1  | 	                            WHEN (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                               FROM document
+warehouse_db-1  | 	                              WHERE document.id_document_category = 2)) THEN document_content.quantity * '-1'::integer
+warehouse_db-1  | 	                            ELSE document_content.quantity
+warehouse_db-1  | 	                        END AS quantity
+warehouse_db-1  | 	                   FROM document_content
+warehouse_db-1  | 	                  WHERE NOT (document_content.id_document IN ( SELECT document.id
+warehouse_db-1  | 	                           FROM document
+warehouse_db-1  | 	                          WHERE document.id_document_category = 3))) t
+warehouse_db-1  | 	             JOIN batch b ON b.id = t.id_batch
+warehouse_db-1  | 	          GROUP BY b.id_product
+warehouse_db-1  | 	          ORDER BY (sum(t.quantity)) DESC) l
+warehouse_db-1  | 	     RIGHT JOIN product pt ON pt.id = l.id_product
+warehouse_db-1  | 	     JOIN producer pr ON pr.id = pt.id_producer;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_products_left
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_products_left TO admin;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_products_left TO moderator;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_products_left TO postgres;
+warehouse_db-1  | 2025-12-07 06:46:32.147 UTC [32] ERROR:  syntax error at or near "," at character 157
+warehouse_db-1  | 2025-12-07 06:46:32.147 UTC [32] STATEMENT:  DROP VIEW public.report_system_users;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_system_users
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number, t.* FROM (SELECT,
+warehouse_db-1  | 	    r.sys_role AS role,
+warehouse_db-1  | 	    e.surname,
+warehouse_db-1  | 	    e.firstname,
+warehouse_db-1  | 	    e.patronymic,
+warehouse_db-1  | 	    ps.name AS "position"
+warehouse_db-1  | 	   FROM employee e
+warehouse_db-1  | 	     JOIN sys_user su ON su.id_employee = e.id
+warehouse_db-1  | 	     JOIN "position" ps ON e.id_position = ps.id
+warehouse_db-1  | 	     JOIN role r ON su.id_role = r.id
+warehouse_db-1  | 	  ORDER BY r.sys_role) t;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_system_users
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_system_users TO admin;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_system_users TO postgres;
+warehouse_db-1  | 2025-12-07 06:46:48.814 UTC [32] ERROR:  syntax error at or near "," at character 160
+warehouse_db-1  | 2025-12-07 06:46:48.814 UTC [32] STATEMENT:  DROP VIEW public.report_system_users;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_system_users
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT 
+warehouse_db-1  | 	 row_number() OVER() AS number, 
+warehouse_db-1  | 	 t.* FROM (SELECT,
+warehouse_db-1  | 	    r.sys_role AS role,
+warehouse_db-1  | 	    e.surname,
+warehouse_db-1  | 	    e.firstname,
+warehouse_db-1  | 	    e.patronymic,
+warehouse_db-1  | 	    ps.name AS "position"
+warehouse_db-1  | 	   FROM employee e
+warehouse_db-1  | 	     JOIN sys_user su ON su.id_employee = e.id
+warehouse_db-1  | 	     JOIN "position" ps ON e.id_position = ps.id
+warehouse_db-1  | 	     JOIN role r ON su.id_role = r.id
+warehouse_db-1  | 	  ORDER BY r.sys_role) t;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_system_users
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 	GRANT SELECT ON TABLE public.report_system_users TO admin;
+warehouse_db-1  | 	GRANT ALL ON TABLE public.report_system_users TO postgres;
+warehouse_db-1  | 2025-12-07 06:46:52.047 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 06:46:55.683 UTC [26] LOG:  checkpoint complete: wrote 36 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.624 s, sync=0.006 s, total=3.637 s; sync files=23, longest=0.004 s, average=0.001 s; distance=233 kB, estimate=233 kB
+warehouse_db-1  | 2025-12-07 06:51:52.737 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 06:51:55.647 UTC [26] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.898 s, sync=0.006 s, total=2.910 s; sync files=23, longest=0.004 s, average=0.001 s; distance=165 kB, estimate=226 kB
+warehouse_db-1  | 2025-12-07 06:54:55.004 UTC [33] ERROR:  database "your_database" does not exist
+warehouse_db-1  | 2025-12-07 06:54:55.004 UTC [33] STATEMENT:  ALTER DATABASE your_database SET timezone TO 'Europe/Moscow';
+warehouse_db-1  | 	
+warehouse_db-1  | 2025-12-07 06:56:52.647 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 06:56:54.316 UTC [26] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.657 s, sync=0.007 s, total=1.670 s; sync files=16, longest=0.005 s, average=0.001 s; distance=18 kB, estimate=206 kB
+warehouse_db-1  | 2025-12-07 06:57:27.588 UTC [33] ERROR:  column "privilage_type" does not exist at character 43
+warehouse_db-1  | 2025-12-07 06:57:27.588 UTC [33] HINT:  Perhaps you meant to reference the column "role_table_grants.privilege_type".
+warehouse_db-1  | 2025-12-07 06:57:27.588 UTC [33] STATEMENT:  SELECT
+warehouse_db-1  | 		grantee,
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		STRING_AGG(privilage_type, ', ')
+warehouse_db-1  | 	FROM information_schema.role_table_grants
+warehouse_db-1  | 	GROUP BY grantee, table_name
+warehouse_db-1  | 2025-12-07 06:57:33.832 UTC [33] ERROR:  column "privelage_type" does not exist at character 43
+warehouse_db-1  | 2025-12-07 06:57:33.832 UTC [33] HINT:  Perhaps you meant to reference the column "role_table_grants.privilege_type".
+warehouse_db-1  | 2025-12-07 06:57:33.832 UTC [33] STATEMENT:  SELECT
+warehouse_db-1  | 		grantee,
+warehouse_db-1  | 		table_name,
+warehouse_db-1  | 		STRING_AGG(privelage_type, ', ')
+warehouse_db-1  | 	FROM information_schema.role_table_grants
+warehouse_db-1  | 	GROUP BY grantee, table_name
+warehouse_db-1  | 2025-12-07 07:01:52.313 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 07:01:54.929 UTC [26] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.597 s, sync=0.006 s, total=2.617 s; sync files=20, longest=0.004 s, average=0.001 s; distance=152 kB, estimate=200 kB
+warehouse_db-1  | 2025-12-07 07:03:42.864 UTC [32] ERROR:  column t.string_agg does not exist at character 133
+warehouse_db-1  | 2025-12-07 07:03:42.864 UTC [32] STATEMENT:  CREATE OR REPLACE VIEW public.report_grants
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.grantee,
+warehouse_db-1  | 	    t.table_name,
+warehouse_db-1  | 	    t.string_agg
+warehouse_db-1  | 	   FROM ( SELECT role_table_grants.grantee,
+warehouse_db-1  | 	            role_table_grants.table_name,
+warehouse_db-1  | 	            string_agg(role_table_grants.privilege_type::text, ', '::text) AS privileges
+warehouse_db-1  | 	           FROM information_schema.role_table_grants
+warehouse_db-1  | 	          WHERE role_table_grants.grantee::name = ANY (ARRAY['admin'::name, 'moderator'::name, 'manager'::name])
+warehouse_db-1  | 	          GROUP BY role_table_grants.grantee, role_table_grants.table_name
+warehouse_db-1  | 	          ORDER BY role_table_grants.grantee, role_table_grants.table_name) t;
+warehouse_db-1  | 2025-12-07 07:03:50.326 UTC [32] ERROR:  column t.string_agg does not exist at character 133
+warehouse_db-1  | 2025-12-07 07:03:50.326 UTC [32] STATEMENT:  CREATE OR REPLACE VIEW public.report_grants
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	     SELECT row_number() OVER () AS number,
+warehouse_db-1  | 	    t.grantee,
+warehouse_db-1  | 	    t.table_name,
+warehouse_db-1  | 	    t.string_agg
+warehouse_db-1  | 	   FROM ( SELECT role_table_grants.grantee,
+warehouse_db-1  | 	            role_table_grants.table_name,
+warehouse_db-1  | 	            string_agg(role_table_grants.privilege_type::text, ', '::text) AS "privileges"
+warehouse_db-1  | 	           FROM information_schema.role_table_grants
+warehouse_db-1  | 	          WHERE role_table_grants.grantee::name = ANY (ARRAY['admin'::name, 'moderator'::name, 'manager'::name])
+warehouse_db-1  | 	          GROUP BY role_table_grants.grantee, role_table_grants.table_name
+warehouse_db-1  | 	          ORDER BY role_table_grants.grantee, role_table_grants.table_name) t;
+warehouse_db-1  | 2025-12-07 07:06:46.759 UTC [32] ERROR:  syntax error at or near ";" at character 559
+warehouse_db-1  | 2025-12-07 07:06:46.759 UTC [32] STATEMENT:  DROP VIEW public.report_tables_activity;
+warehouse_db-1  | 	
+warehouse_db-1  | 	CREATE OR REPLACE VIEW public.report_tables_activity
+warehouse_db-1  | 	    AS
+warehouse_db-1  | 	    SELECT
+warehouse_db-1  | 		ROW_NUMBER() OVER() AS number,
+warehouse_db-1  | 		t.*
+warehouse_db-1  | 	FROM (
+warehouse_db-1  | 	 SELECT audit_log.table_name,
+warehouse_db-1  | 	    audit_log.action,
+warehouse_db-1  | 	    string_agg(DISTINCT audit_log.changed_by, ', '::text ORDER BY audit_log.changed_by) AS actors,
+warehouse_db-1  | 	    count(*) AS action_quantity
+warehouse_db-1  | 	   FROM audit_log
+warehouse_db-1  | 	  WHERE audit_log.table_name <> 'refresh_tokens'::text AND audit_log.changed_at >= (CURRENT_DATE - '7 days'::interval)
+warehouse_db-1  | 	  GROUP BY audit_log.table_name, audit_log.action
+warehouse_db-1  | 	  ORDER BY audit_log.table_name;) AS t;
+warehouse_db-1  | 	
+warehouse_db-1  | 	ALTER TABLE public.report_tables_activity
+warehouse_db-1  | 	    OWNER TO postgres;
+warehouse_db-1  | 2025-12-07 07:06:53.029 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 07:06:55.845 UTC [26] LOG:  checkpoint complete: wrote 28 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.803 s, sync=0.007 s, total=2.816 s; sync files=19, longest=0.004 s, average=0.001 s; distance=173 kB, estimate=198 kB
+warehouse_db-1  | 2025-12-07 07:36:43.867 UTC [98] ERROR:  permission denied for view report_system_users
+warehouse_db-1  | 2025-12-07 07:36:43.867 UTC [98] STATEMENT:  SELECT * FROM report_system_users
+warehouse_db-1  | 2025-12-07 07:37:06.084 UTC [100] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-07 07:37:06.084 UTC [100] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-07 07:37:06.107 UTC [101] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-07 07:37:06.107 UTC [101] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-07 07:40:34.617 UTC [102] ERROR:  column "public" does not exist at character 71
+warehouse_db-1  | 2025-12-07 07:40:34.617 UTC [102] STATEMENT:  SELECT
+warehouse_db-1  | 		table_name
+warehouse_db-1  | 	FROM information_schema.views
+warehouse_db-1  | 	WHERE table_schema = public
+warehouse_db-1  | 2025-12-07 07:41:54.397 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 07:41:56.590 UTC [26] LOG:  checkpoint complete: wrote 22 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.181 s, sync=0.006 s, total=2.194 s; sync files=16, longest=0.005 s, average=0.001 s; distance=189 kB, estimate=197 kB
+warehouse_db-1  | 2025-12-07 07:50:52.012 UTC [102] ERROR:  function subtring(information_schema.sql_identifier, integer, integer) does not exist at character 9
+warehouse_db-1  | 2025-12-07 07:50:52.012 UTC [102] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+warehouse_db-1  | 2025-12-07 07:50:52.012 UTC [102] STATEMENT:  SELECT
+warehouse_db-1  | 		SUBTRING(table_name, 1, 7)
+warehouse_db-1  | 	FROM information_schema.views
+warehouse_db-1  | 	WHERE table_schema = 'public'
+warehouse_db-1  | 	ORDER BY table_name ASC
+warehouse_db-1  | 2025-12-07 08:21:55.251 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 08:21:56.000 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.731 s, sync=0.005 s, total=0.749 s; sync files=8, longest=0.004 s, average=0.001 s; distance=11 kB, estimate=178 kB
+warehouse_db-1  | 2025-12-07 08:22:30.495 UTC [151] ERROR:  relation "report_document_by_employee" does not exist at character 15
+warehouse_db-1  | 2025-12-07 08:22:30.495 UTC [151] STATEMENT:  SELECT * FROM report_document_by_employee
+warehouse_db-1  | 2025-12-07 08:23:50.128 UTC [155] ERROR:  relation "report_product_left" does not exist at character 15
+warehouse_db-1  | 2025-12-07 08:23:50.128 UTC [155] STATEMENT:  SELECT * FROM report_product_left
+warehouse_db-1  | 2025-12-07 08:24:33.735 UTC [102] ERROR:  relation "products_left" does not exist at character 15
+warehouse_db-1  | 2025-12-07 08:24:33.735 UTC [102] STATEMENT:  SELECT * FROM products_left
+warehouse_db-1  | 2025-12-07 08:24:40.285 UTC [102] ERROR:  relation "product_left" does not exist at character 15
+warehouse_db-1  | 2025-12-07 08:24:40.285 UTC [102] STATEMENT:  SELECT * FROM product_left
+warehouse_db-1  | 2025-12-07 09:24:53.899 UTC [226] ERROR:  column "if" does not exist at character 30
+warehouse_db-1  | 2025-12-07 09:24:53.899 UTC [226] HINT:  Perhaps you meant to reference the column "producer.id".
+warehouse_db-1  | 2025-12-07 09:24:53.899 UTC [226] STATEMENT:  SELECT * FROM producer WHERE if=$1
+warehouse_db-1  | 2025-12-07 09:25:17.397 UTC [226] ERROR:  column "if" does not exist at character 30
+warehouse_db-1  | 2025-12-07 09:25:17.397 UTC [226] HINT:  Perhaps you meant to reference the column "producer.id".
+warehouse_db-1  | 2025-12-07 09:25:17.397 UTC [226] STATEMENT:  SELECT * FROM producer WHERE if=$1
+warehouse_db-1  | 2025-12-07 09:25:20.583 UTC [226] ERROR:  column "if" does not exist at character 30
+warehouse_db-1  | 2025-12-07 09:25:20.583 UTC [226] HINT:  Perhaps you meant to reference the column "producer.id".
+warehouse_db-1  | 2025-12-07 09:25:20.583 UTC [226] STATEMENT:  SELECT * FROM producer WHERE if=$1
+warehouse_db-1  | 2025-12-07 09:26:57.041 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 09:26:57.880 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.824 s, sync=0.004 s, total=0.840 s; sync files=9, longest=0.003 s, average=0.001 s; distance=12 kB, estimate=161 kB
+warehouse_db-1  | 2025-12-07 09:56:58.526 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 09:56:59.269 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.726 s, sync=0.004 s, total=0.743 s; sync files=8, longest=0.003 s, average=0.001 s; distance=12 kB, estimate=147 kB
+warehouse_db-1  | 2025-12-07 10:00:23.822 UTC [267] ERROR:  duplicate key value violates unique constraint "producer_inn_key"
+warehouse_db-1  | 2025-12-07 10:00:23.822 UTC [267] DETAIL:  Key (inn)=(0123456789) already exists.
+warehouse_db-1  | 2025-12-07 10:00:23.822 UTC [267] STATEMENT:  INSERT INTO producer (name, id_address, inn, surname, firstname, patronymic) VALUES ($1, $2, $3, $4, $5, $6)
+warehouse_db-1  | 2025-12-07 10:01:58.378 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 10:01:59.648 UTC [26] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.248 s, sync=0.006 s, total=1.271 s; sync files=13, longest=0.005 s, average=0.001 s; distance=15 kB, estimate=133 kB
+warehouse_db-1  | 2025-12-07 10:03:32.628 UTC [272] ERROR:  duplicate key value violates unique constraint "producer_inn_key"
+warehouse_db-1  | 2025-12-07 10:03:32.628 UTC [272] DETAIL:  Key (inn)=(0123456790) already exists.
+warehouse_db-1  | 2025-12-07 10:03:32.628 UTC [272] STATEMENT:  UPDATE producer SET name = $1, id_address = $2, inn = $3, surname = $4, firstname = $5, patronymic = $6
+warehouse_db-1  | 2025-12-07 10:06:58.755 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 10:07:00.663 UTC [26] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.884 s, sync=0.009 s, total=1.909 s; sync files=17, longest=0.007 s, average=0.001 s; distance=73 kB, estimate=127 kB
+warehouse_db-1  | 2025-12-07 12:58:35.797 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 12:58:36.644 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.831 s, sync=0.005 s, total=0.847 s; sync files=9, longest=0.004 s, average=0.001 s; distance=12 kB, estimate=116 kB
+warehouse_db-1  | 2025-12-07 13:43:36.365 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 13:43:37.012 UTC [26] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.624 s, sync=0.007 s, total=0.647 s; sync files=7, longest=0.004 s, average=0.001 s; distance=9 kB, estimate=105 kB
+warehouse_db-1  | 2025-12-07 13:46:17.104 UTC [361] ERROR:  relation "eport_employees" does not exist at character 15
+warehouse_db-1  | 2025-12-07 13:46:17.104 UTC [361] STATEMENT:  SELECT * FROM eport_employees
+warehouse_db-1  | 2025-12-07 14:03:36.362 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 14:03:37.083 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.714 s, sync=0.003 s, total=0.722 s; sync files=8, longest=0.001 s, average=0.001 s; distance=13 kB, estimate=96 kB
+warehouse_db-1  | 2025-12-07 14:08:36.182 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-07 14:08:36.824 UTC [26] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.622 s, sync=0.004 s, total=0.643 s; sync files=7, longest=0.003 s, average=0.001 s; distance=10 kB, estimate=87 kB

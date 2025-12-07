@@ -126,5 +126,5 @@ func (h *AuthHandler) Validate(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondSuccess(ctx, http.StatusOK, "tokena was validated", gin.H{"claims": claims})
+	utils.RespondSuccess(ctx, http.StatusOK, "token was validated", gin.H{"claims": claims})
 }

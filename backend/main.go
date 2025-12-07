@@ -8,6 +8,7 @@ import (
 	"warehouse/internal/batch"
 	"warehouse/internal/employee"
 	"warehouse/internal/gender"
+	"warehouse/internal/position"
 	"warehouse/internal/producer"
 	"warehouse/internal/product"
 	productcategory "warehouse/internal/product_category"
@@ -50,6 +51,7 @@ func main() {
 	productcategory.InitRoutes(s, db)
 	report.InitRoutes(s, db)
 	producer.InitRoutes(s, db)
+	position.InitRoutes(s, db)
 
 	s.Run(":8080")
 }
