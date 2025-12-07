@@ -23,7 +23,7 @@ func (r *ProductRepository) GetPagination(limit, offset int, role string) ([]Pro
 
 	var products []Product
 
-	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY id ASC")
+	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY id ASC LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
 		return nil, err
 	}
