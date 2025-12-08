@@ -1,7 +1,7 @@
 package position
 
 type Position struct {
-	Id          int    `json:"in"`
+	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }

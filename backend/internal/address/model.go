@@ -6,7 +6,7 @@ type Address struct {
 	Region   string `json:"region"`   // varchar(100)
 	City     string `json:"city"`     // varchar(100)
 	Street   string `json:"street"`   // varchar(100)
-	Building string `json:"building"` // varchar(100)
+	Building int    `json:"building"` // varchar(100)
 }
 
 type AddressRequest struct {
@@ -14,5 +14,5 @@ type AddressRequest struct {
 	Region   string `json:"region"`   // varchar(100)
 	City     string `json:"city"`     // varchar(100)
 	Street   string `json:"street"`   // varchar(100)
-	Building string `json:"building"` // varchar(100)
+	Building int    `json:"building"` // varchar(100)
 }

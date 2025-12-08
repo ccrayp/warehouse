@@ -98,7 +98,7 @@ func (r *EmployeeRepository) Create(employee Employee, role string) (*int, error
 	return &id, nil
 }
 
-func (r *EmployeeRepository) Update(employee Employee, role string) (*Employee, error) {
+func (r *EmployeeRepository) Update(employee Employee, id int, role string) (*Employee, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get db pool: %w", err)
@@ -128,7 +128,7 @@ func (r *EmployeeRepository) Update(employee Employee, role string) (*Employee, 
 		employee.IdAddress,
 		employee.BirthDate,
 		employee.IdPosition,
-		employee.ID,
+		id,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update employee: %w", err)
@@ -145,7 +145,7 @@ func (r *EmployeeRepository) Update(employee Employee, role string) (*Employee, 
 	`
 
 	var updated Employee
-	err = pool.QueryRow(context.Background(), querySelect, employee.ID).Scan(
+	err = pool.QueryRow(context.Background(), querySelect, id).Scan(
 		&updated.ID,
 		&updated.Surname,
 		&updated.Firstname,

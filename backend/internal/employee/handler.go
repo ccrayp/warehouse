@@ -160,8 +160,25 @@ func (h *EmployeeHandler) UpdateEmployee(ctx *gin.Context) {
 		return
 	}
 
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil || id < 0 {
+		utils.RespondError(ctx, http.StatusBadRequest, "invalid id", "invalid id", nil)
+		return
+	}
+
+	exists, err := utils.CheckExists(id, "employee", claims.Role, h.EmployeeRepository.db)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while exists check", nil)
+		return
+	}
+
+	if !exists {
+		utils.RespondError(ctx, http.StatusBadRequest, "employee with such id doesn't exist", "employee with such id doesn't exist", nil)
+		return
+	}
+
 	var employeeData Employee
-	err := ctx.BindJSON(&employeeData)
+	err = ctx.BindJSON(&employeeData)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "fail to bind employee", gin.H{
 			"required_data": Employee{},
@@ -184,7 +201,7 @@ func (h *EmployeeHandler) UpdateEmployee(ctx *gin.Context) {
 		return
 	}
 
-	employee, err := h.EmployeeRepository.Update(employeeData, claims.Role)
+	employee, err := h.EmployeeRepository.Update(employeeData, id, claims.Role)
 	if err != nil {
 		status, message := utils.CheckPermissionDenied(err, http.StatusBadRequest, "error while updating")
 		utils.RespondError(ctx, status, err.Error(), message, gin.H{

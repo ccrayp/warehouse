@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"warehouse/internal/address"
 	"warehouse/internal/audit"
 	"warehouse/internal/auth"
 	"warehouse/internal/batch"
@@ -52,6 +53,7 @@ func main() {
 	report.InitRoutes(s, db)
 	producer.InitRoutes(s, db)
 	position.InitRoutes(s, db)
+	address.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

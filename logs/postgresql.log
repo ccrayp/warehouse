@@ -1150,3 +1150,44 @@ warehouse_db-1  | 2025-12-07 14:03:36.362 UTC [26] LOG:  checkpoint starting: ti
 warehouse_db-1  | 2025-12-07 14:03:37.083 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.714 s, sync=0.003 s, total=0.722 s; sync files=8, longest=0.001 s, average=0.001 s; distance=13 kB, estimate=96 kB
 warehouse_db-1  | 2025-12-07 14:08:36.182 UTC [26] LOG:  checkpoint starting: time
 warehouse_db-1  | 2025-12-07 14:08:36.824 UTC [26] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.622 s, sync=0.004 s, total=0.643 s; sync files=7, longest=0.003 s, average=0.001 s; distance=10 kB, estimate=87 kB
+warehouse_db-1  | 
+warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+warehouse_db-1  | 
+warehouse_db-1  | 2025-12-08 05:46:18.248 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-08 05:46:18.249 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-08 05:46:18.249 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-08 05:46:18.253 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-08 05:46:18.257 UTC [28] LOG:  database system was interrupted; last known up at 2025-12-07 14:08:36 UTC
+warehouse_db-1  | 2025-12-08 05:46:18.702 UTC [28] LOG:  database system was not properly shut down; automatic recovery in progress
+warehouse_db-1  | 2025-12-08 05:46:18.704 UTC [28] LOG:  redo starts at 0/1DD3848
+warehouse_db-1  | 2025-12-08 05:46:18.704 UTC [28] LOG:  invalid record length at 0/1DD3930: wanted 24, got 0
+warehouse_db-1  | 2025-12-08 05:46:18.704 UTC [28] LOG:  redo done at 0/1DD38F8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+warehouse_db-1  | 2025-12-08 05:46:18.708 UTC [26] LOG:  checkpoint starting: end-of-recovery immediate wait
+warehouse_db-1  | 2025-12-08 05:46:18.720 UTC [26] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.001 s, total=0.014 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+warehouse_db-1  | 2025-12-08 05:46:18.731 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-08 05:47:00.116 UTC [36] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-08 05:47:00.116 UTC [36] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-08 05:47:00.141 UTC [37] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-08 05:47:00.141 UTC [37] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-08 05:47:13.317 UTC [38] ERROR:  relation "inforamation_schema.tables" does not exist at character 15
+warehouse_db-1  | 2025-12-08 05:47:13.317 UTC [38] STATEMENT:  SELECT * FROM inforamation_schema.tables
+warehouse_db-1  | 2025-12-08 05:47:27.713 UTC [41] FATAL:  password authentication failed for user "manager"
+warehouse_db-1  | 2025-12-08 05:47:27.713 UTC [41] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-08 05:47:27.738 UTC [42] FATAL:  password authentication failed for user "manager"
+warehouse_db-1  | 2025-12-08 05:47:27.738 UTC [42] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-08 05:48:03.495 UTC [43] ERROR:  relation "audit_logs" does not exist at character 15
+warehouse_db-1  | 2025-12-08 05:48:03.495 UTC [43] STATEMENT:  SELECT * FROM audit_logs
+warehouse_db-1  | 2025-12-08 05:48:06.789 UTC [43] ERROR:  permission denied for table audit_log
+warehouse_db-1  | 2025-12-08 05:48:06.789 UTC [43] STATEMENT:  SELECT * FROM audit_log
+warehouse_db-1  | 2025-12-08 05:48:22.199 UTC [43] ERROR:  permission denied for table refresh_tokens
+warehouse_db-1  | 2025-12-08 05:48:22.199 UTC [43] STATEMENT:  SELECT * FROM refresh_tokens
+warehouse_db-1  | 2025-12-08 05:51:18.689 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 05:51:19.547 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.821 s, sync=0.002 s, total=0.859 s; sync files=9, longest=0.001 s, average=0.001 s; distance=15 kB, estimate=15 kB
+warehouse_db-1  | 2025-12-08 05:56:18.631 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 05:56:19.156 UTC [26] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.520 s, sync=0.002 s, total=0.525 s; sync files=6, longest=0.002 s, average=0.001 s; distance=12 kB, estimate=14 kB
+warehouse_db-1  | 2025-12-08 06:10:19.590 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 06:10:20.036 UTC [26] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.435 s, sync=0.004 s, total=0.447 s; sync files=5, longest=0.003 s, average=0.001 s; distance=12 kB, estimate=14 kB
+warehouse_db-1  | 2025-12-08 06:38:50.677 UTC [91] ERROR:  syntax error at or near "SELECT" at character 42
+warehouse_db-1  | 2025-12-08 06:38:50.677 UTC [91] STATEMENT:  SELECT * FROM information_schema.tables
+warehouse_db-1  | 	
+warehouse_db-1  | 	SELECT * FROM address
