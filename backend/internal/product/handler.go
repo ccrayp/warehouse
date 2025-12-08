@@ -23,11 +23,6 @@ func NewProductHandler(db *database.Connector) *ProductHandler {
 }
 
 func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
-	claims := auth.GetClaims(ctx)
-	if claims == nil {
-		return
-	}
-
 	if ctx.Query("limit") == "" || ctx.Query("offset") == "" {
 		utils.RespondError(ctx, http.StatusBadRequest, "no limit of offset parameter", "no limit or offset parameter", nil)
 		return
@@ -45,7 +40,7 @@ func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
 		return
 	}
 
-	products, err := h.productRepository.GetPagination(limit, offset, claims.Role)
+	products, err := h.productRepository.GetPagination(limit, offset, "manager")
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return

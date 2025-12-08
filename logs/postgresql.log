@@ -1191,3 +1191,31 @@ warehouse_db-1  | 2025-12-08 06:38:50.677 UTC [91] ERROR:  syntax error at or ne
 warehouse_db-1  | 2025-12-08 06:38:50.677 UTC [91] STATEMENT:  SELECT * FROM information_schema.tables
 warehouse_db-1  | 	
 warehouse_db-1  | 	SELECT * FROM address
+warehouse_db-1  | 2025-12-08 07:16:37.426 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 07:16:38.491 UTC [26] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.044 s, sync=0.004 s, total=1.066 s; sync files=11, longest=0.003 s, average=0.001 s; distance=21 kB, estimate=21 kB
+warehouse_db-1  | 2025-12-08 07:31:37.735 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 07:31:38.550 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.810 s, sync=0.002 s, total=0.816 s; sync files=8, longest=0.001 s, average=0.001 s; distance=22 kB, estimate=22 kB
+warehouse_db-1  | 2025-12-08 08:16:38.065 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 08:16:38.861 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.714 s, sync=0.048 s, total=0.797 s; sync files=8, longest=0.038 s, average=0.006 s; distance=11 kB, estimate=21 kB
+warehouse_db-1  | 2025-12-08 09:01:39.651 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 09:01:40.621 UTC [26] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.943 s, sync=0.006 s, total=0.972 s; sync files=8, longest=0.004 s, average=0.001 s; distance=12 kB, estimate=20 kB
+warehouse_db-1  | 2025-12-08 09:51:40.306 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 09:51:41.065 UTC [26] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.731 s, sync=0.007 s, total=0.760 s; sync files=8, longest=0.004 s, average=0.001 s; distance=12 kB, estimate=19 kB
+warehouse_db-1  | 2025-12-08 09:53:03.908 UTC [307] ERROR:  relation "docuemnt_content" does not exist at character 15
+warehouse_db-1  | 2025-12-08 09:53:03.908 UTC [307] STATEMENT:  SELECT * FROM docuemnt_content WHERE id=$1
+warehouse_db-1  | 2025-12-08 09:54:18.896 UTC [311] ERROR:  relation "docuemnt" does not exist at character 15
+warehouse_db-1  | 2025-12-08 09:54:18.896 UTC [311] STATEMENT:  SELECT * FROM docuemnt WHERE id=$1
+warehouse_db-1  | 2025-12-08 09:56:18.857 UTC [314] ERROR:  column "defalut" does not exist at character 76
+warehouse_db-1  | 2025-12-08 09:56:18.857 UTC [314] STATEMENT:  INSERT INTO document (id, date, id_employee, id_document_category) VALUES (DEFALUT, $1, $2, $3)
+warehouse_db-1  | 2025-12-08 09:58:55.166 UTC [321] ERROR:  column "id_documnet_category" of relation "document" does not exist at character 46
+warehouse_db-1  | 2025-12-08 09:58:55.166 UTC [321] STATEMENT:  UPDATE document SET date=$1, id_employee=$2, id_documnet_category=$3
+warehouse_db-1  | 2025-12-08 10:01:40.128 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-08 10:01:40.980 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.822 s, sync=0.002 s, total=0.854 s; sync files=9, longest=0.002 s, average=0.001 s; distance=15 kB, estimate=19 kB
+warehouse_db-1  | 2025-12-08 10:01:47.455 UTC [328] ERROR:  relation "docuemnt" does not exist at character 30
+warehouse_db-1  | 2025-12-08 10:01:47.455 UTC [328] STATEMENT:  SELECT EXISTS (SELECT 1 FROM docuemnt WHERE id=$1)
+warehouse_db-1  | 2025-12-08 10:02:55.420 UTC [332] ERROR:  relation "docuemnt" does not exist at character 30
+warehouse_db-1  | 2025-12-08 10:02:55.420 UTC [332] STATEMENT:  SELECT EXISTS (SELECT 1 FROM docuemnt WHERE id=$1)
+warehouse_db-1  | 2025-12-08 10:03:22.676 UTC [334] ERROR:  column "quantityt" of relation "document_content" does not exist at character 58
+warehouse_db-1  | 2025-12-08 10:03:22.676 UTC [334] STATEMENT:  INSERT INTO document_content (id, id_document, id_batch, quantityt) VALUES (DEFAULT, $1, $2, $3) RETURNING id
+warehouse_db-1  | 2025-12-08 10:05:10.630 UTC [337] ERROR:  relation "docuemnt" does not exist at character 30
+warehouse_db-1  | 2025-12-08 10:05:10.630 UTC [337] STATEMENT:  SELECT EXISTS (SELECT 1 FROM docuemnt WHERE id=$1)

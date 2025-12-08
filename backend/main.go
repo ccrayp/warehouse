@@ -7,6 +7,8 @@ import (
 	"warehouse/internal/audit"
 	"warehouse/internal/auth"
 	"warehouse/internal/batch"
+	"warehouse/internal/document"
+	documentcategory "warehouse/internal/document_category"
 	"warehouse/internal/employee"
 	"warehouse/internal/gender"
 	"warehouse/internal/position"
@@ -54,6 +56,8 @@ func main() {
 	producer.InitRoutes(s, db)
 	position.InitRoutes(s, db)
 	address.InitRoutes(s, db)
+	documentcategory.InitRoutes(s, db)
+	document.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

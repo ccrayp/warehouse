@@ -13,7 +13,6 @@ function App() {
         const response = await fetch(API_URL, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
           },
         });
 
@@ -39,16 +38,6 @@ function App() {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f7f7f7", padding: "20px" }}>
-      <div>
-        <form>
-          <input onChange={(e) => {
-            setToken(e.target.value);
-          }} name="token" placeholder="Введите JWT_token"></input>
-        </form>
-      </div>
-      <div>
-        <button onClick={loadProducts}>Обновить</button>
-      </div>
       <h1>Товары</h1>
       {loading ? (
         <p>Загрузка...</p>
