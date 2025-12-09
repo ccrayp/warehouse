@@ -3,25 +3,31 @@ pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: 
 pgadmin-1  |   import pkg_resources
 pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1  |   import pkg_resources
-pgadmin-1  | [2025-12-06 09:14:04 +0000] [1] [INFO] Starting gunicorn 23.0.0
-pgadmin-1  | [2025-12-06 09:14:04 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
-pgadmin-1  | [2025-12-06 09:14:04 +0000] [1] [INFO] Using worker: gthread
-pgadmin-1  | [2025-12-06 09:14:04 +0000] [88] [INFO] Booting worker with pid: 88
+pgadmin-1  | [2025-12-09 06:09:12 +0000] [1] [INFO] Starting gunicorn 23.0.0
+pgadmin-1  | [2025-12-09 06:09:12 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
+pgadmin-1  | [2025-12-09 06:09:12 +0000] [1] [INFO] Using worker: gthread
+pgadmin-1  | [2025-12-09 06:09:12 +0000] [88] [INFO] Booting worker with pid: 88
+pgadmin-1  | [2025-12-09 07:41:54 +0000] [1] [INFO] Handling signal: term
+pgadmin-1  | [2025-12-09 07:41:55 +0000] [88] [INFO] Worker exiting (pid: 88)
+pgadmin-1  | [2025-12-09 07:41:56 +0000] [1] [INFO] Shutting down: Master
 pgadmin-1  | postfix/postlog: starting the Postfix mail system
 pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1  |   import pkg_resources
 pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1  |   import pkg_resources
-pgadmin-1  | [2025-12-07 06:36:57 +0000] [1] [INFO] Starting gunicorn 23.0.0
-pgadmin-1  | [2025-12-07 06:36:57 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
-pgadmin-1  | [2025-12-07 06:36:57 +0000] [1] [INFO] Using worker: gthread
-pgadmin-1  | [2025-12-07 06:36:57 +0000] [83] [INFO] Booting worker with pid: 83
+pgadmin-1  | [2025-12-09 07:49:43 +0000] [1] [INFO] Starting gunicorn 23.0.0
+pgadmin-1  | [2025-12-09 07:49:43 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
+pgadmin-1  | [2025-12-09 07:49:43 +0000] [1] [INFO] Using worker: gthread
+pgadmin-1  | [2025-12-09 07:49:43 +0000] [83] [INFO] Booting worker with pid: 83
+pgadmin-1  | [2025-12-09 07:53:15 +0000] [1] [INFO] Handling signal: term
+pgadmin-1  | [2025-12-09 07:53:16 +0000] [83] [INFO] Worker exiting (pid: 83)
+pgadmin-1  | [2025-12-09 07:53:16 +0000] [1] [INFO] Shutting down: Master
 pgadmin-1  | postfix/postlog: starting the Postfix mail system
 pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1  |   import pkg_resources
 pgadmin-1  | /venv/lib/python3.12/site-packages/passlib/pwd.py:16: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
 pgadmin-1  |   import pkg_resources
-pgadmin-1  | [2025-12-08 05:46:23 +0000] [1] [INFO] Starting gunicorn 23.0.0
-pgadmin-1  | [2025-12-08 05:46:23 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
-pgadmin-1  | [2025-12-08 05:46:23 +0000] [1] [INFO] Using worker: gthread
-pgadmin-1  | [2025-12-08 05:46:23 +0000] [82] [INFO] Booting worker with pid: 82
+pgadmin-1  | [2025-12-09 10:24:28 +0000] [1] [INFO] Starting gunicorn 23.0.0
+pgadmin-1  | [2025-12-09 10:24:28 +0000] [1] [INFO] Listening at: http://[::]:80 (1)
+pgadmin-1  | [2025-12-09 10:24:28 +0000] [1] [INFO] Using worker: gthread
+pgadmin-1  | [2025-12-09 10:24:28 +0000] [83] [INFO] Booting worker with pid: 83

@@ -16,6 +16,34 @@ func NewBatchRepository(db *database.Connector) *BatchRepository {
 	}
 }
 
+func (r *BatchRepository) GetAll(role string) ([]Batch, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM batch ORDER BY created_at DESC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var batches []Batch
+
+	for rows.Next() {
+		var batch Batch
+
+		err = rows.Scan(&batch.ID, &batch.Cost, &batch.ProductionDate, &batch.ExpirationDate, &batch.IdProduct, &batch.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		batches = append(batches, batch)
+	}
+
+	return batches, nil
+}
+
 func (r *BatchRepository) GetPagination(limit, offset int, role string) ([]Batch, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
@@ -109,4 +137,19 @@ func (r *BatchRepository) Delete(id int, role string) error {
 	}
 
 	return nil
+}
+
+func (r *BatchRepository) LeftIn(id int, role string) (*int, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	var quantity int
+	err = pool.QueryRow(context.Background(), "SELECT left_quantity FROM report_products_left_by_batch WHERE id_batch = $1", id).Scan(&quantity)
+	if err != nil {
+		return nil, err
+	}
+
+	return &quantity, nil
 }

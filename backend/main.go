@@ -11,6 +11,7 @@ import (
 	documentcategory "warehouse/internal/document_category"
 	"warehouse/internal/employee"
 	"warehouse/internal/gender"
+	"warehouse/internal/info"
 	"warehouse/internal/position"
 	"warehouse/internal/producer"
 	"warehouse/internal/product"
@@ -58,6 +59,8 @@ func main() {
 	address.InitRoutes(s, db)
 	documentcategory.InitRoutes(s, db)
 	document.InitRoutes(s, db)
+
+	info.InitRoutes(s, db)
 
 	s.Run(":8080")
 }

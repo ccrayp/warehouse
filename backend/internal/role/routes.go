@@ -10,7 +10,7 @@ import (
 func InitRoutes(r *gin.Engine, db *database.Connector) {
 	handler := NewRoleHandler(db)
 
-	r.GET("/roles", auth.AuthMiddleware(), handler.GetRolesPagination)
+	r.GET("/roles", auth.AuthMiddleware(), handler.GetRouting)
 	r.GET("/roles/:id", auth.AuthMiddleware(), handler.GetRoleById)
 	r.POST("/roles", auth.AuthMiddleware(), handler.CreateRole)
 	r.PUT("/roles/:id", auth.AuthMiddleware(), handler.UpdateRole)

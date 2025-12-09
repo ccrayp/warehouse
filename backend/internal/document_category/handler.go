@@ -21,6 +21,36 @@ func NewDocumentCategoryHandler(db *database.Connector) *DocumentCategoryHandler
 	}
 }
 
+func (h *DocumentCategoryHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetDocumentCategoryPagination(ctx)
+	} else {
+		h.GetDocumentCategoryAll(ctx)
+	}
+}
+
+func (h *DocumentCategoryHandler) GetDocumentCategoryAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	documentCategories, err := h.documentCategoryRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if documentCategories == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "document_category successfully selected", gin.H{
+		"document_categories": documentCategories,
+	})
+}
+
 func (h *DocumentCategoryHandler) GetDocumentCategoryPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

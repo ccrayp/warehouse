@@ -20,6 +20,37 @@ func NewBatchHandler(db *database.Connector) *BatchHandler {
 	}
 }
 
+func (h *BatchHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetBatchesPagination(ctx)
+	} else {
+		h.GetBatchAll(ctx)
+	}
+}
+
+func (h *BatchHandler) GetBatchAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		utils.RespondError(ctx, http.StatusUnauthorized, "missong token", "missing token", nil)
+		return
+	}
+
+	batches, err := h.batchRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if batches == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "batches successfully selected", gin.H{
+		"batches": batches,
+	})
+}
+
 func (h *BatchHandler) GetBatchesPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {
@@ -220,4 +251,43 @@ func (h *BatchHandler) DeleteBatchById(ctx *gin.Context) {
 	}
 
 	utils.RespondSuccess(ctx, http.StatusOK, "batch was successfully deleted", nil)
+}
+
+func (h *BatchHandler) GetLeftInBatch(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "error while id parsing", nil)
+		return
+	}
+
+	exists, err := utils.CheckExists(id, "batch", claims.Role, h.batchRepository.db)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while existence checking", nil)
+		return
+	}
+
+	if !exists {
+		utils.RespondError(ctx, http.StatusBadRequest, "batch with such id doesn't exist", "batch with such id doesn't exist", nil)
+		return
+	}
+
+	left, err := h.batchRepository.LeftIn(id, claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if left == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "left quantity was successfully selected", gin.H{
+		"products_left": left,
+	})
 }

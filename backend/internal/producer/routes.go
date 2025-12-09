@@ -10,7 +10,7 @@ import (
 func InitRoutes(r *gin.Engine, db *database.Connector) {
 	handler := NewProducerHandler(db)
 
-	r.GET("/producers", auth.AuthMiddleware(), handler.GetProducerPagination)
+	r.GET("/producers", auth.AuthMiddleware(), handler.GetRouting)
 	r.GET("/producers/:id", auth.AuthMiddleware(), handler.GetProducerById)
 	r.POST("/producers", auth.AuthMiddleware(), handler.CreateProducer)
 	r.PUT("/producers/:id", auth.AuthMiddleware(), handler.UpdateProducer)

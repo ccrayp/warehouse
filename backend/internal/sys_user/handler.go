@@ -21,6 +21,35 @@ func NewSysUserHandler(db *database.Connector) *SysUserHandler {
 	}
 }
 
+func (h *SysUserHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetUsersPagination(ctx)
+	} else {
+		h.GetUsersAll(ctx)
+	}
+}
+
+func (h *SysUserHandler) GetUsersAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	users, err := h.Repo.GetAll(claims.Role)
+	if err != nil {
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
+		return
+	}
+
+	if users == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "query error", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "users selected successfully", gin.H{"users": users})
+}
+
 func (h *SysUserHandler) GetUsersPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

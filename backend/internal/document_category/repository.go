@@ -15,6 +15,33 @@ func NewDocumentCategoryRepository(db *database.Connector) *DocumentCategoryRepo
 	}
 }
 
+func (r *DocumentCategoryRepository) GetAll(role string) ([]DocumentCategory, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	var documentCategories []DocumentCategory
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM document_category")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var documentCategory DocumentCategory
+
+		err := rows.Scan(&documentCategory.Id, &documentCategory.Name, &documentCategory.Description)
+		if err != nil {
+			return nil, err
+		}
+
+		documentCategories = append(documentCategories, documentCategory)
+	}
+
+	return documentCategories, nil
+}
+
 func (r *DocumentCategoryRepository) GetPagination(limit, offset int, role string) ([]DocumentCategory, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

@@ -22,6 +22,31 @@ func NewProductHandler(db *database.Connector) *ProductHandler {
 	}
 }
 
+func (h *ProductHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetProductPagination(ctx)
+	} else {
+		h.GetProductAll(ctx)
+	}
+}
+
+func (h *ProductHandler) GetProductAll(ctx *gin.Context) {
+	products, err := h.productRepository.GetAll("manager")
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if products == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "products selected successfully", gin.H{
+		"products": products,
+	})
+}
+
 func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
 	if ctx.Query("limit") == "" || ctx.Query("offset") == "" {
 		utils.RespondError(ctx, http.StatusBadRequest, "no limit of offset parameter", "no limit or offset parameter", nil)

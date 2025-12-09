@@ -10,7 +10,7 @@ import (
 func InitRoutes(r *gin.Engine, db *database.Connector) {
 	handler := NewAddressHandler(db)
 
-	r.GET("/addresses", auth.AuthMiddleware(), handler.GetAddressPagination)
+	r.GET("/addresses", auth.AuthMiddleware(), handler.GetRouting)
 	r.GET("/addresses/:id", auth.AuthMiddleware(), handler.GetAddressById)
 	r.POST("/addresses", auth.AuthMiddleware(), handler.CreateAddress)
 	r.PUT("/addresses/:id", auth.AuthMiddleware(), handler.UpdateAddress)

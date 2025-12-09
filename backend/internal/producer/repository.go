@@ -15,6 +15,33 @@ func NewProducerRepository(db *database.Connector) *ProducerRepository {
 	}
 }
 
+func (r *ProducerRepository) GetAll(role string) ([]Producer, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM producer")
+	if err != nil {
+		return nil, err
+	}
+
+	var producers []Producer
+
+	for rows.Next() {
+		var producer Producer
+
+		err := rows.Scan(&producer.ID, &producer.Name, &producer.IdAddress, &producer.INN, &producer.Surname, &producer.Firstname, &producer.Patronymic)
+		if err != nil {
+			return nil, err
+		}
+
+		producers = append(producers, producer)
+	}
+
+	return producers, nil
+}
+
 func (r *ProducerRepository) GetPagination(limit, offset int, role string) ([]Producer, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

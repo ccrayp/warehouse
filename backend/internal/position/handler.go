@@ -21,6 +21,36 @@ func NewPositionHandler(db *database.Connector) *PositionHandler {
 	}
 }
 
+func (h *PositionHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetPositionPagination(ctx)
+	} else {
+		h.GetPositionAll(ctx)
+	}
+}
+
+func (h *PositionHandler) GetPositionAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	positions, err := h.positionRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if positions == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "position successfully selected", gin.H{
+		"positions": positions,
+	})
+}
+
 func (h *PositionHandler) GetPositionPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

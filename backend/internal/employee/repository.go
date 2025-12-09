@@ -20,6 +20,34 @@ func NewEmployeeRepository(db *database.Connector) *EmployeeRepository {
 	}
 }
 
+func (r *EmployeeRepository) GetAll(role string) ([]Employee, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	var employees []Employee
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM employee ORDER BY surname, firstname, patronymic ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var employee Employee
+
+		err := rows.Scan(&employee.ID, &employee.Surname, &employee.Firstname, &employee.Patronymic, &employee.IdGender, &employee.INN, &employee.PhoneNumber, &employee.IdAddress, &employee.BirthDate, &employee.IdPosition)
+		if err != nil {
+			return nil, err
+		}
+
+		employees = append(employees, employee)
+	}
+
+	return employees, nil
+}
+
 func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) ([]Employee, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

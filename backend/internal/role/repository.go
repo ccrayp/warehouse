@@ -18,6 +18,30 @@ func NewRoleRepository(db *database.Connector) *RoleRepository {
 	}
 }
 
+func (r *RoleRepository) GetAll(role string) ([]Role, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), `SELECT id, name, description, sys_role FROM role ORDER BY name ASC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var roles []Role
+	for rows.Next() {
+		var rl Role
+		if err := rows.Scan(&rl.ID, &rl.Name, &rl.Description, &rl.SysRole); err != nil {
+			return nil, err
+		}
+		roles = append(roles, rl)
+	}
+
+	return roles, nil
+}
+
 func (r *RoleRepository) GetPagination(limit int, offset int, role string) ([]Role, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

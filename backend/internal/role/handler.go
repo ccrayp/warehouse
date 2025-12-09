@@ -21,6 +21,30 @@ func NewRoleHandler(db *database.Connector) *RoleHandler {
 	}
 }
 
+func (h *RoleHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetRolesPagination(ctx)
+	} else {
+		h.GetRolesAll(ctx)
+	}
+}
+
+func (h *RoleHandler) GetRolesAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	roles, err := h.Repo.GetAll(claims.Role)
+	if err != nil {
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "roles selected successfully", gin.H{"roles": roles})
+}
+
 func (h *RoleHandler) GetRolesPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

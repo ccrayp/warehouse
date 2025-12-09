@@ -21,6 +21,37 @@ func NewEmployeeHandler(db *database.Connector) *EmployeeHandler {
 	}
 }
 
+func (h *EmployeeHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetEmployeesPagination(ctx)
+	} else {
+		h.GetEmployeesAll(ctx)
+	}
+}
+
+func (h *EmployeeHandler) GetEmployeesAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	employees, err := h.EmployeeRepository.GetAll(claims.Role)
+	if err != nil {
+		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
+		utils.RespondError(ctx, status, err.Error(), message, nil)
+		return
+	}
+
+	if employees == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "query error", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "employees selected successfully", gin.H{
+		"employees": employees,
+	})
+}
+
 func (h *EmployeeHandler) GetEmployeesPagination(ctx *gin.Context) {
 
 	claims := auth.GetClaims(ctx)

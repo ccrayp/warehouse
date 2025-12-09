@@ -15,6 +15,33 @@ func NewAddressRepository(db *database.Connector) *AddressRepository {
 	}
 }
 
+func (r *AddressRepository) GetAll(role string) ([]Address, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM address")
+	if err != nil {
+		return nil, err
+	}
+
+	var addresses []Address
+
+	for rows.Next() {
+		var address Address
+
+		err := rows.Scan(&address.Id, &address.Subject, &address.Region, &address.City, &address.Street, &address.Building)
+		if err != nil {
+			return nil, err
+		}
+
+		addresses = append(addresses, address)
+	}
+
+	return addresses, nil
+}
+
 func (r *AddressRepository) GetPagination(limit, offset int, role string) ([]Address, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

@@ -21,6 +21,36 @@ func NewAddressHandler(db *database.Connector) *AddressHandler {
 	}
 }
 
+func (h *AddressHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetAddressPagination(ctx)
+	} else {
+		h.GetAddressAll(ctx)
+	}
+}
+
+func (h *AddressHandler) GetAddressAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	addresses, err := h.addressRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if addresses == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "addresses were selected successfully", gin.H{
+		"addresses": addresses,
+	})
+}
+
 func (h *AddressHandler) GetAddressPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

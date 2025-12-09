@@ -92,3 +92,44 @@ func (r *AuthRepository) GetRoleByUsername(username string) (string, error) {
 
 	return role, nil
 }
+
+func (r *AuthRepository) Me(username, role string) (*string, []Permission, error) {
+	pool, err := r.Db.GetAdminPool()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var name string
+	err = pool.QueryRow(context.Background(),
+		"SELECT surname || ' ' || firstname || ' ' || patronymic AS name "+
+			"FROM employee AS e JOIN sys_user AS su ON e.id = su.id_employee "+
+			"WHERE login = $1", username,
+	).Scan(&name)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rows, err := pool.Query(context.Background(),
+		"SELECT section, permissions FROM report_interface_grants WHERE role=$1", role,
+	)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+
+	var permissions []Permission
+	for rows.Next() {
+		var perm Permission
+		var permsArray []string
+
+		err := rows.Scan(&perm.Section, &permsArray)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		perm.Permissions = permsArray
+		permissions = append(permissions, perm)
+	}
+
+	return &name, permissions, nil
+}

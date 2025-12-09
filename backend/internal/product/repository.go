@@ -15,6 +15,33 @@ func NewProductRepository(db *database.Connector) *ProductRepository {
 	}
 }
 
+func (r *ProductRepository) GetAll(role string) ([]Product, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	var products []Product
+
+	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY id ASC")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var product Product
+
+		err := rows.Scan(&product.ID, &product.Name, &product.IdProductCategory, &product.IdProducer, &product.ImageURL)
+		if err != nil {
+			return nil, err
+		}
+
+		products = append(products, product)
+	}
+
+	return products, nil
+}
+
 func (r *ProductRepository) GetPagination(limit, offset int, role string) ([]Product, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

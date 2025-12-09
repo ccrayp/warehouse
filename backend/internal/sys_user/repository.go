@@ -18,6 +18,30 @@ func NewSysUserRepository(db *database.Connector) *SysUserRepository {
 	}
 }
 
+func (r *SysUserRepository) GetAll(role string) ([]SysUser, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), `SELECT id, login, password_hash, id_role, id_employee FROM sys_user ORDER BY login ASC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []SysUser
+	for rows.Next() {
+		var u SysUser
+		if err := rows.Scan(&u.ID, &u.Login, &u.PasswordHash, &u.IdRole, &u.IdEmployee); err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+
+	return users, nil
+}
+
 func (r *SysUserRepository) GetPagination(limit int, offset int, role string) ([]SysUser, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

@@ -21,6 +21,36 @@ func NewProducerHandler(db *database.Connector) *ProducerHandler {
 	}
 }
 
+func (h *ProducerHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetProducerPagination(ctx)
+	} else {
+		h.GetProducerAll(ctx)
+	}
+}
+
+func (h *ProducerHandler) GetProducerAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	producers, err := h.producerRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if producers == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "producers selected successfully", gin.H{
+		"producers": producers,
+	})
+}
+
 func (h *ProducerHandler) GetProducerPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

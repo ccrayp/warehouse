@@ -20,6 +20,36 @@ func NewProductCategoryHandler(db *database.Connector) *ProductCategoryHandler {
 	}
 }
 
+func (h *ProductCategoryHandler) GetRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetProductCategoryPagination(ctx)
+	} else {
+		h.GetProductCategoryAll(ctx)
+	}
+}
+
+func (h *ProductCategoryHandler) GetProductCategoryAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	productCategories, err := h.productCategoryRepository.GetAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if productCategories == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied fo table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "product categories were successfully selected", gin.H{
+		"product_categories": productCategories,
+	})
+}
+
 func (h *ProductCategoryHandler) GetProductCategoryPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {

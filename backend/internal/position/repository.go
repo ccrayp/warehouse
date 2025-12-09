@@ -15,6 +15,33 @@ func NewPositionRepository(db *database.Connector) *PositionRepository {
 	}
 }
 
+func (r *PositionRepository) GetAll(role string) ([]Position, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	var positions []Position
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM position")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var position Position
+
+		err := rows.Scan(&position.Id, &position.Name, &position.Description)
+		if err != nil {
+			return nil, err
+		}
+
+		positions = append(positions, position)
+	}
+
+	return positions, nil
+}
+
 func (r *PositionRepository) GetPagination(limit, offset int, role string) ([]Position, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

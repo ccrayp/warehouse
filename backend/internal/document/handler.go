@@ -21,6 +21,44 @@ func NewDocumentHandler(db *database.Connector) *DocumentHandler {
 	}
 }
 
+func (h *DocumentHandler) GetDocumentRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetDocumentPagination(ctx)
+	} else {
+		h.GetDocumentAll(ctx)
+	}
+}
+
+func (h *DocumentHandler) GetContentRouting(ctx *gin.Context) {
+	if ctx.Query("limit") != "" || ctx.Query("offset") != "" {
+		h.GetContentPagination(ctx)
+	} else {
+		h.GetContentAll(ctx)
+	}
+}
+
+func (h *DocumentHandler) GetDocumentAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	documents, err := h.documentRepository.GetDocumentAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if documents == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "document were successfully selected", gin.H{
+		"document": documents,
+	})
+}
+
 func (h *DocumentHandler) GetDocumentPagination(ctx *gin.Context) {
 	claims := auth.GetClaims(ctx)
 	if claims == nil {
@@ -203,6 +241,28 @@ func (h *DocumentHandler) DeleteDocument(ctx *gin.Context) {
 	}
 
 	utils.RespondSuccess(ctx, http.StatusOK, "document was successfully deleted", nil)
+}
+
+func (h *DocumentHandler) GetContentAll(ctx *gin.Context) {
+	claims := auth.GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	contents, err := h.documentRepository.GetContentAll(claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if contents == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "document_contents were successfully selected", gin.H{
+		"document_contents": contents,
+	})
 }
 
 func (h *DocumentHandler) GetContentPagination(ctx *gin.Context) {

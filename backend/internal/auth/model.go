@@ -32,3 +32,8 @@ type RefreshRequest struct {
 type ValidateRequest struct {
 	AccessToken string `json:"access_token"`
 }
+
+type Permission struct {
+	Section     string   `json:"section"`
+	Permissions []string `json:"permissions"`
+}

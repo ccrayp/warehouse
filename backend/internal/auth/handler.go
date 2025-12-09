@@ -45,7 +45,7 @@ func (h *AuthHandler) Login(ctx *gin.Context) {
 	}
 
 	if !utils.CheckPasswordHash(data.Password, string(hash)) {
-		utils.RespondError(ctx, http.StatusUnauthorized, "wrong password", "", gin.H{
+		utils.RespondError(ctx, http.StatusUnauthorized, "wrong password", "wrong pawwsord", gin.H{
 			"required_data": LoginRequest{
 				Username: "string",
 				Password: "string",
@@ -127,4 +127,27 @@ func (h *AuthHandler) Validate(ctx *gin.Context) {
 	}
 
 	utils.RespondSuccess(ctx, http.StatusOK, "token was validated", gin.H{"claims": claims})
+}
+
+func (h *AuthHandler) Me(ctx *gin.Context) {
+	claims := GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	name, permissions, err := h.AuthRepository.Me(claims.Username, claims.Role)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+		return
+	}
+
+	if name == nil || permissions == nil {
+		utils.RespondError(ctx, http.StatusForbidden, "permission denied", "permission denied", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "data was selected successfully", gin.H{
+		"name":        name,
+		"permissions": permissions,
+	})
 }
