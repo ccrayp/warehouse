@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Container, Card, Spinner, Row, Col, Carousel } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faBuilding, faUsers, faTags } from "@fortawesome/free-solid-svg-icons";
-import { apiHost } from "../utils";
+import { apiHost } from "../apiRequest";
 
 const STATS_URL = `${apiHost}/info/homepage`;
-const PAGE_SIZE = 4; // 4 товара на слайд
+const PAGE_SIZE = 4;
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -59,14 +59,15 @@ function Home() {
 
   return (
     <div>
-      <div
+      <Container className="pb-4">
+        <div
         style={{
           width: "100%",
           height: "400px",
           overflow: "hidden",
           textAlign: "center",
-          backgroundColor: "#f0f8ff",
         }}
+        className="pb-4"
       >
         <img
           src="/homepage.jpg"
@@ -74,39 +75,47 @@ function Home() {
           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
         />
       </div>
+        <Row className="g-3 mb-4">
+          <Col md={6} lg={3}>
+            <Card className="shadow-sm d-flex flex-row align-items-center p-3">
+              <FontAwesomeIcon icon={faBox} size="2x" className="me-3 text-primary" />
+              <div className="flex-grow-1">
+                <h6 className="mb-1">Товаров</h6>
+              </div>
+              <div className="fs-5 fw-bold">{stats.products}</div>
+            </Card>
+          </Col>
 
-      <Container className="py-4">
-        <Row className="g-3 mb-4 text-center">
-          <Col md={3} sm={6}>
-            <Card className="p-3 shadow-sm">
-              <FontAwesomeIcon icon={faBox} size="2x" className="mb-2" />
-              <h5>Товаров</h5>
-              <div className="fs-4">{stats.products}</div>
+          <Col md={6} lg={3}>
+            <Card className="shadow-sm d-flex flex-row align-items-center p-3">
+              <FontAwesomeIcon icon={faBuilding} size="2x" className="me-3 text-success" />
+              <div className="flex-grow-1">
+                <h6 className="mb-1">Поставщиков</h6>
+              </div>
+              <div className="fs-5 fw-bold">{stats.producers}</div>
             </Card>
           </Col>
-          <Col md={3} sm={6}>
-            <Card className="p-3 shadow-sm">
-              <FontAwesomeIcon icon={faBuilding} size="2x" className="mb-2" />
-              <h5>Поставщиков</h5>
-              <div className="fs-4">{stats.producers}</div>
+
+          <Col md={6} lg={3}>
+            <Card className="shadow-sm d-flex flex-row align-items-center p-3">
+              <FontAwesomeIcon icon={faTags} size="2x" className="me-3 text-warning" />
+              <div className="flex-grow-1">
+                <h6 className="mb-1">Категорий</h6>
+              </div>
+              <div className="fs-5 fw-bold">{stats.categories}</div>
             </Card>
           </Col>
-          <Col md={3} sm={6}>
-            <Card className="p-3 shadow-sm">
-              <FontAwesomeIcon icon={faTags} size="2x" className="mb-2" />
-              <h5>Категорий</h5>
-              <div className="fs-4">{stats.categories}</div>
-            </Card>
-          </Col>
-          <Col md={3} sm={6}>
-            <Card className="p-3 shadow-sm">
-              <FontAwesomeIcon icon={faUsers} size="2x" className="mb-2" />
-              <h5>Сотрудников</h5>
-              <div className="fs-4">{stats.employees}</div>
+
+          <Col md={6} lg={3}>
+            <Card className="shadow-sm d-flex flex-row align-items-center p-3">
+              <FontAwesomeIcon icon={faUsers} size="2x" className="me-3 text-danger" />
+              <div className="flex-grow-1">
+                <h6 className="mb-1">Сотрудников</h6>
+              </div>
+              <div className="fs-5 fw-bold">{stats.employees}</div>
             </Card>
           </Col>
         </Row>
-
         {/* Товары */}
         <h2 className="mb-4">Товары на складе</h2>
 

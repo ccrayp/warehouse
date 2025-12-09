@@ -93,10 +93,10 @@ func (r *AuthRepository) GetRoleByUsername(username string) (string, error) {
 	return role, nil
 }
 
-func (r *AuthRepository) Me(username, role string) (*string, []Permission, error) {
+func (r *AuthRepository) Me(username, role string) (*string, []Permission, *string, error) {
 	pool, err := r.Db.GetAdminPool()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	var name string
@@ -106,14 +106,14 @@ func (r *AuthRepository) Me(username, role string) (*string, []Permission, error
 			"WHERE login = $1", username,
 	).Scan(&name)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	rows, err := pool.Query(context.Background(),
 		"SELECT section, permissions FROM report_interface_grants WHERE role=$1", role,
 	)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	defer rows.Close()
 
@@ -124,12 +124,26 @@ func (r *AuthRepository) Me(username, role string) (*string, []Permission, error
 
 		err := rows.Scan(&perm.Section, &permsArray)
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		}
 
 		perm.Permissions = permsArray
 		permissions = append(permissions, perm)
 	}
 
-	return &name, permissions, nil
+	return &name, permissions, &role, nil
+}
+
+func (r *AuthRepository) Logout(token, username string) error {
+	pool, err := r.Db.GetAdminPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = pool.Exec(context.Background(), "DELETE FROM refresh_tokens WHERE token=$1 AND username=$2", token, username)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

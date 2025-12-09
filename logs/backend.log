@@ -1,38 +1,580 @@
-server-1  | [GIN] 2025/12/09 - 13:52:32 | 200 |   57.852917ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:52:58 | 200 |    6.265917ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:53:27 | 401 |    8.229291ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:54:12 | 401 |  101.611625ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:54:19 | 401 |   98.300458ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:54:59 | 404 |        6.25µs |    192.168.65.1 | POST     "/auth/hash"
-server-1  | [GIN] 2025/12/09 - 13:55:05 | 200 |  100.545917ms |    192.168.65.1 | GET      "/auth/hash"
-server-1  | [GIN] 2025/12/09 - 13:55:26 | 401 |  102.401917ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:55:28 | 401 |   99.876334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:55:37 | 200 |  101.341083ms |    192.168.65.1 | GET      "/auth/hash"
-server-1  | [GIN] 2025/12/09 - 13:55:49 | 200 |   99.220251ms |    192.168.65.1 | GET      "/auth/hash?password=anna"
-server-1  | [GIN] 2025/12/09 - 13:56:02 | 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
-20251ms |    192.168.65.1 | GET      "/auth/hash?password=anna"
-server-1  | [GIN] 2025/12/09 - 13:56:02 | 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
- 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
- 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
-51ms |    192.168.65.1 | GET      "/auth/hash?password=anna"
-server-1  | [GIN] 2025/12/09 - 13:56:02 | 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
- 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
-:02 | 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
- 200 |  101.341083ms |    192.168.65.1 | GET      "/auth/hash"
-server-1  | [GIN] 2025/12/09 - 13:55:49 | 200 |   99.220251ms |    192.168.65.1 | GET      "/auth/hash?password=anna"
-server-1  | [GIN] 2025/12/09 - 13:56:02 | 200 |    8.126083ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/09 - 13:56:05 | 200 |  104.830334ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/09 - 13:56:11 | 200 |    4.482417ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:45:58 | 200 |   72.262208ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:46:04 | 200 |    2.514541ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:46:04 | 200 |   25.005416ms |    192.168.65.1 | GET      "/report/grants"
+server-1  | [GIN] 2025/12/09 - 20:46:51 | 200 |   57.801667ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:46:51 | 200 |   100.74125ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:46:53 | 200 |   10.524833ms |    192.168.65.1 | POST     "/auth/logout"
+server-1  | [GIN] 2025/12/09 - 20:47:11 | 401 |     461.625µs |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:11 | 401 |       355.5µs |    192.168.65.1 | GET      "/report/employees"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHserver-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+serserver-1  | [GIN] 2025/12/09 - 20:47:18 | 401 |      58.958µs |    192.168.65.1 | GET      "/report/grants"
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 401 |      105.75µs |    192.168.65.1 | GET      "/info/me"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+sserver-1  | [GIN] 2025/12/09 - 20:47:18 | 401 |      105.75µs |    192.168.65.1 | GET      "/info/me"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /goserver-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms | server-1  | [GIN] 2025/12/09 - 20:47:26 | 20server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms | server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+    "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:46:51 | 200 |   100.74125ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:46:53 | 200 |   10.524833ms |    192.168.65.1 | POST     "/auth/logout"
+server-1  | [GIN] 2025/12/09 - 20:47:11 | 401 |     461.625µs |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:11 | 401 |       355.5µs |  server-1  | [GIN] 2025/12/09 - 20:47:11 | 401 server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nilserver-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:11 [Recovery] 2025/12/09 - 20:47:11 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:11 | 500server-1  | [GIN] 2025/12/09 - 20:47:18 | 401 |      58.958µs |    192.168.65.1 | GET      "/report/grants"
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 401 |      105.75µs |    192.168.65.1 | GET      "/info/me"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |    1.145375ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereserver-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x48server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+icmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ithub.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+icmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+serserver-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+sr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 5server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms | server-1  | [GIN] 2025/12/09 - 20:47:2server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms | server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.5server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms | server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |    1.145375ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/moserver-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtimeserver-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/giserver-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ithub.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+50917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms | server-1  | [GIN] 2025/12/09 - 20:47:26 | 20server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms | server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.5server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+2025/12/09 - 20:47:33 | 200 |       1.683ms | server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms | server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ntime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: pserver-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66easerver-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+     12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+     12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+GET      "/info/me"
+server-1  | [GIN] 2025/12/server-1  | [GIN] 2025/12/09 - 20:47:3server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+0 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms | server-1  | [GIN] 2025/12/09 - 20:47:26 |server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms | server-1  | [GIN] 2025/12/09 - 20:47:2server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms | server-1  | [GIN] 2025/12/09 - 20:47:26 | 20server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms | server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+ 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"
+/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |    1.145375ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | 
+server-1  | 
+server-1  | [31m2025/12/09 20:47:18 [Recovery] 2025/12/09 - 20:47:18 panic recovered:
+server-1  | runtime error: invalid memory address or nil pointer dereference
+server-1  | /usr/local/go/src/runtime/panic.go:262 (0x47d9b8)
+server-1  | 	panicmem: panic(memoryError)
+server-1  | /usr/local/go/src/runtime/signal_unix.go:925 (0x47d988)
+server-1  | 	sigpanic: panicmem()
+server-1  | /app/internal/auth/handler.go:86 (0xe8d9df)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/recovery.go:92 (0xe75e90)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/logger.go:249 (0xe74fa9)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/context.go:192 (0xe66ead)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:689 (0xe73fd4)
+server-1  | /go/pkg/mod/github.com/gin-gonic/gin@v1.11.0/gin.go:643 (0xe7396c)
+server-1  | /usr/local/go/src/net/http/server.go:3340 (0x6d804d)
+server-1  | 	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+server-1  | /usr/local/go/src/net/http/server.go:2109 (0x6c8be4)
+server-1  | 	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+server-1  | /usr/local/go/src/runtime/asm_amd64.s:1693 (0x4832c0)
+server-1  | 	goexit: BYTE	$0x90	// NOP
+server-1  | [0m
+server-1  | [GIN] 2025/12/09 - 20:47:18 | 500 |   10.603958ms |    192.168.65.1 | POST     "/auth/refresh"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |  114.165584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    5.650917ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |    3.157875ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/09 - 20:47:26 | 200 |      12.519ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |       1.683ms |    192.168.65.1 | GET      "/info/me"
+server-1  | [GIN] 2025/12/09 - 20:47:33 | 200 |    8.490209ms |    192.168.65.1 | GET      "/report/grants"

@@ -3,6 +3,7 @@ package info
 import (
 	"context"
 	"net/http"
+	"warehouse/internal/auth"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
 
@@ -31,6 +32,42 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 			"prodcut":   products,
 			"employee":  employees,
 			"categoris": product_categories,
+		})
+	})
+
+	r.GET("info/me", auth.AuthMiddleware(), func(ctx *gin.Context) {
+		var info EmployeeInfo
+
+		claims := auth.GetClaims(ctx)
+		if claims == nil {
+			return
+		}
+
+		pool, _ := db.GetAdminPool()
+
+		err := pool.QueryRow(context.Background(), `
+			SELECT
+				e.surname,
+				e.firstname,
+				e.patronymic,
+				p.name AS position,
+				a.subject || ', ' ||  a.region || ', ' || a.city || ', ' || a.street || ', ' || a.building AS address 
+			FROM employee AS e
+			JOIN position AS p
+				ON e.id_position = p.id
+			JOIN address AS a
+				ON e.id_address = a.id
+			JOIN sys_user AS su
+				ON su.id_employee = e.id
+			WHERE su.login = $1
+		`, claims.Username).Scan(&info.Surname, &info.Firstname, &info.Patronymic, &info.Position, &info.Address)
+		if err != nil {
+			utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
+			return
+		}
+
+		utils.RespondSuccess(ctx, http.StatusOK, "info data was successfully selected", gin.H{
+			"employee": info,
 		})
 	})
 }

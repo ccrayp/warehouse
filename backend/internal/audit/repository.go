@@ -20,10 +20,10 @@ func NewAuditRepository(db *database.Connector) *AuditRepository {
 	}
 }
 
-func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]Audit, string, error) {
+func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]Audit, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, role, err
+		return nil, nil, err
 	}
 
 	var logs []Audit
@@ -34,11 +34,11 @@ func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]A
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
 			if pgErr.Code == "42501" {
-				return nil, role, fmt.Errorf("permission denied: %s", pgErr.Message)
+				return nil, nil, fmt.Errorf("permission denied: %s", pgErr.Message)
 			}
-			return nil, role, fmt.Errorf("PostgreSQL error %s: %s", pgErr.Code, pgErr.Message)
+			return nil, nil, fmt.Errorf("PostgreSQL error %s: %s", pgErr.Code, pgErr.Message)
 		}
-		return nil, role, err
+		return nil, nil, err
 	}
 	defer rows.Close()
 
@@ -47,7 +47,7 @@ func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]A
 		var oldData, newData []byte
 
 		if err := rows.Scan(&log.ID, &log.TableName, &log.Action, &oldData, &newData, &log.ChangedBy, &log.ChangetAt); err != nil {
-			return nil, role, err
+			return nil, nil, err
 		}
 
 		if len(oldData) > 0 {
@@ -64,5 +64,8 @@ func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]A
 		logs = append(logs, log)
 	}
 
-	return logs, role, nil
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) AS total FROM audit_log").Scan(&total)
+
+	return logs, &total, nil
 }

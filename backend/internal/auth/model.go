@@ -33,6 +33,10 @@ type ValidateRequest struct {
 	AccessToken string `json:"access_token"`
 }
 
+type LogoutRequest struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
 type Permission struct {
 	Section     string   `json:"section"`
 	Permissions []string `json:"permissions"`

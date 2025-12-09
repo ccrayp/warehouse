@@ -207,3 +207,178 @@ warehouse_db-1  | 2025-12-09 10:51:46.198 UTC [133] ERROR:  permission denied fo
 warehouse_db-1  | 2025-12-09 10:51:46.198 UTC [133] STATEMENT:  SELECT surname || ' ' || firstname || ' ' || patronymic AS name FROM employee AS e JOIN sys_user AS su ON e.id = su.id_employee WHERE login = $1
 warehouse_db-1  | 2025-12-09 10:54:24.314 UTC [27] LOG:  checkpoint starting: time
 warehouse_db-1  | 2025-12-09 10:54:25.267 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.938 s, sync=0.006 s, total=0.954 s; sync files=10, longest=0.005 s, average=0.001 s; distance=12 kB, estimate=161 kB
+warehouse_db-1  | 2025-12-09 10:59:24.371 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 10:59:25.321 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.936 s, sync=0.006 s, total=0.951 s; sync files=10, longest=0.005 s, average=0.001 s; distance=7 kB, estimate=146 kB
+warehouse_db-1  | 2025-12-09 11:42:40.225 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 11:42:40.967 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.727 s, sync=0.006 s, total=0.743 s; sync files=8, longest=0.005 s, average=0.001 s; distance=6 kB, estimate=132 kB
+warehouse_db-1  | 2025-12-09 11:47:41.072 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 11:47:41.816 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.726 s, sync=0.006 s, total=0.744 s; sync files=8, longest=0.005 s, average=0.001 s; distance=7 kB, estimate=119 kB
+warehouse_db-1  | 2025-12-09 11:52:41.857 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 11:52:42.600 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.733 s, sync=0.004 s, total=0.744 s; sync files=8, longest=0.003 s, average=0.001 s; distance=9 kB, estimate=108 kB
+warehouse_db-1  | 2025-12-09 11:57:41.659 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 11:57:42.318 UTC [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.630 s, sync=0.004 s, total=0.659 s; sync files=10, longest=0.002 s, average=0.001 s; distance=40 kB, estimate=101 kB
+warehouse_db-1  | 2025-12-09 12:02:41.423 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:02:42.402 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.942 s, sync=0.006 s, total=0.981 s; sync files=8, longest=0.004 s, average=0.001 s; distance=6 kB, estimate=92 kB
+warehouse_db-1  | 2025-12-09 12:06:05.526 UTC [396] FATAL:  password authentication failed for user "manager"
+warehouse_db-1  | 2025-12-09 12:06:05.526 UTC [396] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-09 12:06:05.554 UTC [397] FATAL:  password authentication failed for user "manager"
+warehouse_db-1  | 2025-12-09 12:06:05.554 UTC [397] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-09 12:06:21.140 UTC [398] ERROR:  permission denied for table sys_user
+warehouse_db-1  | 2025-12-09 12:06:21.140 UTC [398] STATEMENT:  SELECT * FROM sys_user
+warehouse_db-1  | 2025-12-09 12:06:23.744 UTC [398] ERROR:  syntax error at or near "employee" at character 1
+warehouse_db-1  | 2025-12-09 12:06:23.744 UTC [398] STATEMENT:  employee
+warehouse_db-1  | 2025-12-09 12:06:44.137 UTC [398] ERROR:  permission denied for view report_employees
+warehouse_db-1  | 2025-12-09 12:06:44.137 UTC [398] STATEMENT:  SELECT * FROM report_employees
+warehouse_db-1  | 2025-12-09 12:06:49.739 UTC [402] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-09 12:06:49.739 UTC [402] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-09 12:06:49.765 UTC [403] FATAL:  password authentication failed for user "admin"
+warehouse_db-1  | 2025-12-09 12:06:49.765 UTC [403] DETAIL:  Connection matched pg_hba.conf line 100: "host all all all scram-sha-256"
+warehouse_db-1  | 2025-12-09 12:07:41.508 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:07:42.461 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.930 s, sync=0.006 s, total=0.953 s; sync files=10, longest=0.005 s, average=0.001 s; distance=7 kB, estimate=83 kB
+warehouse_db-1  | 2025-12-09 12:10:42.468 UTC [404] ERROR:  syntax error at or near "." at character 111
+warehouse_db-1  | 2025-12-09 12:10:42.468 UTC [404] STATEMENT:  SELECT
+warehouse_db-1  | 		e.surname,
+warehouse_db-1  | 		e.firstname,
+warehouse_db-1  | 		e.patronymic,
+warehouse_db-1  | 		p.name AS position,
+warehouse_db-1  | 		a.subject || ', ' ||  a.region || ', ' a.city || ', ' || a.street || ', ' || a.building AS address 
+warehouse_db-1  | 	FROM employee AS e
+warehouse_db-1  | 	JOIN position AS p
+warehouse_db-1  | 		ON e.id_position = p.id
+warehouse_db-1  | 	JOIN address AS a
+warehouse_db-1  | 		ON e.id_address = a.id
+warehouse_db-1  | 2025-12-09 12:17:43.858 UTC [404] ERROR:  column su.username does not exist at character 331
+warehouse_db-1  | 2025-12-09 12:17:43.858 UTC [404] STATEMENT:  SELECT
+warehouse_db-1  | 		e.surname,
+warehouse_db-1  | 		e.firstname,
+warehouse_db-1  | 		e.patronymic,
+warehouse_db-1  | 		p.name AS position,
+warehouse_db-1  | 		a.subject || ', ' ||  a.region || ', ' || a.city || ', ' || a.street || ', ' || a.building AS address 
+warehouse_db-1  | 	FROM employee AS e
+warehouse_db-1  | 	JOIN position AS p
+warehouse_db-1  | 		ON e.id_position = p.id
+warehouse_db-1  | 	JOIN address AS a
+warehouse_db-1  | 		ON e.id_address = a.id
+warehouse_db-1  | 	JOIN sys_user AS su
+warehouse_db-1  | 		ON su.id_employee = e.id
+warehouse_db-1  | 	WHERE su.username = 'anna_sokolova'
+warehouse_db-1  | 2025-12-09 12:22:41.801 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:22:42.641 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.826 s, sync=0.003 s, total=0.841 s; sync files=9, longest=0.002 s, average=0.001 s; distance=8 kB, estimate=76 kB
+warehouse_db-1  | 2025-12-09 12:27:41.733 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:27:42.490 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.735 s, sync=0.006 s, total=0.758 s; sync files=8, longest=0.005 s, average=0.001 s; distance=13 kB, estimate=70 kB
+warehouse_db-1  | 2025-12-09 12:32:41.593 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:32:42.341 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.730 s, sync=0.004 s, total=0.748 s; sync files=8, longest=0.003 s, average=0.001 s; distance=12 kB, estimate=64 kB
+warehouse_db-1  | 2025-12-09 12:37:41.446 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:37:42.408 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.939 s, sync=0.005 s, total=0.963 s; sync files=9, longest=0.004 s, average=0.001 s; distance=14 kB, estimate=59 kB
+warehouse_db-1  | 2025-12-09 12:42:41.511 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:42:44.167 UTC [27] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.631 s, sync=0.010 s, total=2.657 s; sync files=14, longest=0.007 s, average=0.001 s; distance=72 kB, estimate=72 kB
+warehouse_db-1  | 2025-12-09 12:47:41.273 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:47:42.036 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.730 s, sync=0.005 s, total=0.763 s; sync files=8, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=66 kB
+warehouse_db-1  | 2025-12-09 12:52:41.131 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:52:42.190 UTC [27] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.037 s, sync=0.005 s, total=1.060 s; sync files=10, longest=0.003 s, average=0.001 s; distance=26 kB, estimate=62 kB
+warehouse_db-1  | 2025-12-09 12:57:41.295 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 12:57:42.058 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.733 s, sync=0.008 s, total=0.764 s; sync files=8, longest=0.005 s, average=0.001 s; distance=13 kB, estimate=57 kB
+warehouse_db-1  | 2025-12-09 13:07:41.221 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:07:42.000 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.743 s, sync=0.006 s, total=0.780 s; sync files=8, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=53 kB
+warehouse_db-1  | 2025-12-09 13:26:45.617 UTC [404] ERROR:  relation "sys_users" does not exist at character 15
+warehouse_db-1  | 2025-12-09 13:26:45.617 UTC [404] STATEMENT:  SELECT * FROM sys_users
+warehouse_db-1  | 2025-12-09 13:26:47.226 UTC [404] ERROR:  relation "sys_users" does not exist at character 15
+warehouse_db-1  | 2025-12-09 13:26:47.226 UTC [404] STATEMENT:  SELECT * FROM sys_users
+warehouse_db-1  | 2025-12-09 13:27:42.253 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:27:42.999 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.730 s, sync=0.006 s, total=0.747 s; sync files=8, longest=0.005 s, average=0.001 s; distance=17 kB, estimate=49 kB
+warehouse_db-1  | 2025-12-09 13:32:43.105 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:32:43.868 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.732 s, sync=0.005 s, total=0.764 s; sync files=8, longest=0.003 s, average=0.001 s; distance=17 kB, estimate=46 kB
+warehouse_db-1  | 2025-12-09 13:37:43.973 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:37:44.751 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.739 s, sync=0.006 s, total=0.779 s; sync files=8, longest=0.004 s, average=0.001 s; distance=18 kB, estimate=43 kB
+warehouse_db-1  | 2025-12-09 13:42:43.826 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:42:44.699 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.831 s, sync=0.009 s, total=0.873 s; sync files=9, longest=0.007 s, average=0.001 s; distance=10 kB, estimate=40 kB
+warehouse_db-1  | 2025-12-09 13:47:43.824 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:47:44.603 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.736 s, sync=0.006 s, total=0.780 s; sync files=8, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=37 kB
+warehouse_db-1  | 2025-12-09 13:52:43.678 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:52:44.529 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.735 s, sync=0.005 s, total=0.852 s; sync files=8, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=35 kB
+warehouse_db-1  | 2025-12-09 13:57:43.588 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 13:57:44.367 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.729 s, sync=0.006 s, total=0.780 s; sync files=8, longest=0.005 s, average=0.001 s; distance=15 kB, estimate=33 kB
+warehouse_db-1  | 2025-12-09 14:02:43.387 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 14:02:44.180 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.745 s, sync=0.004 s, total=0.792 s; sync files=8, longest=0.003 s, average=0.001 s; distance=15 kB, estimate=31 kB
+warehouse_db-1  | 2025-12-09 14:07:43.181 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 14:07:44.330 UTC [27] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.134 s, sync=0.006 s, total=1.150 s; sync files=11, longest=0.005 s, average=0.001 s; distance=20 kB, estimate=30 kB
+warehouse_db-1  | 2025-12-09 14:12:43.451 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 14:12:44.333 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.832 s, sync=0.007 s, total=0.883 s; sync files=9, longest=0.005 s, average=0.001 s; distance=13 kB, estimate=28 kB
+warehouse_db-1  | 2025-12-09 14:16:24.962 UTC [404] ERROR:  syntax error at or near "employee" at character 1
+warehouse_db-1  | 2025-12-09 14:16:24.962 UTC [404] STATEMENT:  employee
+warehouse_db-1  | 2025-12-09 14:17:43.366 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 14:17:44.340 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.944 s, sync=0.005 s, total=0.974 s; sync files=10, longest=0.004 s, average=0.001 s; distance=16 kB, estimate=27 kB
+warehouse_db-1  | 2025-12-09 14:57:44.064 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 14:57:44.997 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.853 s, sync=0.007 s, total=0.933 s; sync files=9, longest=0.006 s, average=0.001 s; distance=19 kB, estimate=26 kB
+warehouse_db-1  | 2025-12-09 15:02:44.980 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 15:02:45.941 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.854 s, sync=0.029 s, total=0.960 s; sync files=8, longest=0.023 s, average=0.004 s; distance=20 kB, estimate=26 kB
+warehouse_db-1  | 2025-12-09 15:03:30.587 UTC [1] LOG:  received fast shutdown request
+warehouse_db-1  | 2025-12-09 15:03:30.598 UTC [1] LOG:  aborting any active transactions
+warehouse_db-1  | 2025-12-09 15:03:30.605 UTC [1290] FATAL:  terminating connection due to administrator command
+warehouse_db-1  | 2025-12-09 15:03:30.608 UTC [1287] FATAL:  terminating connection due to administrator command
+warehouse_db-1  | 2025-12-09 15:03:30.609 UTC [1288] FATAL:  terminating connection due to administrator command
+warehouse_db-1  | 2025-12-09 15:03:30.610 UTC [172] FATAL:  terminating connection due to administrator command
+warehouse_db-1  | 2025-12-09 15:03:30.611 UTC [404] FATAL:  terminating connection due to administrator command
+warehouse_db-1  | 2025-12-09 15:03:30.624 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+warehouse_db-1  | 2025-12-09 15:03:30.637 UTC [27] LOG:  shutting down
+warehouse_db-1  | 2025-12-09 15:03:30.640 UTC [27] LOG:  checkpoint starting: shutdown immediate
+warehouse_db-1  | 2025-12-09 15:03:30.664 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.011 s, sync=0.006 s, total=0.027 s; sync files=8, longest=0.004 s, average=0.001 s; distance=21 kB, estimate=25 kB
+warehouse_db-1  | 2025-12-09 15:03:30.674 UTC [1] LOG:  database system is shut down
+warehouse_db-1  | 
+warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+warehouse_db-1  | 
+warehouse_db-1  | 2025-12-09 15:50:20.808 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-09 15:50:20.808 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-09 15:50:20.808 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-09 15:50:20.814 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-09 15:50:20.816 UTC [29] LOG:  database system was shut down at 2025-12-09 15:03:30 UTC
+warehouse_db-1  | 2025-12-09 15:50:20.830 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-09 15:51:34.150 UTC [41] ERROR:  relation "information_schema.views_grants" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:34.150 UTC [41] STATEMENT:  SELECT * FROM information_schema.views_grants
+warehouse_db-1  | 2025-12-09 15:51:38.938 UTC [41] ERROR:  relation "information_schema.view_grants" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:38.938 UTC [41] STATEMENT:  SELECT * FROM information_schema.view_grants
+warehouse_db-1  | 2025-12-09 15:51:43.494 UTC [41] ERROR:  relation "information_schema.table_grants" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:43.494 UTC [41] STATEMENT:  SELECT * FROM information_schema.table_grants
+warehouse_db-1  | 2025-12-09 15:51:45.207 UTC [41] ERROR:  relation "information_schema.table_grant" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:45.207 UTC [41] STATEMENT:  SELECT * FROM information_schema.table_grant
+warehouse_db-1  | 2025-12-09 15:51:46.807 UTC [41] ERROR:  relation "information_schema.tables_grant" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:46.807 UTC [41] STATEMENT:  SELECT * FROM information_schema.tables_grant
+warehouse_db-1  | 2025-12-09 15:51:48.061 UTC [41] ERROR:  relation "information_schema.tables_grants" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:48.061 UTC [41] STATEMENT:  SELECT * FROM information_schema.tables_grants
+warehouse_db-1  | 2025-12-09 15:51:57.223 UTC [41] ERROR:  relation "information_schema.tables_privilege" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:57.223 UTC [41] STATEMENT:  SELECT * FROM information_schema.tables_privilege
+warehouse_db-1  | 2025-12-09 15:51:59.096 UTC [41] ERROR:  relation "information_schema.table_privilege" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:51:59.096 UTC [41] STATEMENT:  SELECT * FROM information_schema.table_privilege
+warehouse_db-1  | 2025-12-09 15:52:06.683 UTC [41] ERROR:  relation "information_schema.view_privileges" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:52:06.683 UTC [41] STATEMENT:  SELECT * FROM information_schema.view_privileges
+warehouse_db-1  | 2025-12-09 15:52:43.197 UTC [41] ERROR:  syntax error at or near "table" at character 8
+warehouse_db-1  | 2025-12-09 15:52:43.197 UTC [41] STATEMENT:  SELECT table FROM information_schema.table_privileges
+warehouse_db-1  | 	WHERE table_name LIKE 'report_%'
+warehouse_db-1  | 2025-12-09 15:53:03.464 UTC [41] ERROR:  relation "grants" does not exist at character 15
+warehouse_db-1  | 2025-12-09 15:53:03.464 UTC [41] STATEMENT:  SELECT * FROM grants
+warehouse_db-1  | 2025-12-09 15:55:20.893 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 15:55:20.905 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.001 s, total=0.012 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+warehouse_db-1  | 2025-12-09 16:01:38.558 UTC [41] ERROR:  relation "report_subject_producer_statistics" does not exist at character 15
+warehouse_db-1  | 2025-12-09 16:01:38.558 UTC [41] STATEMENT:  SELECT * FROM report_subject_producer_statistics
+warehouse_db-1  | 2025-12-09 16:03:40.647 UTC [41] ERROR:  syntax error at or near "report_documents_by_employee" at character 1
+warehouse_db-1  | 2025-12-09 16:03:40.647 UTC [41] STATEMENT:  report_documents_by_employee
+warehouse_db-1  | 2025-12-09 16:10:21.002 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 16:10:21.969 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.939 s, sync=0.005 s, total=0.968 s; sync files=10, longest=0.004 s, average=0.001 s; distance=23 kB, estimate=23 kB
+warehouse_db-1  | 2025-12-09 16:25:22.091 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 16:25:23.981 UTC [27] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.875 s, sync=0.007 s, total=1.891 s; sync files=16, longest=0.006 s, average=0.001 s; distance=49 kB, estimate=49 kB
+warehouse_db-1  | 2025-12-09 17:10:23.780 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:10:24.654 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.844 s, sync=0.006 s, total=0.875 s; sync files=8, longest=0.005 s, average=0.001 s; distance=20 kB, estimate=46 kB
+warehouse_db-1  | 2025-12-09 17:15:23.686 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:15:25.075 UTC [27] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.358 s, sync=0.008 s, total=1.390 s; sync files=12, longest=0.006 s, average=0.001 s; distance=45 kB, estimate=46 kB
+warehouse_db-1  | 2025-12-09 17:20:23.182 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:20:23.958 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.745 s, sync=0.005 s, total=0.776 s; sync files=8, longest=0.004 s, average=0.001 s; distance=12 kB, estimate=42 kB
+warehouse_db-1  | 2025-12-09 17:25:23.985 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:25:24.761 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.735 s, sync=0.005 s, total=0.777 s; sync files=8, longest=0.004 s, average=0.001 s; distance=14 kB, estimate=40 kB
+warehouse_db-1  | 2025-12-09 17:30:23.873 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:30:26.217 UTC [27] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.299 s, sync=0.008 s, total=2.345 s; sync files=15, longest=0.006 s, average=0.001 s; distance=88 kB, estimate=88 kB
+warehouse_db-1  | 2025-12-09 17:35:23.326 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:35:23.466 UTC [27] LOG:  checkpoint complete: wrote 1 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.108 s, sync=0.002 s, total=0.140 s; sync files=1, longest=0.002 s, average=0.002 s; distance=3 kB, estimate=80 kB
+warehouse_db-1  | 2025-12-09 17:45:23.632 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-09 17:45:24.558 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.866 s, sync=0.005 s, total=0.927 s; sync files=8, longest=0.004 s, average=0.001 s; distance=6 kB, estimate=73 kB
+warehouse_db-1  | 2025-12-09 17:47:33.298 UTC [539] ERROR:  permission denied for view report_grants
+warehouse_db-1  | 2025-12-09 17:47:33.298 UTC [539] STATEMENT:  SELECT * FROM report_grants

@@ -135,7 +135,7 @@ func (h *AuthHandler) Me(ctx *gin.Context) {
 		return
 	}
 
-	name, permissions, err := h.AuthRepository.Me(claims.Username, claims.Role)
+	name, permissions, role, err := h.AuthRepository.Me(claims.Username, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -149,5 +149,28 @@ func (h *AuthHandler) Me(ctx *gin.Context) {
 	utils.RespondSuccess(ctx, http.StatusOK, "data was selected successfully", gin.H{
 		"name":        name,
 		"permissions": permissions,
+		"role":        role,
 	})
+}
+
+func (h *AuthHandler) Logout(ctx *gin.Context) {
+	claims := GetClaims(ctx)
+	if claims == nil {
+		return
+	}
+
+	var req LogoutRequest
+	err := ctx.BindJSON(&req)
+	if err != nil || req.RefreshToken == "" {
+		utils.RespondError(ctx, http.StatusBadRequest, "invalid token", "invalid token", nil)
+		return
+	}
+
+	err = h.AuthRepository.Logout(req.RefreshToken, claims.Username)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while delete", nil)
+		return
+	}
+
+	utils.RespondSuccess(ctx, http.StatusOK, "successfully logout", nil)
 }

@@ -49,7 +49,7 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 		return
 	}
 
-	logs, role, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
+	logs, total, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
 		return
@@ -61,7 +61,7 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 	}
 
 	utils.RespondSuccess(ctx, http.StatusOK, "logs selected successfully", gin.H{
-		"logs": logs,
-		"role": role,
+		"logs":  logs,
+		"total": total,
 	})
 }

@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 
 function Footer() {
   return (
-    <footer className="bg-light py-3 mt-auto">
+    <footer className="bg-light py-3 mt-auto no-print">
       <Container className="text-center text-muted">
         © {new Date().getFullYear()} Склад — Курсовой проект. Михайлов Роман •{" "}
         <a 

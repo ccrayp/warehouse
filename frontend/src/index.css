@@ -66,3 +66,28 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+.print-user-info {
+  display: none;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .content-wrapper {
+    margin-top: 0 !important;
+    min-height: auto !important;
+  }
+
+  footer {
+    display: none !important;
+  }
+
+  .print-user-info {
+    display: block !important;
+  }
+}
