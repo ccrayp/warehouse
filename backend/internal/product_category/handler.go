@@ -68,7 +68,7 @@ func (h *ProductCategoryHandler) GetProductCategoryPagination(ctx *gin.Context) 
 		return
 	}
 
-	productCategories, err := h.productCategoryRepository.GetPagination(limit, offset, claims.Role)
+	productCategories, total, err := h.productCategoryRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -81,6 +81,7 @@ func (h *ProductCategoryHandler) GetProductCategoryPagination(ctx *gin.Context) 
 
 	utils.RespondSuccess(ctx, http.StatusOK, "product categories were successfully selected", gin.H{
 		"product_categories": productCategories,
+		"total":              total,
 	})
 }
 

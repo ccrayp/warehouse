@@ -38,6 +38,7 @@ import EmployeesPage from "./pages/Employees/EmployeesPage";
 import GendersPage from "./pages/Genders/GerndrsPage";
 import AddressesPage from "./pages/Addresses/AddressesPage";
 import ProductsPage from "./pages/Products/ProductsPage";
+import ProductsCategoriesPage from "./pages/ProductCategories/ProductCategoriesPage";
 
 export const ContentWrapper = styled.div.attrs({
   className: "content-wrapper"
@@ -72,6 +73,7 @@ export default function App() {
             <Route path="/gender" element={<GendersPage />} />
             <Route path="/address" element={<AddressesPage />} />
             <Route path="/product" element={<ProductsPage />} />
+            <Route path="/product_category" element={<ProductsCategoriesPage />} />
 
             <Route path="/report/report_batches" element={<ReportBatches/>} />
             <Route path="/report/report_documents_by_employee" element={<ReportDocumentsByEmployee/>} />

@@ -42,17 +42,20 @@ func (r *ProductCategoryRepository) GetAll(role string) ([]ProductCategory, erro
 	return productCategoies, nil
 }
 
-func (r *ProductCategoryRepository) GetPagination(limit, offset int, role string) ([]ProductCategory, error) {
+func (r *ProductCategoryRepository) GetPagination(limit, offset int, role string) ([]ProductCategory, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM product_category").Scan(&total)
 
 	var productCategoies []ProductCategory
 
 	rows, err := pool.Query(context.Background(), "SELECT id, name FROM product_category LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for rows.Next() {
@@ -60,13 +63,13 @@ func (r *ProductCategoryRepository) GetPagination(limit, offset int, role string
 
 		err := rows.Scan(&productCategory.ID, &productCategory.Name)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		productCategoies = append(productCategoies, productCategory)
 	}
 
-	return productCategoies, nil
+	return productCategoies, &total, nil
 }
 
 func (r *ProductCategoryRepository) GetById(id int, role string) (*ProductCategory, error) {
