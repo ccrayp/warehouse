@@ -69,7 +69,7 @@ func (h *PositionHandler) GetPositionPagination(ctx *gin.Context) {
 		return
 	}
 
-	positions, err := h.positionRepository.GetPagination(limit, offset, claims.Role)
+	positions, total, err := h.positionRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -82,6 +82,7 @@ func (h *PositionHandler) GetPositionPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "position successfully selected", gin.H{
 		"positions": positions,
+		"total":     total,
 	})
 }
 

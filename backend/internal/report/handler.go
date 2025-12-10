@@ -64,6 +64,10 @@ func (h *ReportHandler) Grants(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetGrants)
 }
 
+func (h *ReportHandler) InterfaceGrants(ctx *gin.Context) {
+	h.handleReport(ctx, h.reportRepository.GetInterfaceGrants)
+}
+
 func (h *ReportHandler) NoProducts(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetNoProducts)
 }
@@ -76,12 +80,16 @@ func (h *ReportHandler) ProductLeft(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetProductLeft)
 }
 
+func (h *ReportHandler) ProductLeftByBatch(ctx *gin.Context) {
+	h.handleReport(ctx, h.reportRepository.GetProductLeftByBatch)
+}
+
 func (h *ReportHandler) SystemUsers(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetSystemUsers)
 }
 
-func (h *ReportHandler) TableActivityPerHour(ctx *gin.Context) {
-	h.handleReport(ctx, h.reportRepository.GetTableActivityPerHour)
+func (h *ReportHandler) TablesActivityPerHour(ctx *gin.Context) {
+	h.handleReport(ctx, h.reportRepository.GetTablesActivityPerHour)
 }
 
 func (h *ReportHandler) TablesActivity(ctx *gin.Context) {

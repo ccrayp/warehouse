@@ -42,15 +42,18 @@ func (r *SysUserRepository) GetAll(role string) ([]SysUser, error) {
 	return users, nil
 }
 
-func (r *SysUserRepository) GetPagination(limit int, offset int, role string) ([]SysUser, error) {
+func (r *SysUserRepository) GetPagination(limit int, offset int, role string) ([]SysUser, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) AS total FROM sys_user").Scan(&total)
 
 	rows, err := pool.Query(context.Background(), `SELECT id, login, password_hash, id_role, id_employee FROM sys_user ORDER BY login ASC LIMIT $1 OFFSET $2`, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer rows.Close()
 
@@ -58,12 +61,12 @@ func (r *SysUserRepository) GetPagination(limit int, offset int, role string) ([
 	for rows.Next() {
 		var u SysUser
 		if err := rows.Scan(&u.ID, &u.Login, &u.PasswordHash, &u.IdRole, &u.IdEmployee); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		users = append(users, u)
 	}
 
-	return users, nil
+	return users, &total, nil
 }
 
 func (r *SysUserRepository) GetById(id int, role string) (*SysUser, error) {

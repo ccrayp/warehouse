@@ -42,15 +42,18 @@ func (r *AddressRepository) GetAll(role string) ([]Address, error) {
 	return addresses, nil
 }
 
-func (r *AddressRepository) GetPagination(limit, offset int, role string) ([]Address, error) {
+func (r *AddressRepository) GetPagination(limit, offset int, role string) ([]Address, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM address").Scan(&total)
 
 	rows, err := pool.Query(context.Background(), "SELECT * FROM address LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var addresses []Address
@@ -60,13 +63,13 @@ func (r *AddressRepository) GetPagination(limit, offset int, role string) ([]Add
 
 		err := rows.Scan(&address.Id, &address.Subject, &address.Region, &address.City, &address.Street, &address.Building)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		addresses = append(addresses, address)
 	}
 
-	return addresses, nil
+	return addresses, &total, nil
 }
 
 func (r *AddressRepository) GetById(id int, role string) (*Address, error) {

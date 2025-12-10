@@ -65,19 +65,22 @@ func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
 		return
 	}
 
-	products, err := h.productRepository.GetPagination(limit, offset, "manager")
+	query := ctx.Query("q")
+
+	products, total, err := h.productRepository.GetPagination(limit, offset, query, "manager")
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
 	}
 
-	if products == nil {
-		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
-		return
-	}
+	// if products == nil {
+	// 	utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+	// 	return
+	// }
 
 	utils.RespondSuccess(ctx, http.StatusOK, "products selected successfully", gin.H{
 		"products": products,
+		"total":    total,
 	})
 }
 
@@ -141,7 +144,7 @@ func (h *ProductHandler) CreateProduct(ctx *gin.Context) {
 		return
 	}
 
-	req.ImageURL = ""
+	req.ImageURL = "/static/products/placeholder.png"
 
 	id, err := h.productRepository.Create(req, claims.Role)
 	if err != nil {

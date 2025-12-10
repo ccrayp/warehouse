@@ -145,6 +145,32 @@ func (r *ReportRepository) GetGrants(role string) (any, error) {
 	return response, nil
 }
 
+func (r *ReportRepository) GetInterfaceGrants(role string) (any, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM report_interface_grants")
+	if err != nil {
+		return nil, err
+	}
+
+	var response []ReportInterfaceGrants
+	for rows.Next() {
+		var item ReportInterfaceGrants
+
+		err = rows.Scan(&item.Role, &item.Section, &item.Permissions)
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, item)
+	}
+
+	return response, nil
+}
+
 func (r *ReportRepository) GetNoProducts(role string) (any, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
@@ -223,6 +249,32 @@ func (r *ReportRepository) GetProductLeft(role string) (any, error) {
 	return response, nil
 }
 
+func (r *ReportRepository) GetProductLeftByBatch(role string) (any, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM report_products_left_by_batch")
+	if err != nil {
+		return nil, err
+	}
+
+	var response []ReportProductsLeftByBatch
+	for rows.Next() {
+		var item ReportProductsLeftByBatch
+
+		err = rows.Scan(&item.Number, &item.IdProduct, &item.IdBacth, &item.ProductName, &item.LeftQuantity)
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, item)
+	}
+
+	return response, nil
+}
+
 func (r *ReportRepository) GetSystemUsers(role string) (any, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
@@ -249,20 +301,20 @@ func (r *ReportRepository) GetSystemUsers(role string) (any, error) {
 	return response, nil
 }
 
-func (r *ReportRepository) GetTableActivityPerHour(role string) (any, error) {
+func (r *ReportRepository) GetTablesActivityPerHour(role string) (any, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM report_table_activity_per_hour")
+	rows, err := pool.Query(context.Background(), "SELECT * FROM report_tables_activity_per_hour")
 	if err != nil {
 		return nil, err
 	}
 
-	var response []ReportTableActivityPerHour
+	var response []ReportTablesActivityPerHour
 	for rows.Next() {
-		var item ReportTableActivityPerHour
+		var item ReportTablesActivityPerHour
 
 		err = rows.Scan(&item.Hour, &item.ActionCount, &item.Actors)
 		if err != nil {

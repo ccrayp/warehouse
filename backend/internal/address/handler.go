@@ -69,7 +69,7 @@ func (h *AddressHandler) GetAddressPagination(ctx *gin.Context) {
 		return
 	}
 
-	addresses, err := h.addressRepository.GetPagination(limit, offset, claims.Role)
+	addresses, total, err := h.addressRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -82,6 +82,7 @@ func (h *AddressHandler) GetAddressPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "addresses were selected successfully", gin.H{
 		"addresses": addresses,
+		"total":     total,
 	})
 }
 

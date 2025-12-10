@@ -82,7 +82,7 @@ func (h *EmployeeHandler) GetEmployeesPagination(ctx *gin.Context) {
 		return
 	}
 
-	employees, err := h.EmployeeRepository.GetPagination(limit, offset, claims.Role)
+	employees, total, err := h.EmployeeRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
 		utils.RespondError(ctx, status, err.Error(), message, nil)
@@ -96,6 +96,7 @@ func (h *EmployeeHandler) GetEmployeesPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "employees selected successfully", gin.H{
 		"employees": employees,
+		"total":     total,
 	})
 }
 

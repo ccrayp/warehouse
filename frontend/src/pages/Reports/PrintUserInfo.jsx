@@ -21,9 +21,9 @@ export default function PrintUserInfo() {
 
   return (
     <div className="print-user-info">
-        <strong>Дата генерации:</strong> {new Date().toLocaleDateString()} • <strong>Формат:</strong> PDF • <strong>Источник:</strong> PostgreSQL (pgx)
         <div><strong>Сотрудник:</strong> {fullName}</div>
         <div><strong>Должность:</strong> {info.position}</div>
+        <strong>Дата генерации:</strong> {new Date().toLocaleDateString()} • <strong>Формат:</strong> PDF • <strong>Источник:</strong> PostgreSQL (pgx)
     </div>
   );
 }

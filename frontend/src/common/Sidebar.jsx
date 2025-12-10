@@ -25,7 +25,6 @@ export default function Sidebar() {
     position: "Должности",
     sys_user: "Пользователи",
     role: "Роли",
-    refresh_tokens: "Токены",
     audit_log: "Логи"
   };
 
@@ -44,7 +43,7 @@ export default function Sidebar() {
   const isAdmin = role && role["role"] === "admin";
   const adminCategory = {
     title: "Администрирование",
-    items: ["sys_user", "role", "refresh_tokens"]
+    items: ["sys_user", "role"]
   };
 
   const hasPermission = (sectionName) => sections.some(s => s.section === sectionName);

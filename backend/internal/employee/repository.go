@@ -48,17 +48,20 @@ func (r *EmployeeRepository) GetAll(role string) ([]Employee, error) {
 	return employees, nil
 }
 
-func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) ([]Employee, error) {
+func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) ([]Employee, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var employees []Employee
 
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM employee").Scan(&total)
+
 	rows, err := pool.Query(context.Background(), `SELECT * FROM employee ORDER BY surname, firstname, patronymic ASC LIMIT $1 OFFSET $2`, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer rows.Close()
 
@@ -67,13 +70,13 @@ func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) (
 
 		err := rows.Scan(&employee.ID, &employee.Surname, &employee.Firstname, &employee.Patronymic, &employee.IdGender, &employee.INN, &employee.PhoneNumber, &employee.IdAddress, &employee.BirthDate, &employee.IdPosition)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		employees = append(employees, employee)
 	}
 
-	return employees, nil
+	return employees, &total, nil
 }
 
 func (r *EmployeeRepository) GetById(id int, role string) (*Employee, error) {

@@ -74,7 +74,7 @@ type ReportSystemUsers struct {
 	Position   string `json:"position"`
 }
 
-type ReportTableActivityPerHour struct {
+type ReportTablesActivityPerHour struct {
 	Hour        int    `json:"hour"`
 	ActionCount int    `json:"action_count"`
 	Actors      string `json:"actors"`
@@ -86,4 +86,18 @@ type ReportTablesActivity struct {
 	Action         string `json:"action"`
 	Actors         string `json:"actors"`
 	ActionQuantity int    `json:"action_quantity"`
+}
+
+type ReportInterfaceGrants struct {
+	Role        string   `json:"role"`
+	Section     string   `json:"section"`
+	Permissions []string `json:"permissions"`
+}
+
+type ReportProductsLeftByBatch struct {
+	Number       int    `json:"number"`
+	IdBacth      int    `json:"id_batch"`
+	IdProduct    int    `json:"id_product"`
+	ProductName  string `json:"product_name"`
+	LeftQuantity int    `json:"left_quantity"`
 }

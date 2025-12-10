@@ -5,9 +5,11 @@ export function useApi() {
   const { accessToken, refreshAccessToken, logout } = useContext(AuthContext);
 
   async function apiRequest(url, options = {}) {
+    const isFormData = options.body instanceof FormData;
+
     const headers = {
       ...(options.headers || {}),
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       Authorization: `Bearer ${accessToken}`,
     };
 
@@ -26,7 +28,7 @@ export function useApi() {
 
       const retryHeaders = {
         ...(options.headers || {}),
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         Authorization: `Bearer ${newAccess}`,
       };
 
@@ -43,7 +45,12 @@ export function useApi() {
     }
   }
 
-  return { apiRequest };
+  function getImageUrl(url) {
+    return images + url;
+  }
+
+  return { apiRequest, getImageUrl };
 }
 
-export const apiHost = 'http://localhost:8080/api'
+export const apiHost = 'http://localhost:8080/api';
+export const images = 'http://localhost:8080';

@@ -77,7 +77,7 @@ func (h *SysUserHandler) GetUsersPagination(ctx *gin.Context) {
 		return
 	}
 
-	users, err := h.Repo.GetPagination(limit, offset, claims.Role)
+	users, total, err := h.Repo.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
 		utils.RespondError(ctx, status, err.Error(), message, nil)
@@ -89,7 +89,7 @@ func (h *SysUserHandler) GetUsersPagination(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondSuccess(ctx, http.StatusOK, "users selected successfully", gin.H{"users": users})
+	utils.RespondSuccess(ctx, http.StatusOK, "users selected successfully", gin.H{"users": users, "total": total})
 }
 
 func (h *SysUserHandler) GetUserById(ctx *gin.Context) {

@@ -42,17 +42,20 @@ func (r *PositionRepository) GetAll(role string) ([]Position, error) {
 	return positions, nil
 }
 
-func (r *PositionRepository) GetPagination(limit, offset int, role string) ([]Position, error) {
+func (r *PositionRepository) GetPagination(limit, offset int, role string) ([]Position, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM position").Scan(&total)
 
 	var positions []Position
 
 	rows, err := pool.Query(context.Background(), "SELECT * FROM position LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for rows.Next() {
@@ -60,13 +63,13 @@ func (r *PositionRepository) GetPagination(limit, offset int, role string) ([]Po
 
 		err := rows.Scan(&position.Id, &position.Name, &position.Description)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		positions = append(positions, position)
 	}
 
-	return positions, nil
+	return positions, &total, nil
 }
 
 func (r *PositionRepository) GetById(id int, role string) (*Position, error) {

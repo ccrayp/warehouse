@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"fmt"
 	"warehouse/pkg/database"
 )
 
@@ -42,31 +43,42 @@ func (r *ProductRepository) GetAll(role string) ([]Product, error) {
 	return products, nil
 }
 
-func (r *ProductRepository) GetPagination(limit, offset int, role string) ([]Product, error) {
+func (r *ProductRepository) GetPagination(limit, offset int, query, role string) ([]Product, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	ctx := context.Background()
+
+	searchPattern := "%" + query + "%"
+
+	var total int
+	countQuery := "SELECT COUNT(*) FROM product WHERE name LIKE $1"
+	err = pool.QueryRow(ctx, countQuery, searchPattern).Scan(&total)
+	if err != nil {
+		return nil, nil, fmt.Errorf("counting products: %w", err)
+	}
+
+	selectQuery := `SELECT id, name, id_product_category, id_producer, image_url FROM product WHERE LOWER(name) LIKE $1 ORDER BY id ASC LIMIT $2 OFFSET $3`
+
+	rows, err := pool.Query(ctx, selectQuery, searchPattern, limit, offset)
+	if err != nil {
+		return nil, nil, fmt.Errorf("querying products: %w", err)
+	}
+	defer rows.Close()
 
 	var products []Product
-
-	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY id ASC LIMIT $1 OFFSET $2", limit, offset)
-	if err != nil {
-		return nil, err
-	}
-
 	for rows.Next() {
 		var product Product
-
 		err := rows.Scan(&product.ID, &product.Name, &product.IdProductCategory, &product.IdProducer, &product.ImageURL)
 		if err != nil {
-			return nil, err
+			return nil, nil, fmt.Errorf("scanning product: %w", err)
 		}
-
 		products = append(products, product)
 	}
 
-	return products, nil
+	return products, &total, nil
 }
 
 func (r *ProductRepository) GetById(id int, role string) (*Product, error) {

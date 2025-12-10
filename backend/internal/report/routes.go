@@ -19,11 +19,13 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 		"employees":                   handler.Employees,
 		"expired_batches":             handler.ExpiredBatches,
 		"grants":                      handler.Grants,
+		"interface_grants":            handler.InterfaceGrants,
 		"no_products":                 handler.NoProducts,
 		"producer_subject_statistics": handler.ProducerSubjectStatistics,
 		"products_left":               handler.ProductLeft,
+		"products_left_by_batch":      handler.ProductLeftByBatch,
 		"system_users":                handler.SystemUsers,
-		"table_activity_per_hour":     handler.TableActivityPerHour,
+		"tables_activity_per_hour":    handler.TablesActivityPerHour,
 		"tables_activity":             handler.TablesActivity,
 	}
 
