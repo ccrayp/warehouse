@@ -42,15 +42,19 @@ func (r *ProducerRepository) GetAll(role string) ([]Producer, error) {
 	return producers, nil
 }
 
-func (r *ProducerRepository) GetPagination(limit, offset int, role string) ([]Producer, error) {
+func (r *ProducerRepository) GetPagination(limit, offset int, role string) ([]Producer, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM producer LIMIT $1 OFFSET $2", limit, offset)
+	var total int
+
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM producer").Scan(&total)
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM producer ORDER BY name ASC LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var producers []Producer
@@ -60,13 +64,13 @@ func (r *ProducerRepository) GetPagination(limit, offset int, role string) ([]Pr
 
 		err := rows.Scan(&producer.ID, &producer.Name, &producer.IdAddress, &producer.INN, &producer.Surname, &producer.Firstname, &producer.Patronymic)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		producers = append(producers, producer)
 	}
 
-	return producers, nil
+	return producers, &total, nil
 }
 
 func (r *ProducerRepository) GetById(id int, role string) (*Producer, error) {

@@ -42,17 +42,20 @@ func (r *DocumentCategoryRepository) GetAll(role string) ([]DocumentCategory, er
 	return documentCategories, nil
 }
 
-func (r *DocumentCategoryRepository) GetPagination(limit, offset int, role string) ([]DocumentCategory, error) {
+func (r *DocumentCategoryRepository) GetPagination(limit, offset int, role string) ([]DocumentCategory, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM document_category").Scan(&total)
 
 	var documentCategories []DocumentCategory
 
 	rows, err := pool.Query(context.Background(), "SELECT * FROM document_category LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	for rows.Next() {
@@ -60,13 +63,13 @@ func (r *DocumentCategoryRepository) GetPagination(limit, offset int, role strin
 
 		err := rows.Scan(&documentCategory.Id, &documentCategory.Name, &documentCategory.Description)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		documentCategories = append(documentCategories, documentCategory)
 	}
 
-	return documentCategories, nil
+	return documentCategories, &total, nil
 }
 
 func (r *DocumentCategoryRepository) GetById(id int, role string) (*DocumentCategory, error) {

@@ -112,7 +112,7 @@ export default function RolesTable() {
 
   return (
     <Container className="mt-4">
-      <h2>Роли пользователей</h2>
+      <h2>Администрирование: Роли пользователей</h2>
       <Button className="mb-3" onClick={() => handleShowModal()}>
         Добавить роль
       </Button>

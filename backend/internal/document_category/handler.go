@@ -69,7 +69,7 @@ func (h *DocumentCategoryHandler) GetDocumentCategoryPagination(ctx *gin.Context
 		return
 	}
 
-	documentCategories, err := h.documentCategoryRepository.GetPagination(limit, offset, claims.Role)
+	documentCategories, total, err := h.documentCategoryRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -82,6 +82,7 @@ func (h *DocumentCategoryHandler) GetDocumentCategoryPagination(ctx *gin.Context
 
 	utils.RespondSuccess(ctx, http.StatusOK, "document_category successfully selected", gin.H{
 		"document_categories": documentCategories,
+		"total":               total,
 	})
 }
 

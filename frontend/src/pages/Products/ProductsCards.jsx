@@ -217,7 +217,7 @@ export default function ProductsCards() {
 
   return (
     <Container className="mt-4">
-      <h2 className="pt-4">Справочник: Продукты</h2>
+      <h2 className="pt-4">Склад: Продукты</h2>
 
       <Row className="mb-3">
         <Col md={4}>

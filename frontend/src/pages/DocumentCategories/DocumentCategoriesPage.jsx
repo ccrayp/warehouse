@@ -1,11 +1,11 @@
 import React from "react";
 import ProtectedPage from "../../common/ProtectedPage";
-import ProductsCards from "./ProductsCards";
+import DocumentCategoriesTable from "./DocumentCategoriesTable";
 
-export default function ProductsPage() {
+export default function DocumentCategoriesPage() {
   return (
     <ProtectedPage section="product">
-      <ProductsCards />
+      <DocumentCategoriesTable />
     </ProtectedPage>
   );
 }

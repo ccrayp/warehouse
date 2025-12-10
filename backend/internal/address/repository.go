@@ -21,7 +21,7 @@ func (r *AddressRepository) GetAll(role string) ([]Address, error) {
 		return nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM address")
+	rows, err := pool.Query(context.Background(), "SELECT * FROM address ORDER BY subject, region, city, street, building ASC")
 	if err != nil {
 		return nil, err
 	}

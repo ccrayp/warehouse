@@ -54,7 +54,7 @@ export default function ReportsPage() {
 
   return (
     <Container className="mt-4">
-      <h2>Выберите отчёт</h2>
+      <h2>Отчеты</h2>
 
       <Row className="mb-4 gx-3">
         <Col md={4} lg={3}>

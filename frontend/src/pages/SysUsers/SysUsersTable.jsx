@@ -136,7 +136,7 @@ export default function SysUsersTable() {
 
   return (
     <Container className="mt-4">
-      <h2>Пользователи системы</h2>
+      <h2>Администрирование: Пользователи системы</h2>
       <Button className="mb-3" onClick={() => handleShowModal()}>
         Добавить пользователя
       </Button>

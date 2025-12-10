@@ -69,7 +69,7 @@ export default function AuditLogs() {
 
   return (
     <Container className="mt-2">
-      <h2 className="mt-3 mb-3">Логи изменений</h2>
+      <h2 className="mt-3 mb-3">Администрирование: Логи изменений</h2>
 
       {/* Фильтры */}
       <Form className="mb-3">
@@ -157,7 +157,12 @@ export default function AuditLogs() {
                     </pre>
                     </td>
                     <td>{log.changer_by}</td>
-                    <td>{new Date(log.changer_at).toLocaleString()}</td>
+                    <td>
+                      {new Date(log.changer_at).toLocaleString('ru-RU', {
+                        hour12: false,
+                        timeZone: 'UTC'
+                      })}
+                    </td>
                 </tr>
                 ))}
             </tbody>

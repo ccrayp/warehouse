@@ -69,7 +69,7 @@ func (h *ProducerHandler) GetProducerPagination(ctx *gin.Context) {
 		return
 	}
 
-	producers, err := h.producerRepository.GetPagination(limit, offset, claims.Role)
+	producers, total, err := h.producerRepository.GetPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -82,6 +82,7 @@ func (h *ProducerHandler) GetProducerPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "producers selected successfully", gin.H{
 		"producers": producers,
+		"total":     total,
 	})
 }
 
@@ -242,6 +243,9 @@ func (h *ProducerHandler) DeleteProducer(ctx *gin.Context) {
 }
 
 func (h *ProducerHandler) CheckProducer(producer ProducerRequest, role string) (bool, error) {
+	if utf8.RuneCountInString(producer.Name) > 100 {
+		return false, nil
+	}
 	if utf8.RuneCountInString(producer.Surname) > 50 {
 		return false, nil
 	}

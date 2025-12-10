@@ -5,14 +5,14 @@ import { AuthContext } from "../../AuthContext";
 
 const PAGE_SIZE = 10;
 
-export default function ProductCategoriesTable() {
+export default function DocumentCategoriesTable() {
   const { apiRequest } = useApi();
   const { sections } = useContext(AuthContext);
 
-  const hasSelect = sections?.some(s => s.section === "product_category" && s.permissions.includes("select"));
-  const hasInsert = sections?.some(s => s.section === "product_category" && s.permissions.includes("insert"));
-  const hasUpdate = sections?.some(s => s.section === "product_category" && s.permissions.includes("update"));
-  const hasDelete = sections?.some(s => s.section === "product_category" && s.permissions.includes("delete"));
+  const hasSelect = sections?.some(s => s.section === "document_category" && s.permissions.includes("select"));
+  const hasInsert = sections?.some(s => s.section === "document_category" && s.permissions.includes("insert"));
+  const hasUpdate = sections?.some(s => s.section === "document_category" && s.permissions.includes("update"));
+  const hasDelete = sections?.some(s => s.section === "document_category" && s.permissions.includes("delete"));
 
   if (!hasSelect) {
     return (
@@ -30,7 +30,7 @@ export default function ProductCategoriesTable() {
 
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [form, setForm] = useState({ id: "", name: "" });
+  const [form, setForm] = useState({ id: "", name: "", description: "" });
   const [saving, setSaving] = useState(false);
 
   const fetchData = async (pageNumber = 1) => {
@@ -38,10 +38,10 @@ export default function ProductCategoriesTable() {
     const offset = (pageNumber - 1) * PAGE_SIZE;
 
     try {
-      const resp = await apiRequest(`/product_categories?limit=${PAGE_SIZE}&offset=${offset}`);
+      const resp = await apiRequest(`/document_categories?limit=${PAGE_SIZE}&offset=${offset}`);
       if (resp.success) {
-        setCategories(resp.data.product_categories || []);
-        setTotal(resp.data.total || resp.data.product_categories.length || 0);
+        setCategories(resp.data.document_categories || []);
+        setTotal(resp.data.total || resp.data.document_categories.length || 0);
       }
     } catch (err) {
       console.error(err);
@@ -58,7 +58,8 @@ export default function ProductCategoriesTable() {
     setEditingCategory(category);
     setForm({
       id: category?.id || "",
-      name: category?.name || ""
+      name: category?.name || "",
+      description: category?.description || ""
     });
     setShowModal(true);
   };
@@ -66,7 +67,7 @@ export default function ProductCategoriesTable() {
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingCategory(null);
-    setForm({ id: "", name: "" });
+    setForm({ id: "", name: "", description: "" });
   };
 
   const handleSave = async () => {
@@ -78,16 +79,16 @@ export default function ProductCategoriesTable() {
 
     setSaving(true);
     try {
-      const payload = { name: form.name.trim() };
+      const payload = { name: form.name.trim(), description: form.description.trim() };
       let resp;
 
       if (editingCategory) {
-        resp = await apiRequest(`/product_categories/${editingCategory.id}`, {
+        resp = await apiRequest(`/document_categories/${editingCategory.id}`, {
           method: "PUT",
           body: JSON.stringify(payload)
         });
       } else {
-        resp = await apiRequest("/product_categories", {
+        resp = await apiRequest("/document_categories", {
           method: "POST",
           body: JSON.stringify(payload)
         });
@@ -112,7 +113,7 @@ export default function ProductCategoriesTable() {
     if (!window.confirm(`Удалить категорию "${category.name}"?`)) return;
 
     try {
-      const resp = await apiRequest(`/product_categories/${category.id}`, { method: "DELETE" });
+      const resp = await apiRequest(`/document_categories/${category.id}`, { method: "DELETE" });
       if (resp.success) {
         fetchData(page);
         handleCloseModal();
@@ -129,7 +130,7 @@ export default function ProductCategoriesTable() {
 
   return (
     <Container className="mt-4">
-      <h2 className="pt-4">Справочник: Категории продуктов</h2>
+      <h2 className="pt-4">Справочник: Категории документов</h2>
       {hasInsert && (
         <Button className="mb-3" onClick={() => handleShowModal()}>
           Добавить категорию
@@ -145,6 +146,7 @@ export default function ProductCategoriesTable() {
               <tr>
                 <th>ID</th>
                 <th>Название</th>
+                <th>Описание</th>
               </tr>
             </thead>
             <tbody>
@@ -152,10 +154,17 @@ export default function ProductCategoriesTable() {
                 <tr key={cat.id} onClick={() => handleShowModal(cat)} style={{ cursor: "pointer" }}>
                   <td>{cat.id}</td>
                   <td>{cat.name}</td>
+                  <td>{cat.description}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
+
+            {categories.length > 0 && (
+            <p style={{ color: "#666", fontSize: "14px", marginTop: "8px" }}>
+              * Для редактирования или удаления нажмите на соответствующую строку
+            </p>
+          )}
 
           {totalPages > 1 && (
             <div className="d-flex justify-content-center mt-3 mb-4">
@@ -185,12 +194,6 @@ export default function ProductCategoriesTable() {
         </>
       )}
 
-      {categories.length > 0 && (
-            <p style={{ color: "#666", fontSize: "14px", marginTop: "8px" }}>
-              * Для редактирования или удаления нажмите на соответствующую строку
-            </p>
-          )}
-
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{editingCategory ? "Редактировать категорию" : "Создать категорию"}</Modal.Title>
@@ -207,6 +210,15 @@ export default function ProductCategoriesTable() {
                 type="text"
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Описание</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={form.description}
+                onChange={e => setForm({ ...form, description: e.target.value })}
               />
             </Form.Group>
           </Form>

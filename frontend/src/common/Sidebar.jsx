@@ -31,11 +31,11 @@ export default function Sidebar() {
   const categories = [
     {
       title: "Склад",
-      items: ["batch", "document", "document_category", "document_content", "product", "product_category", "producer"]
+      items: ["batch", "document", "document_content", "product", "producer"]
     },
     {
       title: "Справочники",
-      items: ["address", "employee", "gender", "position"]
+      items: ["address", "employee", "gender", "position", "document_category", "product_category"]
     }
   ];
 

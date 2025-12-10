@@ -18,7 +18,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: warehouse
-      TZ: Europe/Moscow 
     ports:
       - "8888:5432"
     volumes:
