@@ -197,13 +197,13 @@ func (r *ReportRepository) GetNoProducts(role string) (any, error) {
 	return response, nil
 }
 
-func (r *ReportRepository) GetProductsTotalSum(role string) (any, error) {
+func (r *ReportRepository) GetProductsTotalCost(role string) (any, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM report_products_total_sum")
+	rows, err := pool.Query(context.Background(), "SELECT * FROM report_products_total_cost")
 	if err != nil {
 		return nil, err
 	}

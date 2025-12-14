@@ -14,7 +14,7 @@ const reports = [
   { id: "report_grants", name: "Права ролей", description: "Права для ролей в системе", type: "table" },
   { id: "report_interface_grants", name: "Доступные разделы", description: "Доступные разделы и права пользователей", type: "table" },
   { id: "report_no_products", name: "Отсутствующие товары", description: "Товары, которых нет на складе", type: "table" },
-  { id: "report_products_total_sum", name: "Стоимость товаров", description: "Суммарная стоимость товаров, находящихся на складе", type: "table" },
+  { id: "report_products_total_cost", name: "Стоимость товаров", description: "Суммарная стоимость товаров, находящихся на складе", type: "table" },
   { id: "report_producer_subject_statistics", name: "Производители по регионам", description: "Количество производителей по регионам", type: "chart" },
   { id: "report_products_left", name: "Остатки продукции", description: "Остатки продукции на складе", type: "table" },
   { id: "report_products_left_by_batch", name: "Остатки по партиям", description: "Остаток продукции по партиям", type: "table" },

@@ -31,6 +31,9 @@ import ReportTableActivity from "./pages/Reports/ReportTableActivity";
 import ReportProducerStatistics from "./pages/Reports/ProducerSubjectStatistics";
 import ReportTableActivityPerHour from "./pages/Reports/TablesActivityPerHout";
 import ReportProductsLeftByBatch from "./pages/Reports/ProductsLeftByBatch";
+import ReportNonFixedBacthes from "./pages/Reports/NonFixedBatches";
+import ReportProductsTotalCost from "./pages/Reports/ProductsTotalCost";
+
 import RolesPage from "./pages/Roles/RolesPage";
 import SysUsersPage from "./pages/SysUsers/SysUsersPage";
 import PositionsPage from "./pages/Positions/PositionsPage";
@@ -44,7 +47,6 @@ import ProducersPage from "./pages/Producers/ProducersPage";
 import BatchesPage from "./pages/Batches/BatchesPage";
 import DocumentsPage from "./pages/Documents/DocumentsPage";
 import DocumentsItemPage from "./pages/Documents/DocumentsItemPage";
-import ReportNonFixedBacthes from "./pages/Reports/NonFixedBatches";
 
 export const ContentWrapper = styled.div.attrs({
   className: "content-wrapper"
@@ -95,7 +97,7 @@ export default function App() {
             <Route path="/report/report_grants" element={<ReportGrants/>} />
             <Route path="/report/report_interface_grants" element={<ReportPermissions/>} />
             <Route path="/report/report_no_products" element={<ReportNoProducts/>} />
-            <Route path="/report/report_products_total_sum" element={<ReportNoProducts/>} />
+            <Route path="/report/report_products_total_cost" element={<ReportProductsTotalCost/>} />
             <Route path="/report/report_producer_subject_statistics" element={<ReportProducerStatistics/>} />
             <Route path="/report/report_products_left" element={<ReportProductsLeft/>} />
             <Route path="/report/report_products_left_by_batch" element={<ReportProductsLeftByBatch/>} />

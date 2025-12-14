@@ -1,7 +1,1 @@
-server-1  | [GIN] 2025/12/14 - 15:43:09 | 200 |   65.334083ms |    192.168.65.1 | GET      "/info/homepage"
-server-1  | [GIN] 2025/12/14 - 15:43:09 | 200 |    68.20225ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
-server-1  | [GIN] 2025/12/14 - 15:43:15 | 200 |    115.9875ms |    192.168.65.1 | POST     "/auth/login"
-server-1  | [GIN] 2025/12/14 - 15:43:15 | 200 |    14.68175ms |    192.168.65.1 | POST     "/auth/me"
-server-1  | [GIN] 2025/12/14 - 15:43:15 | 200 |      654.75µs |    192.168.65.1 | GET      "/info/homepage"
-server-1  | [GIN] 2025/12/14 - 15:43:15 | 200 |    1.708625ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
-server-1  | [GIN] 2025/12/14 - 15:43:15 | 200 |   21.988834ms |    192.168.65.1 | POST     "/auth/me"
+[Kserver-1 exited with code 2

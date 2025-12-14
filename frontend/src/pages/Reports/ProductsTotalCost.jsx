@@ -2,12 +2,12 @@ import UniversalReport from "../../common/UniversalReport";
 import { useEffect, useState } from "react";
 import { useApi } from "../../apiRequest";
 
-export default function ReportProductsTotalSum() {
+export default function ReportProductsTotalCost() {
   const [rows, setRows] = useState([]);
   const { apiRequest } = useApi();
 
   useEffect(() => {
-    apiRequest("/report/products_total_sum", "GET").then((resp) => {
+    apiRequest("/report/products_total_cost", "GET").then((resp) => {
       if (resp.success) setRows(resp.data.report);
     });
   }, []);
@@ -15,7 +15,7 @@ export default function ReportProductsTotalSum() {
   return (
     <UniversalReport
       title="Суммарная стоимость товаров"
-      section="report_products_total_sum"
+      section="report_products_total_cost"
       rows={rows}
       columns={[
         { key: "number", label: "№" },

@@ -9,109 +9,14 @@
 При входе в систему требуется авторизация пользователей.
 ```
 
-## Posible queries
-```sql
--- список партий, полученных от определенного поставщика;
+## Scripts using
+- ```debug.sh``` - script for development, rebuild every time
+- ```start.sh``` - script to start information system
+- ```stop.sh``` - script to stop the whole information system
+- ```make_dump.sh``` - script to make reserve database dump
+- ```backup.sh``` - script to transfer the entire system to another machine, include database dump and images on server. After using this script you will have got archive with whole info, just transfer it onto another server -> unzip it -> start ```./restore.sh```
 
-SELECT b.* 
-FROM batch AS b
-JOIN product AS pt
-	ON pt.id = b.id_product
-JOIN producer AS pr
-	ON pr.id = pt.id_producer
-WHERE pr.name = 'ООО "СтильДрев"';
-
-
--- список продуктов, которых нет на складе;
-
-SELECT
-	pt.id,
-	pt.name,
-	pt.id_producer
-FROM (
-	SELECT id FROM product 
-	EXCEPT
-	SELECT 
-		id_product AS id
-	FROM (
-		SELECT
-			id_batch,
-			CASE
-				WHEN id_document IN (SELECT id FROM document WHERE id_document_category = 2) THEN quantity * -1
-				ELSE quantity
-			END AS quantity
-		FROM document_content
-		WHERE id_document NOT IN (SELECT id FROM document WHERE id_document_category = 3)
-	) AS t
-	JOIN batch AS b
-		ON b.id = t.id_batch
-	GROUP BY id_product
-	HAVING SUM(quantity) > 0
-) AS l
-JOIN product AS pt
-	ON pt.id = l.id
-
-
--- Количество оставшихся на складе товаров каждого типа
-
-SELECT 
-	pt.id,
-	pt.name,
-	COALESCE(l.product_left, 0)
-FROM (
-	SELECT 
-		id_product,
-		SUM(quantity) AS product_left
-	FROM (
-		SELECT
-			id_batch,
-			CASE
-				WHEN id_document IN (SELECT id FROM document WHERE id_document_category = 2) THEN quantity * -1
-				ELSE quantity
-			END AS quantity
-		FROM document_content
-		WHERE id_document NOT IN (SELECT id FROM document WHERE id_document_category = 3)
-	) AS t
-	JOIN batch AS b
-		ON b.id = t.id_batch
-	GROUP BY id_product
-) AS l
-RIGHT JOIN product AS pt
-	ON pt.id = l.id_product
-
-
--- список сотрудников, которые могут пользоваться системой;
-
-SELECT 
-	e.surname,
-	e.firstname,
-	e.patronymic,
-	ps.name
-FROM employee AS e
-JOIN sys_user AS su
-	ON su.id_employee = e.id
-JOIN position AS ps
-	ON e.id_position = ps.id
-
-
--- список список партий, принятых за определенный период времени;
-
-SELECT b.* FROM batch AS b
-JOIN (
-	SELECT
-		id_batch
-	FROM document_content AS dc
-	JOIN document AS d
-		ON d.id = dc.id_document
-	WHERE d.id_document_category = 1 AND (d.date BETWEEN '2024-01-01' AND '2024-07-01')
-) AS l
-ON l.id_batch = b.id
-```
-
-```bash
-# Создание дампа базы данны
-docker exec -i storage_db-warehouse_db-1 pg_dump -F p -U postgres -d warehouse > dump_$(date +%Y%m%d_%H%M%S).sql
-
-# Импорт дампа базы данных
-docker exec -i my_postgres psql -U postgres -d mydb < dump.sql
-```
+## Links
+- [Visual interface](http://localhost:8080/)
+- [API homepage](http://localhost:8080/api/)
+- [pgAdmin4](http://localhost:5050)

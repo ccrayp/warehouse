@@ -57,7 +57,7 @@ export default function UniversalReport({ title, columns, rows, section }) {
               zIndex: 999,
             }}
           >
-            <i className="fa-solid fa-file" style={{ marginRight: "8px" }}></i>
+            <i className="fa-solid fa-download" style={{ marginRight: "8px" }}></i>
             Сохранить
           </button>
 

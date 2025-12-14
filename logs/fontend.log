@@ -2,9 +2,10 @@ frontend-1  |
 frontend-1  | > storage@0.0.0 dev
 frontend-1  | > vite --host 0.0.0.0 --port 5173
 frontend-1  | 
-frontend-1  | 12:42:09 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
+frontend-1  | 1:46:59 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
 frontend-1  | 
-frontend-1  |   VITE v7.2.7  ready in 199 ms
+frontend-1  |   VITE v7.2.7  ready in 242 ms
 frontend-1  | 
 frontend-1  |   ➜  Local:   http://localhost:5173/
 frontend-1  |   ➜  Network: http://172.20.0.5:5173/
+[Kfrontend-1 exited with code 143

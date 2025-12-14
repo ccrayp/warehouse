@@ -52,7 +52,7 @@ type ReportNoProducts struct {
 
 type ReportProductsTotalSum struct {
 	Number       int     `json:"number"`
-	IdBatch      int     `json:"batch_id"`
+	IdBatch      string  `json:"id_batch"`
 	ProductName  string  `json:"product_name"`
 	Cost         string  `json:"cost"`
 	LeftQuantity int     `json:"left_quantity"`

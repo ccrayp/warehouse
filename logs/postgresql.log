@@ -1,59 +1,17 @@
-warehouse_db-1  | The files belonging to this database system will be owned by user "postgres".
-warehouse_db-1  | This user must also own the server process.
 warehouse_db-1  | 
-warehouse_db-1  | The database cluster will be initialized with locale "en_US.utf8".
-warehouse_db-1  | The default database encoding has accordingly been set to "UTF8".
-warehouse_db-1  | The default text search configuration will be set to "english".
+warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
 warehouse_db-1  | 
-warehouse_db-1  | Data page checksums are disabled.
-warehouse_db-1  | 
-warehouse_db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
-warehouse_db-1  | creating subdirectories ... ok
-warehouse_db-1  | selecting dynamic shared memory implementation ... posix
-warehouse_db-1  | selecting default max_connections ... 100
-warehouse_db-1  | selecting default shared_buffers ... 128MB
-warehouse_db-1  | selecting default time zone ... Etc/UTC
-warehouse_db-1  | creating configuration files ... ok
-warehouse_db-1  | running bootstrap script ... ok
-warehouse_db-1  | performing post-bootstrap initialization ... ok
-warehouse_db-1  | syncing data to disk ... ok
-warehouse_db-1  | 
-warehouse_db-1  | 
-warehouse_db-1  | Success. You can now start the database server using:
-warehouse_db-1  | 
-warehouse_db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
-warehouse_db-1  | 
-warehouse_db-1  | initdb: warning: enabling "trust" authentication for local connections
-warehouse_db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
-warehouse_db-1  | waiting for server to start....2025-12-14 12:42:09.482 UTC [54] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-warehouse_db-1  | 2025-12-14 12:42:09.483 UTC [54] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-warehouse_db-1  | 2025-12-14 12:42:09.485 UTC [57] LOG:  database system was shut down at 2025-12-14 12:42:09 UTC
-warehouse_db-1  | 2025-12-14 12:42:09.488 UTC [54] LOG:  database system is ready to accept connections
-warehouse_db-1  |  done
-warehouse_db-1  | server started
-warehouse_db-1  | CREATE DATABASE
-warehouse_db-1  | 
-warehouse_db-1  | 
-warehouse_db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
-warehouse_db-1  | 
-warehouse_db-1  | waiting for server to shut down....2025-12-14 12:42:09.679 UTC [54] LOG:  received fast shutdown request
-warehouse_db-1  | 2025-12-14 12:42:09.680 UTC [54] LOG:  aborting any active transactions
-warehouse_db-1  | 2025-12-14 12:42:09.684 UTC [54] LOG:  background worker "logical replication launcher" (PID 60) exited with exit code 1
-warehouse_db-1  | 2025-12-14 12:42:09.685 UTC [55] LOG:  shutting down
-warehouse_db-1  | 2025-12-14 12:42:09.687 UTC [55] LOG:  checkpoint starting: shutdown immediate
-warehouse_db-1  | 2025-12-14 12:42:09.738 UTC [55] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.014 s, sync=0.034 s, total=0.053 s; sync files=301, longest=0.011 s, average=0.001 s; distance=4239 kB, estimate=4239 kB
-warehouse_db-1  | 2025-12-14 12:42:09.741 UTC [54] LOG:  database system is shut down
-warehouse_db-1  |  done
-warehouse_db-1  | server stopped
-warehouse_db-1  | 
-warehouse_db-1  | PostgreSQL init process complete; ready for start up.
-warehouse_db-1  | 
-warehouse_db-1  | 2025-12-14 12:42:09.811 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-warehouse_db-1  | 2025-12-14 12:42:09.811 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-warehouse_db-1  | 2025-12-14 12:42:09.811 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-warehouse_db-1  | 2025-12-14 12:42:09.812 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-warehouse_db-1  | 2025-12-14 12:42:09.815 UTC [70] LOG:  database system was shut down at 2025-12-14 12:42:09 UTC
-warehouse_db-1  | 2025-12-14 12:42:09.817 UTC [1] LOG:  database system is ready to accept connections
-warehouse_db-1  | 2025-12-14 12:42:10.597 UTC [87] ERROR:  role "postgres" already exists
-warehouse_db-1  | 2025-12-14 12:42:10.597 UTC [87] STATEMENT:  CREATE ROLE postgres;
-warehouse_db-1  | 2025-12-14 12:42:35.206 UTC [89] WARNING:  there is no transaction in progress
+warehouse_db-1  | 2025-12-14 13:46:58.640 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-14 13:46:58.641 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-14 13:46:58.641 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-14 13:46:58.643 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-14 13:46:58.647 UTC [29] LOG:  database system was shut down at 2025-12-14 13:45:12 UTC
+warehouse_db-1  | 2025-12-14 13:46:58.650 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-14 13:47:39.986 UTC [1] LOG:  received fast shutdown request
+warehouse_db-1  | 2025-12-14 13:47:39.987 UTC [1] LOG:  aborting any active transactions
+warehouse_db-1  | 2025-12-14 13:47:39.989 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+warehouse_db-1  | 2025-12-14 13:47:39.990 UTC [27] LOG:  shutting down
+warehouse_db-1  | 2025-12-14 13:47:39.991 UTC [27] LOG:  checkpoint starting: shutdown immediate
+warehouse_db-1  | 2025-12-14 13:47:39.997 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+warehouse_db-1  | 2025-12-14 13:47:39.999 UTC [1] LOG:  database system is shut down
+[Kwarehouse_db-1 exited with code 0
