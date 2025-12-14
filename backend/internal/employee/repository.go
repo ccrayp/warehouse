@@ -48,31 +48,41 @@ func (r *EmployeeRepository) GetAll(role string) ([]Employee, error) {
 	return employees, nil
 }
 
-func (r *EmployeeRepository) GetPagination(limit int, offset int, role string) ([]Employee, *int, error) {
+func (r *EmployeeRepository) GetPagination(limit, offset int, query, role string) ([]Employee, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var employees []Employee
+	ctx := context.Background()
+	searchPattern := "%" + query + "%"
 
 	var total int
-	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM employee").Scan(&total)
-
-	rows, err := pool.Query(context.Background(), `SELECT * FROM employee ORDER BY surname, firstname, patronymic ASC LIMIT $1 OFFSET $2`, limit, offset)
+	countQuery := `SELECT COUNT(*) FROM employee WHERE LOWER(surname) LIKE LOWER($1) OR LOWER(firstname) LIKE LOWER($1) OR LOWER(patronymic) LIKE LOWER($1)`
+	err = pool.QueryRow(ctx, countQuery, searchPattern).Scan(&total)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("counting employees: %w", err)
+	}
+
+	selectQuery := `SELECT id, surname, firstname, patronymic, id_gender, inn, phone_number, id_address, birth_date, id_position FROM employee WHERE LOWER(surname) LIKE LOWER($1) OR LOWER(firstname) LIKE LOWER($1) OR LOWER(patronymic) LIKE LOWER($1) ORDER BY surname, firstname, patronymic ASC LIMIT $2 OFFSET $3`
+
+	rows, err := pool.Query(ctx, selectQuery, searchPattern, limit, offset)
+	if err != nil {
+		return nil, nil, fmt.Errorf("querying employees: %w", err)
 	}
 	defer rows.Close()
 
+	var employees []Employee
 	for rows.Next() {
 		var employee Employee
-
-		err := rows.Scan(&employee.ID, &employee.Surname, &employee.Firstname, &employee.Patronymic, &employee.IdGender, &employee.INN, &employee.PhoneNumber, &employee.IdAddress, &employee.BirthDate, &employee.IdPosition)
+		err := rows.Scan(
+			&employee.ID, &employee.Surname, &employee.Firstname, &employee.Patronymic,
+			&employee.IdGender, &employee.INN, &employee.PhoneNumber, &employee.IdAddress,
+			&employee.BirthDate, &employee.IdPosition,
+		)
 		if err != nil {
-			return nil, nil, err
+			return nil, nil, fmt.Errorf("scanning employee: %w", err)
 		}
-
 		employees = append(employees, employee)
 	}
 

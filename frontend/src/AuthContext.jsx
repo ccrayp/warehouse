@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [sections, setSections] = useState(JSON.parse(localStorage.getItem("sections") || "[]"));
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "null"));
   const [role, setRole] = useState(JSON.parse(localStorage.getItem("role") || "null"));
+  const [employee_id, setEmployeeId] = useState(JSON.parse(localStorage.getItem("employee_id") || "null"));
 
   useEffect(() => {
     if (accessToken) localStorage.setItem("access_token", accessToken);
@@ -16,7 +17,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("sections", JSON.stringify(sections));
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("role", JSON.stringify(role));
-  }, [accessToken, refreshToken, sections, user, role]);
+    localStorage.setItem("employee_id", JSON.stringify(employee_id));
+  }, [accessToken, refreshToken, sections, user, role, employee_id]);
 
   const refreshAccessToken = async () => {
     try {
@@ -59,12 +61,12 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-      // Очистка состояния и localStorage
       setAccessToken(null);
       setRefreshToken(null);
       setSections([]);
       setUser(null);
       setRole(null);
+      setEmployeeId(null);
       localStorage.clear();
     }
   };
@@ -86,6 +88,7 @@ export const AuthProvider = ({ children }) => {
         setUser({ name: data.data.name });
         setSections(data.data.permissions || []);
         setRole({role: data.data.role});
+        setEmployeeId({employee_id: data.data.employee_id});
       } else {
         await logout();
       }
@@ -102,6 +105,7 @@ export const AuthProvider = ({ children }) => {
         sections,
         user,
         role,
+        employee_id,
         setAccessToken,
         setSections,
         setUser,

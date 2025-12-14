@@ -82,7 +82,9 @@ func (h *EmployeeHandler) GetEmployeesPagination(ctx *gin.Context) {
 		return
 	}
 
-	employees, total, err := h.EmployeeRepository.GetPagination(limit, offset, claims.Role)
+	query := ctx.Query("q")
+
+	employees, total, err := h.EmployeeRepository.GetPagination(limit, offset, query, claims.Role)
 	if err != nil {
 		status, message := utils.CheckPermissionDenied(err, http.StatusInternalServerError, "error while query")
 		utils.RespondError(ctx, status, err.Error(), message, nil)

@@ -71,7 +71,9 @@ func (h *BatchHandler) GetBatchesPagination(ctx *gin.Context) {
 		return
 	}
 
-	batches, err := h.batchRepository.GetPagination(limit, offset, claims.Role)
+	query := ctx.Query("q")
+
+	batches, total, err := h.batchRepository.GetPagination(limit, offset, query, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -84,6 +86,7 @@ func (h *BatchHandler) GetBatchesPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "batches successfully selected", gin.H{
 		"batches": batches,
+		"total":   total,
 	})
 }
 

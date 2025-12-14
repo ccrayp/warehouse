@@ -83,7 +83,7 @@ func CheckFK(ctx *gin.Context, id int, table string, role string, db *database.C
 		return false
 	}
 	if !exists {
-		RespondError(ctx, http.StatusBadRequest, fmt.Sprintf("%s with such id doesn't exist", table), fmt.Sprintf("%s not found", table), nil)
+		RespondError(ctx, http.StatusBadRequest, fmt.Sprintf("%s with such id (%d) doesn't exist", table, id), fmt.Sprintf("%s not found", table), nil)
 		return false
 	}
 	return true

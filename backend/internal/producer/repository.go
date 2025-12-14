@@ -42,31 +42,50 @@ func (r *ProducerRepository) GetAll(role string) ([]Producer, error) {
 	return producers, nil
 }
 
-func (r *ProducerRepository) GetPagination(limit, offset int, role string) ([]Producer, *int, error) {
+func (r *ProducerRepository) GetPagination(limit, offset int, query, role string) ([]Producer, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, nil, err
 	}
 
+	ctx := context.Background()
+	searchPattern := "%" + query + "%"
+
 	var total int
-
-	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM producer").Scan(&total)
-
-	rows, err := pool.Query(context.Background(), "SELECT * FROM producer ORDER BY name ASC LIMIT $1 OFFSET $2", limit, offset)
+	countQuery := `
+		SELECT COUNT(*) 
+		FROM producer p
+		WHERE LOWER(name) LIKE LOWER($1)
+	`
+	err = pool.QueryRow(ctx, countQuery, searchPattern).Scan(&total)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var producers []Producer
+	selectQuery := `
+		SELECT p.id, p.name, p.id_address, p.inn, p.surname, p.firstname, p.patronymic
+		FROM producer p
+		WHERE LOWER(p.name) LIKE LOWER($1)
+		ORDER BY p.name ASC
+		LIMIT $2 OFFSET $3
+	`
 
+	rows, err := pool.Query(ctx, selectQuery, searchPattern, limit, offset)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+
+	var producers []Producer
 	for rows.Next() {
 		var producer Producer
-
-		err := rows.Scan(&producer.ID, &producer.Name, &producer.IdAddress, &producer.INN, &producer.Surname, &producer.Firstname, &producer.Patronymic)
+		err := rows.Scan(
+			&producer.ID, &producer.Name, &producer.IdAddress, &producer.INN,
+			&producer.Surname, &producer.Firstname, &producer.Patronymic,
+		)
 		if err != nil {
 			return nil, nil, err
 		}
-
 		producers = append(producers, producer)
 	}
 

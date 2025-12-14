@@ -84,6 +84,10 @@ func (h *ReportHandler) ProductLeftByBatch(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetProductLeftByBatch)
 }
 
+func (h *ReportHandler) NonFixedBatches(ctx *gin.Context) {
+	h.handleReport(ctx, h.reportRepository.GetNonFixedBatches)
+}
+
 func (h *ReportHandler) SystemUsers(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetSystemUsers)
 }

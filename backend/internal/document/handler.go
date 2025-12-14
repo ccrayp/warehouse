@@ -77,7 +77,9 @@ func (h *DocumentHandler) GetDocumentPagination(ctx *gin.Context) {
 		return
 	}
 
-	documents, err := h.documentRepository.GetDocumentPagination(limit, offset, claims.Role)
+	type_ := ctx.Query("type")
+
+	documents, total, err := h.documentRepository.GetDocumentPagination(limit, offset, type_, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -90,6 +92,7 @@ func (h *DocumentHandler) GetDocumentPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "document were successfully selected", gin.H{
 		"document": documents,
+		"total":    total,
 	})
 }
 
@@ -283,7 +286,7 @@ func (h *DocumentHandler) GetContentPagination(ctx *gin.Context) {
 		return
 	}
 
-	contents, err := h.documentRepository.GetContentPagination(limit, offset, claims.Role)
+	contents, total, err := h.documentRepository.GetContentPagination(limit, offset, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -296,6 +299,7 @@ func (h *DocumentHandler) GetContentPagination(ctx *gin.Context) {
 
 	utils.RespondSuccess(ctx, http.StatusOK, "document_contents were successfully selected", gin.H{
 		"document_contents": contents,
+		"total":             total,
 	})
 }
 
@@ -350,16 +354,16 @@ func (h *DocumentHandler) GetAllContentByDocuemntId(ctx *gin.Context) {
 		return
 	}
 
-	exists, err := utils.CheckExists(id, "document_content", claims.Role, h.documentRepository.db)
-	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while exists check", nil)
-		return
-	}
+	// exists, err := utils.CheckExists(id, "document_content", claims.Role, h.documentRepository.db)
+	// if err != nil {
+	// 	utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while exists check", nil)
+	// 	return
+	// }
 
-	if !exists {
-		utils.RespondError(ctx, http.StatusNotFound, "docuemnt_content with such id doesn't exist", "docuemnt_content with such id doesn't exist", nil)
-		return
-	}
+	// if !exists {
+	// 	utils.RespondError(ctx, http.StatusNotFound, "docuemnt_content with such document id doesn't exist", "docuemnt_content with such document id doesn't exist", nil)
+	// 	return
+	// }
 
 	contents, err := h.documentRepository.GetAllContentByDocuemntId(id, claims.Role)
 	if err != nil {
@@ -367,10 +371,10 @@ func (h *DocumentHandler) GetAllContentByDocuemntId(ctx *gin.Context) {
 		return
 	}
 
-	if contents == nil {
-		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
-		return
-	}
+	// if contents == nil {
+	// 	utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+	// 	return
+	// }
 
 	utils.RespondSuccess(ctx, http.StatusOK, "document_contents were successfully selected", gin.H{
 		"document_contens": contents,

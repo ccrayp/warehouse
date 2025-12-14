@@ -135,7 +135,7 @@ func (h *AuthHandler) Me(ctx *gin.Context) {
 		return
 	}
 
-	name, permissions, role, err := h.AuthRepository.Me(claims.Username, claims.Role)
+	name, permissions, role, employee_id, err := h.AuthRepository.Me(claims.Username, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
@@ -150,6 +150,7 @@ func (h *AuthHandler) Me(ctx *gin.Context) {
 		"name":        name,
 		"permissions": permissions,
 		"role":        role,
+		"employee_id": employee_id,
 	})
 }
 

@@ -6,6 +6,7 @@ import { AuthContext } from "../AuthContext";
 
 const reports = [
   { id: "report_batches", name: "Принятые партии", description: "Информация о принятых партиях товара", type: "table" },
+  { id: "report_non_fixed_batches", name: "Непринятые партии", description: "Информация о партиях, которые еще не были задокументированы", type: "table" },
   { id: "report_documents_by_employee", name: "Документы по сотрудникам", description: "Список сотрудников и количество документов", type: "table" },
   { id: "report_employees", name: "Сотрудники", description: "Информация о сотрудниках компании", type: "table" },
   { id: "report_expired_batches", name: "Просроченные партии", description: "Информация о просроченных партиях", type: "table" },
@@ -54,7 +55,7 @@ export default function ReportsPage() {
 
   return (
     <Container className="mt-4">
-      <h2>Отчеты</h2>
+      <h2 className="pt-4">Отчеты</h2>
 
       <Row className="mb-4 gx-3">
         <Col md={4} lg={3}>

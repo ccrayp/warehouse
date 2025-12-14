@@ -93,27 +93,28 @@ func (r *AuthRepository) GetRoleByUsername(username string) (string, error) {
 	return role, nil
 }
 
-func (r *AuthRepository) Me(username, role string) (*string, []Permission, *string, error) {
+func (r *AuthRepository) Me(username, role string) (*string, []Permission, *string, *int, error) {
 	pool, err := r.Db.GetAdminPool()
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	var name string
-	err = pool.QueryRow(context.Background(),
-		"SELECT surname || ' ' || firstname || ' ' || patronymic AS name "+
-			"FROM employee AS e JOIN sys_user AS su ON e.id = su.id_employee "+
-			"WHERE login = $1", username,
-	).Scan(&name)
+	var employee_id int
+	err = pool.QueryRow(context.Background(), `
+		SELECT surname || ' ' || firstname || ' ' || patronymic AS name, su.id_employee
+			FROM employee AS e JOIN sys_user AS su ON e.id = su.id_employee
+			WHERE login = $1`, username,
+	).Scan(&name, &employee_id)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	rows, err := pool.Query(context.Background(),
 		"SELECT section, permissions FROM report_interface_grants WHERE role=$1", role,
 	)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 	defer rows.Close()
 
@@ -124,14 +125,14 @@ func (r *AuthRepository) Me(username, role string) (*string, []Permission, *stri
 
 		err := rows.Scan(&perm.Section, &permsArray)
 		if err != nil {
-			return nil, nil, nil, err
+			return nil, nil, nil, nil, err
 		}
 
 		perm.Permissions = permsArray
 		permissions = append(permissions, perm)
 	}
 
-	return &name, permissions, &role, nil
+	return &name, permissions, &role, &employee_id, nil
 }
 
 func (r *AuthRepository) Logout(token, username string) error {

@@ -264,7 +264,33 @@ func (r *ReportRepository) GetProductLeftByBatch(role string) (any, error) {
 	for rows.Next() {
 		var item ReportProductsLeftByBatch
 
-		err = rows.Scan(&item.Number, &item.IdProduct, &item.IdBacth, &item.ProductName, &item.LeftQuantity)
+		err = rows.Scan(&item.Number, &item.IdBacth, &item.IdProduct, &item.ProductName, &item.LeftQuantity)
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, item)
+	}
+
+	return response, nil
+}
+
+func (r *ReportRepository) GetNonFixedBatches(role string) (any, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), `SELECT * FROM report_non_fixed_batches`)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []ReportNonFixedBatches
+	for rows.Next() {
+		var item ReportNonFixedBatches
+
+		err = rows.Scan(&item.Number, &item.IdBatch, &item.IdProduct, &item.ProductName)
 		if err != nil {
 			return nil, err
 		}

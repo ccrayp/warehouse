@@ -16,7 +16,6 @@ export default function Sidebar() {
     batch: "Партии",
     document: "Документы",
     document_category: "Категории документов",
-    document_content: "Содержимое документов",
     product: "Продукты",
     product_category: "Категории продуктов",
     producer: "Производители",
@@ -31,7 +30,7 @@ export default function Sidebar() {
   const categories = [
     {
       title: "Склад",
-      items: ["batch", "document", "document_content", "product", "producer"]
+      items: ["batch", "document", "product", "producer"]
     },
     {
       title: "Справочники",
@@ -48,107 +47,109 @@ export default function Sidebar() {
 
   const hasPermission = (sectionName) => sections.some(s => s.section === sectionName);
 
-  return (
-    <>
-      <Button
-        className="no-print"
-        variant="outline-primary"
-        onClick={handleShow}
-        style={{ position: "fixed", top: 85, left: 15, zIndex: 100 }}
-      >
-        ☰
-      </Button>
+  if (sections.length !== 0) {
+    return (
+      <>
+        <Button
+          className="no-print"
+          variant="outline-primary"
+          onClick={handleShow}
+          style={{ position: "fixed", top: 85, left: 15, zIndex: 100 }}
+        >
+          ☰
+        </Button>
 
-      <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Меню</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {sections.length === 0 ? (
-            <Alert variant="info" className="text-center">
-              Авторизуйтесь для доступа к меню
-            </Alert>
-          ) : (
-            <Nav className="flex-column">
-              {categories.map((cat, i) => {
-                const visibleItems = cat.items.filter(hasPermission);
-                if (visibleItems.length === 0) return null;
+        <Offcanvas show={show} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Меню</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            {sections.length === 0 ? (
+              <Alert variant="info" className="text-center">
+                Авторизуйтесь для доступа к меню
+              </Alert>
+            ) : (
+              <Nav className="flex-column">
+                {categories.map((cat, i) => {
+                  const visibleItems = cat.items.filter(hasPermission);
+                  if (visibleItems.length === 0) return null;
 
-                return (
-                  <div key={i} style={{ marginBottom: "1rem" }}>
-                    <strong className="mb-2 d-block">{cat.title}</strong>
-                    {visibleItems.map((item, idx) => (
-                      <Nav.Link
-                        key={idx}
-                        as={Link}
-                        to={`/${item}`}
-                        active={location.pathname === `/${item}`}
-                        onClick={handleClose}
-                        className="ps-3"
-                      >
-                        {sectionNames[item] || item}
-                      </Nav.Link>
-                    ))}
-                  </div>
-                );
-              })}
-
-              {/* Отчеты */}
-              {sections.some(s => s.section.startsWith("report_")) && (
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong className="mb-2 d-block">Отчеты</strong>
-                  <Nav.Link
-                    as={Link}
-                    to="/report"
-                    active={location.pathname === "/report"}
-                    onClick={handleClose}
-                    className="ps-3"
-                  >
-                    Все отчеты
-                  </Nav.Link>
-                </div>
-              )}
-
-              {/* Администрирование */}
-              {isAdmin && (
-                <>
-                  <div style={{ marginBottom: "1rem" }}>
-                    <strong className="mb-2 d-block">{adminCategory.title}</strong>
-                    {adminCategory.items.filter(hasPermission).map((item, idx) => (
-                      <Nav.Link
-                        key={idx}
-                        as={Link}
-                        to={`/${item}`}
-                        active={location.pathname === `/${item}`}
-                        onClick={handleClose}
-                        className="ps-3"
-                      >
-                        {sectionNames[item] || item}
-                      </Nav.Link>
-                    ))}
-                  </div>
-
-                  {/* Логи */}
-                  {hasPermission("audit_log") && (
-                    <div style={{ marginBottom: "1rem" }}>
-                      <strong className="mb-2 d-block">Логи</strong>
-                      <Nav.Link
-                        as={Link}
-                        to="/audit_log"
-                        active={location.pathname === "/audit_log"}
-                        onClick={handleClose}
-                        className="ps-3"
-                      >
-                        Просмотр логов
-                      </Nav.Link>
+                  return (
+                    <div key={i} style={{ marginBottom: "1rem" }}>
+                      <strong className="mb-2 d-block">{cat.title}</strong>
+                      {visibleItems.map((item, idx) => (
+                        <Nav.Link
+                          key={idx}
+                          as={Link}
+                          to={`/${item}`}
+                          active={location.pathname === `/${item}`}
+                          onClick={handleClose}
+                          className="ps-3"
+                        >
+                          {sectionNames[item] || item}
+                        </Nav.Link>
+                      ))}
                     </div>
-                  )}
-                </>
-              )}
-            </Nav>
-          )}
-        </Offcanvas.Body>
-      </Offcanvas>
-    </>
-  );
+                  );
+                })}
+
+                {/* Отчеты */}
+                {sections.some(s => s.section.startsWith("report_")) && (
+                  <div style={{ marginBottom: "1rem" }}>
+                    <strong className="mb-2 d-block">Отчеты</strong>
+                    <Nav.Link
+                      as={Link}
+                      to="/report"
+                      active={location.pathname === "/report"}
+                      onClick={handleClose}
+                      className="ps-3"
+                    >
+                      Все отчеты
+                    </Nav.Link>
+                  </div>
+                )}
+
+                {/* Администрирование */}
+                {isAdmin && (
+                  <>
+                    <div style={{ marginBottom: "1rem" }}>
+                      <strong className="mb-2 d-block">{adminCategory.title}</strong>
+                      {adminCategory.items.filter(hasPermission).map((item, idx) => (
+                        <Nav.Link
+                          key={idx}
+                          as={Link}
+                          to={`/${item}`}
+                          active={location.pathname === `/${item}`}
+                          onClick={handleClose}
+                          className="ps-3"
+                        >
+                          {sectionNames[item] || item}
+                        </Nav.Link>
+                      ))}
+                    </div>
+
+                    {/* Логи */}
+                    {hasPermission("audit_log") && (
+                      <div style={{ marginBottom: "1rem" }}>
+                        <strong className="mb-2 d-block">Логи</strong>
+                        <Nav.Link
+                          as={Link}
+                          to="/audit_log"
+                          active={location.pathname === "/audit_log"}
+                          onClick={handleClose}
+                          className="ps-3"
+                        >
+                          Просмотр логов
+                        </Nav.Link>
+                      </div>
+                    )}
+                  </>
+                )}
+              </Nav>
+            )}
+          </Offcanvas.Body>
+        </Offcanvas>
+      </>
+    );
+  }
 }

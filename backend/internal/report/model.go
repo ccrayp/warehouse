@@ -101,3 +101,10 @@ type ReportProductsLeftByBatch struct {
 	ProductName  string `json:"product_name"`
 	LeftQuantity int    `json:"left_quantity"`
 }
+
+type ReportNonFixedBatches struct {
+	Number      int    `json:"number"`
+	IdBatch     int    `json:"id_batch"`
+	IdProduct   int    `json:"id_product"`
+	ProductName string `json:"product_name"`
+}

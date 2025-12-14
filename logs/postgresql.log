@@ -1,11 +1,105 @@
 warehouse_db-1  | 
 warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
 warehouse_db-1  | 
-warehouse_db-1  | 2025-12-10 17:46:27.022 MSK [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-warehouse_db-1  | 2025-12-10 17:46:27.029 MSK [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-warehouse_db-1  | 2025-12-10 17:46:27.029 MSK [1] LOG:  listening on IPv6 address "::", port 5432
-warehouse_db-1  | 2025-12-10 17:46:27.057 MSK [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-warehouse_db-1  | 2025-12-10 17:46:27.066 MSK [29] LOG:  database system was shut down at 2025-12-10 17:46:25 MSK
-warehouse_db-1  | 2025-12-10 17:46:27.073 MSK [1] LOG:  database system is ready to accept connections
-warehouse_db-1  | 2025-12-10 17:51:27.158 MSK [27] LOG:  checkpoint starting: time
-warehouse_db-1  | 2025-12-10 17:51:30.210 MSK [27] LOG:  checkpoint complete: wrote 32 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.025 s, sync=0.009 s, total=3.054 s; sync files=22, longest=0.007 s, average=0.001 s; distance=81 kB, estimate=81 kB
+warehouse_db-1  | 2025-12-12 10:11:52.335 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-12 10:11:52.335 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-12 10:11:52.335 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-12 10:11:52.339 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-12 10:11:52.342 UTC [29] LOG:  database system was shut down at 2025-12-12 08:34:03 UTC
+warehouse_db-1  | 2025-12-12 10:11:52.361 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-12 10:13:34.900 UTC [35] ERROR:  relation "report_product_left" does not exist at character 15
+warehouse_db-1  | 2025-12-12 10:13:34.900 UTC [35] STATEMENT:  SELECT * FROM report_product_left
+warehouse_db-1  | 2025-12-12 10:16:52.422 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-12 10:16:52.441 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.002 s, total=0.020 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
+warehouse_db-1  | 2025-12-12 11:23:33.403 UTC [35] ERROR:  function get_interface_grants() does not exist at character 15
+warehouse_db-1  | 2025-12-12 11:23:33.403 UTC [35] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+warehouse_db-1  | 2025-12-12 11:23:33.403 UTC [35] STATEMENT:  SELECT * FROM get_interface_grants()
+warehouse_db-1  | 2025-12-12 12:11:39.445 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-12 12:11:40.819 UTC [27] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.362 s, sync=0.005 s, total=1.374 s; sync files=11, longest=0.004 s, average=0.001 s; distance=11 kB, estimate=11 kB
+warehouse_db-1  | 2025-12-12 19:18:49.641 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-12 19:18:50.394 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.742 s, sync=0.006 s, total=0.754 s; sync files=8, longest=0.004 s, average=0.001 s; distance=13 kB, estimate=13 kB
+warehouse_db-1  | 2025-12-14 07:24:50.572 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 07:24:51.319 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.734 s, sync=0.003 s, total=0.747 s; sync files=8, longest=0.002 s, average=0.001 s; distance=13 kB, estimate=13 kB
+warehouse_db-1  | 2025-12-14 07:36:45.824 UTC [1412] ERROR:  syntax error at or near "FROM" at character 49
+warehouse_db-1  | 2025-12-14 07:36:45.824 UTC [1412] STATEMENT:  SELECT * FROM refresh_tokens WHERE EXRTACT(DATE FROM created_at) = CURRENT_DATE
+warehouse_db-1  | 2025-12-14 07:36:49.921 UTC [1412] ERROR:  syntax error at or near "created_at" at character 49
+warehouse_db-1  | 2025-12-14 07:36:49.921 UTC [1412] STATEMENT:  SELECT * FROM refresh_tokens WHERE EXRTACT(DATE created_at) = CURRENT_DATE
+warehouse_db-1  | 2025-12-14 07:36:59.609 UTC [1412] ERROR:  operator does not exist: numeric = date at character 66
+warehouse_db-1  | 2025-12-14 07:36:59.609 UTC [1412] HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+warehouse_db-1  | 2025-12-14 07:36:59.609 UTC [1412] STATEMENT:  SELECT * FROM refresh_tokens WHERE EXTRACT(DATE FROM created_at) = CURRENT_DATE
+warehouse_db-1  | 2025-12-14 07:37:16.958 UTC [1412] ERROR:  unit "date" not recognized for type timestamp without time zone
+warehouse_db-1  | 2025-12-14 07:37:16.958 UTC [1412] STATEMENT:  SELECT EXTRACT(DATE FROM created_at) FROM refresh_tokens
+warehouse_db-1  | 2025-12-14 07:39:50.556 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 07:39:52.139 UTC [27] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.570 s, sync=0.006 s, total=1.584 s; sync files=14, longest=0.005 s, average=0.001 s; distance=57 kB, estimate=57 kB
+warehouse_db-1  | 2025-12-14 08:19:04.415 UTC [1581] ERROR:  relation "docuemnt" does not exist at character 22
+warehouse_db-1  | 2025-12-14 08:19:04.415 UTC [1581] STATEMENT:  SELECT COUNT(*) FROM docuemnt
+warehouse_db-1  | 2025-12-14 08:39:50.942 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 08:39:51.699 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.734 s, sync=0.006 s, total=0.758 s; sync files=8, longest=0.005 s, average=0.001 s; distance=8 kB, estimate=52 kB
+warehouse_db-1  | 2025-12-14 09:09:51.192 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:09:51.945 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.726 s, sync=0.007 s, total=0.753 s; sync files=8, longest=0.006 s, average=0.001 s; distance=9 kB, estimate=48 kB
+warehouse_db-1  | 2025-12-14 09:24:52.138 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:24:52.996 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.844 s, sync=0.008 s, total=0.858 s; sync files=9, longest=0.005 s, average=0.001 s; distance=10 kB, estimate=44 kB
+warehouse_db-1  | 2025-12-14 09:29:53.112 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:29:54.086 UTC [27] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.933 s, sync=0.006 s, total=0.976 s; sync files=10, longest=0.005 s, average=0.001 s; distance=12 kB, estimate=41 kB
+warehouse_db-1  | 2025-12-14 09:34:53.204 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:34:54.076 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.846 s, sync=0.006 s, total=0.872 s; sync files=9, longest=0.004 s, average=0.001 s; distance=12 kB, estimate=38 kB
+warehouse_db-1  | 2025-12-14 09:39:53.115 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:39:53.573 UTC [27] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.419 s, sync=0.004 s, total=0.459 s; sync files=5, longest=0.003 s, average=0.001 s; distance=10 kB, estimate=35 kB
+warehouse_db-1  | 2025-12-14 09:44:53.684 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:44:55.502 UTC [27] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.770 s, sync=0.008 s, total=1.819 s; sync files=14, longest=0.006 s, average=0.001 s; distance=42 kB, estimate=42 kB
+warehouse_db-1  | 2025-12-14 09:49:53.474 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:49:54.746 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.251 s, sync=0.006 s, total=1.273 s; sync files=10, longest=0.005 s, average=0.001 s; distance=8 kB, estimate=38 kB
+warehouse_db-1  | 2025-12-14 09:54:53.846 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 09:54:55.123 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.252 s, sync=0.006 s, total=1.277 s; sync files=13, longest=0.004 s, average=0.001 s; distance=9 kB, estimate=35 kB
+warehouse_db-1  | 2025-12-14 10:04:24.560 UTC [1412] ERROR:  syntax error at or near "FROM" at character 42
+warehouse_db-1  | 2025-12-14 10:04:24.560 UTC [1412] STATEMENT:  SELECT
+warehouse_db-1  | 		ROW_NUMBER() OVER() AS number,
+warehouse_db-1  | 		
+warehouse_db-1  | 	FROM batch AS b
+warehouse_db-1  | 	JOIN (
+warehouse_db-1  | 		SELECT id AS id_batch FROM batch
+warehouse_db-1  | 		EXCEPT 
+warehouse_db-1  | 		SELECT DISTINCT id_batch FROM document_content
+warehouse_db-1  | 	) AS t
+warehouse_db-1  | 		ON b.id = t.id_batch
+warehouse_db-1  | 2025-12-14 10:14:53.490 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:14:54.789 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.268 s, sync=0.010 s, total=1.300 s; sync files=13, longest=0.005 s, average=0.001 s; distance=10 kB, estimate=33 kB
+warehouse_db-1  | 2025-12-14 10:19:53.868 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:19:55.157 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.249 s, sync=0.006 s, total=1.290 s; sync files=13, longest=0.005 s, average=0.001 s; distance=10 kB, estimate=30 kB
+warehouse_db-1  | 2025-12-14 10:24:53.155 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:24:54.406 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.236 s, sync=0.008 s, total=1.252 s; sync files=13, longest=0.006 s, average=0.001 s; distance=12 kB, estimate=29 kB
+warehouse_db-1  | 2025-12-14 10:29:53.507 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:29:54.369 UTC [27] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.840 s, sync=0.007 s, total=0.863 s; sync files=9, longest=0.005 s, average=0.001 s; distance=9 kB, estimate=27 kB
+warehouse_db-1  | 2025-12-14 10:34:53.400 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:34:54.684 UTC [27] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.257 s, sync=0.006 s, total=1.285 s; sync files=13, longest=0.005 s, average=0.001 s; distance=13 kB, estimate=25 kB
+warehouse_db-1  | 2025-12-14 10:44:53.778 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:44:56.512 UTC [27] LOG:  checkpoint complete: wrote 27 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.702 s, sync=0.006 s, total=2.735 s; sync files=22, longest=0.004 s, average=0.001 s; distance=129 kB, estimate=129 kB
+warehouse_db-1  | 2025-12-14 10:45:10.849 UTC [1412] ERROR:  relation "report_non_fixed_bacthes" does not exist
+warehouse_db-1  | 2025-12-14 10:45:10.849 UTC [1412] STATEMENT:  GRANT SELECT ON report_non_fixed_bacthes TO admin, moderator, manager
+warehouse_db-1  | 2025-12-14 10:49:53.676 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:49:54.126 UTC [27] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.425 s, sync=0.004 s, total=0.451 s; sync files=5, longest=0.003 s, average=0.001 s; distance=16 kB, estimate=118 kB
+warehouse_db-1  | 2025-12-14 10:54:53.224 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 10:54:54.390 UTC [27] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.143 s, sync=0.007 s, total=1.167 s; sync files=11, longest=0.006 s, average=0.001 s; distance=10 kB, estimate=107 kB
+warehouse_db-1  | 2025-12-14 11:09:21.041 UTC [1412] ERROR:  syntax error at or near "AND" at character 27
+warehouse_db-1  | 2025-12-14 11:09:21.041 UTC [1412] STATEMENT:  REVOKE UPDATE ON document AND document_content FOR manager
+warehouse_db-1  | 2025-12-14 11:09:26.228 UTC [1412] ERROR:  syntax error at or near "FOR" at character 35
+warehouse_db-1  | 2025-12-14 11:09:26.228 UTC [1412] STATEMENT:  REVOKE UPDATE ON document_content FOR manager
+warehouse_db-1  | 2025-12-14 11:09:53.483 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 11:09:53.850 UTC [27] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.318 s, sync=0.010 s, total=0.368 s; sync files=3, longest=0.007 s, average=0.004 s; distance=16 kB, estimate=98 kB
+warehouse_db-1  | 2025-12-14 11:10:42.299 UTC [2458] ERROR:  permission denied for table document_category
+warehouse_db-1  | 2025-12-14 11:10:42.299 UTC [2458] STATEMENT:  SELECT * FROM document_category
+warehouse_db-1  | 2025-12-14 11:10:43.878 UTC [2462] ERROR:  permission denied for table document_category
+warehouse_db-1  | 2025-12-14 11:10:43.878 UTC [2462] STATEMENT:  SELECT * FROM document_category
+warehouse_db-1  | 2025-12-14 11:11:10.023 UTC [2468] ERROR:  permission denied for table document_category
+warehouse_db-1  | 2025-12-14 11:11:10.023 UTC [2468] STATEMENT:  SELECT * FROM document_category
+warehouse_db-1  | 2025-12-14 11:11:11.878 UTC [2467] ERROR:  permission denied for table document_category
+warehouse_db-1  | 2025-12-14 11:11:11.878 UTC [2467] STATEMENT:  SELECT * FROM document_category
+warehouse_db-1  | 2025-12-14 11:11:32.167 UTC [2462] ERROR:  permission denied for table document_category
+warehouse_db-1  | 2025-12-14 11:11:32.167 UTC [2462] STATEMENT:  SELECT * FROM document_category
+warehouse_db-1  | 2025-12-14 11:14:53.950 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 11:14:55.660 UTC [27] LOG:  checkpoint complete: wrote 17 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.667 s, sync=0.010 s, total=1.712 s; sync files=15, longest=0.009 s, average=0.001 s; distance=54 kB, estimate=94 kB
+warehouse_db-1  | 2025-12-14 11:18:29.662 UTC [1412] ERROR:  argument of WHERE must be type boolean, not type information_schema.sql_identifier at character 45
+warehouse_db-1  | 2025-12-14 11:18:29.662 UTC [1412] STATEMENT:  SELECT * FROM report_interface_grants WHERE section ORDER BY section, role
+warehouse_db-1  | 	
+warehouse_db-1  | 2025-12-14 11:19:53.817 UTC [27] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 11:19:54.490 UTC [27] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.636 s, sync=0.004 s, total=0.674 s; sync files=5, longest=0.003 s, average=0.001 s; distance=36 kB, estimate=88 kB

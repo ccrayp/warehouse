@@ -69,7 +69,7 @@ export default function AuditLogs() {
 
   return (
     <Container className="mt-2">
-      <h2 className="mt-3 mb-3">Администрирование: Логи изменений</h2>
+      <h2 className="pt-4 mb-3">Администрирование: Логи изменений</h2>
 
       {/* Фильтры */}
       <Form className="mb-3">

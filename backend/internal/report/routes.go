@@ -24,6 +24,7 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 		"producer_subject_statistics": handler.ProducerSubjectStatistics,
 		"products_left":               handler.ProductLeft,
 		"products_left_by_batch":      handler.ProductLeftByBatch,
+		"non_fixed_batches":           handler.NonFixedBatches,
 		"system_users":                handler.SystemUsers,
 		"tables_activity_per_hour":    handler.TablesActivityPerHour,
 		"tables_activity":             handler.TablesActivity,

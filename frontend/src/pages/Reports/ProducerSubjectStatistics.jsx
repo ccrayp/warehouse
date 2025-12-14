@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useApi } from "../../apiRequest";
 import { Container, Spinner } from "react-bootstrap";
+import PrintUserInfo from "./PrintUserInfo";
 import {
   BarChart,
   Bar,
@@ -85,7 +86,7 @@ export default function ReportProducerStatistics() {
         </p>
 
         {/* Гистограмма */}
-        <div style={{ width: "100%", height: "400px", marginBottom: "32px" }}>
+        <div style={{ width: "100%", height: "800px", marginBottom: "32px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
@@ -125,6 +126,7 @@ export default function ReportProducerStatistics() {
               ))}
             </tbody>
           </table>
+          <PrintUserInfo />
         </div>
       </Container>
 

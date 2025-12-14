@@ -44,32 +44,66 @@ func (r *BatchRepository) GetAll(role string) ([]Batch, error) {
 	return batches, nil
 }
 
-func (r *BatchRepository) GetPagination(limit, offset int, role string) ([]Batch, error) {
+func (r *BatchRepository) GetPagination(limit, offset int, query, role string) ([]Batch, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM batch ORDER BY created_at DESC LIMIT $1 OFFSET $2", limit, offset)
+	ctx := context.Background()
+	searchPattern := "%" + query + "%"
+
+	var total int
+	countQuery := `
+		SELECT COUNT(*)
+		FROM batch b
+		JOIN product p ON b.id_product = p.id
+		WHERE LOWER(p.name) LIKE LOWER($1)
+	`
+	err = pool.QueryRow(ctx, countQuery, searchPattern).Scan(&total)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+
+	selectQuery := `
+		SELECT 
+			b.id,
+			b.cost,
+			b.production_date,
+			b.expiration_date,
+			b.id_product,
+			b.created_at
+		FROM batch b
+		JOIN product p ON b.id_product = p.id
+		WHERE LOWER(p.name) LIKE LOWER($1)
+		ORDER BY b.created_at DESC
+		LIMIT $2 OFFSET $3
+	`
+
+	rows, err := pool.Query(ctx, selectQuery, searchPattern, limit, offset)
+	if err != nil {
+		return nil, nil, err
 	}
 	defer rows.Close()
 
 	var batches []Batch
-
 	for rows.Next() {
 		var batch Batch
-
-		err = rows.Scan(&batch.ID, &batch.Cost, &batch.ProductionDate, &batch.ExpirationDate, &batch.IdProduct, &batch.CreatedAt)
+		err := rows.Scan(
+			&batch.ID,
+			&batch.Cost,
+			&batch.ProductionDate,
+			&batch.ExpirationDate,
+			&batch.IdProduct,
+			&batch.CreatedAt,
+		)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-
 		batches = append(batches, batch)
 	}
 
-	return batches, nil
+	return batches, &total, nil
 }
 
 func (r *BatchRepository) GetById(id int, role string) (*Batch, error) {
@@ -79,7 +113,7 @@ func (r *BatchRepository) GetById(id int, role string) (*Batch, error) {
 	}
 
 	var batch Batch
-	err = pool.QueryRow(context.Background(), "SELECT * FROM batch WHERE id=$1", id).Scan(&batch.ID, &batch.Cost, &batch.ProductionDate, &batch.ExpirationDate, &batch.CreatedAt)
+	err = pool.QueryRow(context.Background(), "SELECT * FROM batch WHERE id=$1", id).Scan(&batch.ID, &batch.Cost, &batch.ProductionDate, &batch.ExpirationDate, &batch.IdProduct, &batch.CreatedAt)
 	if err != nil {
 		return nil, err
 	}

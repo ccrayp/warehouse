@@ -4,6 +4,8 @@ import (
 	"context"
 	"warehouse/internal/document/models"
 	"warehouse/pkg/database"
+
+	"github.com/jackc/pgx/v5"
 )
 
 type DocumentRepository struct {
@@ -42,30 +44,73 @@ func (r *DocumentRepository) GetDocumentAll(role string) ([]models.Document, err
 	return docuemnts, nil
 }
 
-func (r *DocumentRepository) GetDocumentPagination(limit, offset int, role string) ([]models.Document, error) {
+func (r *DocumentRepository) GetDocumentPagination(limit, offset int, type_, role string) ([]models.Document, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM document LIMIT $1 OFFSET $2", limit, offset)
+	ctx := context.Background()
+
+	var total int
+	if type_ == "" {
+		err = pool.QueryRow(
+			ctx,
+			`SELECT COUNT(*) FROM document`,
+		).Scan(&total)
+	} else {
+		err = pool.QueryRow(
+			ctx,
+			`SELECT COUNT(*) FROM document WHERE id_document_category = $1`,
+			type_,
+		).Scan(&total)
+	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	var docuemnts []models.Document
+	var rows pgx.Rows
+	if type_ == "" {
+		rows, err = pool.Query(
+			ctx,
+			`SELECT id, date, id_employee, id_document_category
+			 FROM document
+			 ORDER BY date DESC
+			 LIMIT $1 OFFSET $2`,
+			limit, offset,
+		)
+	} else {
+		rows, err = pool.Query(
+			ctx,
+			`SELECT id, date, id_employee, id_document_category
+			 FROM document
+			 WHERE id_document_category = $1
+			 ORDER BY date DESC
+			 LIMIT $2 OFFSET $3`,
+			type_, limit, offset,
+		)
+	}
+	if err != nil {
+		return nil, nil, err
+	}
+	defer rows.Close()
+
+	var documents []models.Document
 	for rows.Next() {
-		var docuemnt models.Document
-
-		err := rows.Scan(&docuemnt.ID, &docuemnt.Date, &docuemnt.IdEmployee, &docuemnt.IdDocumentCategory)
+		var document models.Document
+		err := rows.Scan(
+			&document.ID,
+			&document.Date,
+			&document.IdEmployee,
+			&document.IdDocumentCategory,
+		)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-
-		docuemnts = append(docuemnts, docuemnt)
+		documents = append(documents, document)
 	}
 
-	return docuemnts, nil
+	return documents, &total, nil
 }
 
 func (r *DocumentRepository) GetDocumentById(id int, role string) (*models.Document, error) {
@@ -152,15 +197,18 @@ func (r *DocumentRepository) GetContentAll(role string) ([]models.Content, error
 	return contents, nil
 }
 
-func (r *DocumentRepository) GetContentPagination(limit, offset int, role string) ([]models.Content, error) {
+func (r *DocumentRepository) GetContentPagination(limit, offset int, role string) ([]models.Content, *int, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	var total int
+	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM document").Scan(&total)
 
 	rows, err := pool.Query(context.Background(), "SELECT * FROM document_content LIMIT $1 OFFSET $2", limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var contents []models.Content
@@ -169,13 +217,13 @@ func (r *DocumentRepository) GetContentPagination(limit, offset int, role string
 
 		err := rows.Scan(&content.Id, &content.IdDocument, &content.IdBatch, &content.Quantity)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		contents = append(contents, content)
 	}
 
-	return contents, nil
+	return contents, &total, nil
 }
 
 func (r *DocumentRepository) GetContentById(id int, role string) (*models.Content, error) {

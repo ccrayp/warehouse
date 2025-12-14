@@ -41,6 +41,10 @@ import ProductsPage from "./pages/Products/ProductsPage";
 import ProductsCategoriesPage from "./pages/ProductCategories/ProductCategoriesPage";
 import DocumentCategoriesPage from "./pages/DocumentCategories/DocumentCategoriesPage";
 import ProducersPage from "./pages/Producers/ProducersPage";
+import BatchesPage from "./pages/Batches/BatchesPage";
+import DocumentsPage from "./pages/Documents/DocumentsPage";
+import DocumentsItemPage from "./pages/Documents/DocumentsItemPage";
+import ReportNonFixedBacthes from "./pages/Reports/NonFixedBatches";
 
 export const ContentWrapper = styled.div.attrs({
   className: "content-wrapper"
@@ -78,8 +82,13 @@ export default function App() {
             <Route path="/product_category" element={<ProductsCategoriesPage />} />
             <Route path="/document_category" element={<DocumentCategoriesPage />} />
             <Route path="/producer" element={<ProducersPage />} />
+            <Route path="/batch" element={<BatchesPage />} />
+            <Route path="/document" element={<DocumentsPage />} />
+            <Route path="/document/:id" element={<DocumentsItemPage />} />
+
 
             <Route path="/report/report_batches" element={<ReportBatches/>} />
+            <Route path="/report/report_non_fixed_batches" element={<ReportNonFixedBacthes/>} />
             <Route path="/report/report_documents_by_employee" element={<ReportDocumentsByEmployee/>} />
             <Route path="/report/report_employees" element={<ReportEmployees/>} />
             <Route path="/report/report_expired_batches" element={<ReportExpiredBatches/>} />

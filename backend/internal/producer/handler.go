@@ -69,16 +69,18 @@ func (h *ProducerHandler) GetProducerPagination(ctx *gin.Context) {
 		return
 	}
 
-	producers, total, err := h.producerRepository.GetPagination(limit, offset, claims.Role)
+	query := ctx.Query("q")
+
+	producers, total, err := h.producerRepository.GetPagination(limit, offset, query, claims.Role)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
 	}
 
-	if producers == nil {
-		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
-		return
-	}
+	// if producers == nil {
+	// 	utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
+	// 	return
+	// }
 
 	utils.RespondSuccess(ctx, http.StatusOK, "producers selected successfully", gin.H{
 		"producers": producers,
