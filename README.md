@@ -20,3 +20,40 @@
 - [Visual interface](http://localhost:8080/)
 - [API homepage](http://localhost:8080/api/)
 - [pgAdmin4](http://localhost:5050)
+
+## Screenshots
+### Homepage
+![Home](./screenshots/home.png)
+
+### Sidebar
+![Sidebar](./screenshots/sidebar.png)
+
+### Reports
+![Reports](./screenshots/reports.png)
+
+### Report chart
+![ReportChart](./screenshots/chart.png)
+
+### Save (print) report
+![PrintReport](./screenshots/print.png)
+
+### Modal create
+![ModalCreate](./screenshots/create.png)
+
+### Model edit
+![ModalEdit](./screenshots/edit.png)
+
+### Document page
+![DocumentPage](./screenshots/document.png)
+
+### Employees
+![Emplopyees](./screenshots/employees.png)
+
+### Positions
+![Positions](./screenshots/positions.png)
+
+### Producers
+![Producers](./screenshots/producers.png)
+
+### Products
+![Products](./screenshots/products.png)

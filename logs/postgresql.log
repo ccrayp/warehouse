@@ -1,17 +1,11 @@
 warehouse_db-1  | 
 warehouse_db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
 warehouse_db-1  | 
-warehouse_db-1  | 2025-12-14 13:46:58.640 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
-warehouse_db-1  | 2025-12-14 13:46:58.641 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-warehouse_db-1  | 2025-12-14 13:46:58.641 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-warehouse_db-1  | 2025-12-14 13:46:58.643 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-warehouse_db-1  | 2025-12-14 13:46:58.647 UTC [29] LOG:  database system was shut down at 2025-12-14 13:45:12 UTC
-warehouse_db-1  | 2025-12-14 13:46:58.650 UTC [1] LOG:  database system is ready to accept connections
-warehouse_db-1  | 2025-12-14 13:47:39.986 UTC [1] LOG:  received fast shutdown request
-warehouse_db-1  | 2025-12-14 13:47:39.987 UTC [1] LOG:  aborting any active transactions
-warehouse_db-1  | 2025-12-14 13:47:39.989 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
-warehouse_db-1  | 2025-12-14 13:47:39.990 UTC [27] LOG:  shutting down
-warehouse_db-1  | 2025-12-14 13:47:39.991 UTC [27] LOG:  checkpoint starting: shutdown immediate
-warehouse_db-1  | 2025-12-14 13:47:39.997 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB
-warehouse_db-1  | 2025-12-14 13:47:39.999 UTC [1] LOG:  database system is shut down
-[Kwarehouse_db-1 exited with code 0
+warehouse_db-1  | 2025-12-14 13:59:20.124 UTC [1] LOG:  starting PostgreSQL 15.15 (Debian 15.15-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+warehouse_db-1  | 2025-12-14 13:59:20.124 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+warehouse_db-1  | 2025-12-14 13:59:20.124 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+warehouse_db-1  | 2025-12-14 13:59:20.133 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+warehouse_db-1  | 2025-12-14 13:59:20.141 UTC [28] LOG:  database system was shut down at 2025-12-14 13:47:39 UTC
+warehouse_db-1  | 2025-12-14 13:59:20.155 UTC [1] LOG:  database system is ready to accept connections
+warehouse_db-1  | 2025-12-14 14:04:20.178 UTC [26] LOG:  checkpoint starting: time
+warehouse_db-1  | 2025-12-14 14:04:20.813 UTC [26] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.624 s, sync=0.004 s, total=0.636 s; sync files=8, longest=0.003 s, average=0.001 s; distance=13 kB, estimate=13 kB
