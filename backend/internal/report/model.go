@@ -50,6 +50,15 @@ type ReportNoProducts struct {
 	ProducerName string `json:"producer_name"`
 }
 
+type ReportProductsTotalSum struct {
+	Number       int     `json:"number"`
+	IdBatch      int     `json:"batch_id"`
+	ProductName  string  `json:"product_name"`
+	Cost         string  `json:"cost"`
+	LeftQuantity int     `json:"left_quantity"`
+	Total        float32 `json:"total"`
+}
+
 type ReportProducerSubjectStatistics struct {
 	Number           int    `json:"number"`
 	Subject          string `json:"subject"`

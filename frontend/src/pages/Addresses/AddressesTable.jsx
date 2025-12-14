@@ -146,7 +146,7 @@ export default function AddressesTable() {
 
   const handleDelete = async () => {
     if (!hasDelete || !editingAddress) return;
-    if (!window.confirm(`Удалить адрес "${editingAddress.subject}, ${editingAddress.city}"?`)) return;
+    if (!window.confirm(`Удалить адрес "${editingAddress.subject}, ${editingAddress.city}" (все связанные данные будут удалены)?`)) return;
 
     try {
       const resp = await apiRequest(`/addresses/${editingAddress.id}`, { method: "DELETE" });

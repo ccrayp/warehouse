@@ -95,6 +95,7 @@ export default function App() {
             <Route path="/report/report_grants" element={<ReportGrants/>} />
             <Route path="/report/report_interface_grants" element={<ReportPermissions/>} />
             <Route path="/report/report_no_products" element={<ReportNoProducts/>} />
+            <Route path="/report/report_products_total_sum" element={<ReportNoProducts/>} />
             <Route path="/report/report_producer_subject_statistics" element={<ReportProducerStatistics/>} />
             <Route path="/report/report_products_left" element={<ReportProductsLeft/>} />
             <Route path="/report/report_products_left_by_batch" element={<ReportProductsLeftByBatch/>} />

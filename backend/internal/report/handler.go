@@ -72,6 +72,10 @@ func (h *ReportHandler) NoProducts(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetNoProducts)
 }
 
+func (h *ReportHandler) ProductsTotalSum(ctx *gin.Context) {
+	h.handleReport(ctx, h.reportRepository.GetProductsTotalSum)
+}
+
 func (h *ReportHandler) ProducerSubjectStatistics(ctx *gin.Context) {
 	h.handleReport(ctx, h.reportRepository.GetProducerSubjectStatistics)
 }

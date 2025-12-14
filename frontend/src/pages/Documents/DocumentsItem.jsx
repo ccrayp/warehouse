@@ -180,7 +180,7 @@ export default function DocumentsItemPage() {
 
   const deleteDocument = async () => {
     if (!hasDelete) return alert("Нет прав на удаление");
-    if (!window.confirm("Удалить документ?")) return;
+    if (!window.confirm("Удалить документ (все связанные данные будут удалены)?")) return;
 
     await apiRequest(`/documents/${id}`, { method: "DELETE" });
     navigate("/documents");

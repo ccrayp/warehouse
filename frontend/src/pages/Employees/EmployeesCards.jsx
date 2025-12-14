@@ -163,7 +163,7 @@ export default function EmployeesCards() {
 
   const handleDelete = async emp => {
     if (!hasDelete) return alert("Нет прав на удаление");
-    if (!window.confirm(`Удалить сотрудника "${emp.surname} ${emp.firstname}"?`)) return;
+    if (!window.confirm(`Удалить сотрудника "${emp.surname} ${emp.firstname}" (все связанные данные будут удалены)?`)) return;
 
     try {
       const resp = await apiRequest(`/employees/${emp.id}`, { method: "DELETE" });

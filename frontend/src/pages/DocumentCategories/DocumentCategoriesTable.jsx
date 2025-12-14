@@ -110,7 +110,7 @@ export default function DocumentCategoriesTable() {
 
   const handleDelete = async (category) => {
     if (!hasDelete) return;
-    if (!window.confirm(`Удалить категорию "${category.name}"?`)) return;
+    if (!window.confirm(`Удалить категорию "${category.name}" (все связанные данные будут удалены)?`)) return;
 
     try {
       const resp = await apiRequest(`/document_categories/${category.id}`, { method: "DELETE" });

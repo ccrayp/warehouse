@@ -118,7 +118,7 @@ export default function ProducersCards() {
 
   const handleDelete = async producer => {
     if (!hasDelete) return alert("Нет прав на удаление");
-    if (!window.confirm(`Удалить производителя "${producer.name}"?`)) return;
+    if (!window.confirm(`Удалить производителя "${producer.name}"? (все связанные данные будут удалены)`)) return;
 
     try {
       const resp = await apiRequest(`/producers/${producer.id}`, { method: "DELETE" });

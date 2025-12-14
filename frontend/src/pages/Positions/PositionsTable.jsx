@@ -115,7 +115,7 @@ export default function PositionsTable() {
       alert("Нет прав на удаление");
       return;
     }
-    if (!window.confirm(`Удалить должность "${position.name}"?`)) return;
+    if (!window.confirm(`Удалить должность "${position.name}" (все связанные данные будут удалены)?`)) return;
     try {
       const resp = await apiRequest(`/positions/${position.id}`, { method: "DELETE" });
       if (resp.success) {

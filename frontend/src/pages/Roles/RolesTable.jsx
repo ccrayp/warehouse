@@ -94,7 +94,7 @@ export default function RolesTable() {
 
   const handleDelete = async () => {
     if (!editingRole) return;
-    if (!window.confirm(`Удалить роль "${editingRole.name}"?`)) return;
+    if (!window.confirm(`Удалить роль "${editingRole.name}"? (все связанные данные будут удалены)`)) return;
 
     try {
       const resp = await apiRequest(`/roles/${editingRole.id}`, { method: "DELETE" });

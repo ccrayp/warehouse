@@ -2,7 +2,7 @@
 -- PostgreSQL database cluster dump
 --
 
-\restrict omBZpuocgHMwkIh7srKAJ3pByz79VthLouXZ77bJBFTcCjxgTOq3mhEeVBTLcCO
+\restrict KbnVUxgbeiA1eduoFXVcKHez7rbbo0nD67SASCkyhIYiUaXKhjGzvZ8NAfdDs3v
 
 SET default_transaction_read_only = off;
 
@@ -33,7 +33,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 
 
 
-\unrestrict omBZpuocgHMwkIh7srKAJ3pByz79VthLouXZ77bJBFTcCjxgTOq3mhEeVBTLcCO
+\unrestrict KbnVUxgbeiA1eduoFXVcKHez7rbbo0nD67SASCkyhIYiUaXKhjGzvZ8NAfdDs3v
 
 --
 -- PostgreSQL database cluster dump complete
@@ -43,7 +43,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- PostgreSQL database dump
 --
 
-\restrict eIjdvO54jOwwaU9Ux3hoPsqFM3xTzhnRZ1tWhVHR09fzYaXIQFCVih91QjlwW4f
+\restrict FmJYTKcX9oQhycIA65rRx32fJ0f7HSiCbriuhnYAN7r91lGii0C6oPgcTRmSAZa
 
 -- Dumped from database version 15.15 (Debian 15.15-1.pgdg13+1)
 -- Dumped by pg_dump version 15.15 (Debian 15.15-1.pgdg13+1)
@@ -841,6 +841,26 @@ CREATE VIEW public.report_no_products AS
 ALTER TABLE public.report_no_products OWNER TO postgres;
 
 --
+-- Name: report_non_fixed_batches; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.report_non_fixed_batches AS
+ SELECT row_number() OVER () AS number,
+    b.id AS id_batch,
+    b.id_product,
+    pt.name
+   FROM ((public.batch b
+     JOIN ( SELECT batch.id AS id_batch
+           FROM public.batch
+        EXCEPT
+         SELECT DISTINCT document_content.id_batch
+           FROM public.document_content) t ON ((b.id = t.id_batch)))
+     JOIN public.product pt ON ((pt.id = b.id_product)));
+
+
+ALTER TABLE public.report_non_fixed_batches OWNER TO postgres;
+
+--
 -- Name: report_producer_subject_statistics; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -923,6 +943,27 @@ CREATE VIEW public.report_products_left_by_batch AS
 
 
 ALTER TABLE public.report_products_left_by_batch OWNER TO postgres;
+
+--
+-- Name: report_products_total_cost; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.report_products_total_cost AS
+ SELECT row_number() OVER (ORDER BY GROUPING(b.id), pt.name) AS number,
+    b.id AS batch_id,
+    COALESCE(pt.name, 'ИТОГ'::character varying) AS product_name,
+    b.cost,
+    r.left_quantity,
+    sum((b.cost * (r.left_quantity)::double precision)) AS total
+   FROM ((public.report_products_left_by_batch r
+     JOIN public.batch b ON ((r.id_batch = b.id)))
+     JOIN public.product pt ON ((b.id_product = pt.id)))
+  WHERE (r.left_quantity > 0)
+  GROUP BY GROUPING SETS ((b.id, pt.name, b.cost, r.left_quantity), ())
+  ORDER BY GROUPING(b.id), pt.name;
+
+
+ALTER TABLE public.report_products_total_cost OWNER TO postgres;
 
 --
 -- Name: role; Type: TABLE; Schema: public; Owner: postgres
@@ -1515,6 +1556,7 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 288	address	INSERT	\N	{"id": 17, "city": "Санкт-Петербург", "region": "Центральный", "street": "Невский проспект", "subject": "Санкт-Петербург", "building": 12}	postgres	2025-12-08 17:16:09.019164
 289	address	INSERT	\N	{"id": 18, "city": "Выборг", "region": "Выборгский", "street": "Ленинградская улица", "subject": "Ленинградская область", "building": 7}	postgres	2025-12-08 17:16:09.019164
 290	address	INSERT	\N	{"id": 19, "city": "Екатеринбург", "region": "Екатеринбургский", "street": "Ленина", "subject": "Свердловская область", "building": 18}	postgres	2025-12-08 17:16:09.019164
+859	document_content	DELETE	{"id": 16, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:43:53.443618
 291	address	INSERT	\N	{"id": 20, "city": "Краснодар", "region": "Центральный", "street": "Красная", "subject": "Краснодарский край", "building": 33}	postgres	2025-12-08 17:16:09.019164
 292	address	INSERT	\N	{"id": 21, "city": "Химки", "region": "Химкинский", "street": "Ленинградская", "subject": "Московская область", "building": 5}	postgres	2025-12-08 17:16:09.019164
 293	address	INSERT	\N	{"id": 22, "city": "Ростов-на-Дону", "region": "Ростовский", "street": "Пушкинская", "subject": "Ростовская область", "building": 20}	postgres	2025-12-08 17:16:09.019164
@@ -1636,6 +1678,7 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 410	product	UPDATE	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/1765205423056717632_10.webp", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:50:23.057518
 411	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205429991122927_11.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:50:29.99166
 412	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205429991122927_11.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205440110440418_11.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:50:40.11107
+860	document_content	DELETE	{"id": 17, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:43:53.443618
 413	product	UPDATE	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/1765205452018769299_12.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-08 17:50:52.019086
 414	product	UPDATE	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/1765205465161011013_13.jpg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:51:05.161558
 415	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205479544053381_14.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:51:19.545105
@@ -1839,6 +1882,7 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 627	refresh_tokens	DELETE	{"id": 176, "role": "manager", "token": "0b894fcc2e44822e41e7d997d2b0f79e98ced992c833e5f3b5d282e12b177184", "username": "anna_sokolova", "created_at": "2025-12-10T07:18:35.999613"}	\N	admin	2025-12-10 10:21:22.379968
 628	refresh_tokens	INSERT	\N	{"id": 177, "role": "admin", "token": "f203907549a2e3319ebda42af8b66dc0ea27cafa6eaa470da1e7a07e6b61c702", "username": "roman", "created_at": "2025-12-10T07:21:26.578641"}	admin	2025-12-10 10:21:26.578641
 629	refresh_tokens	DELETE	{"id": 173, "role": "admin", "token": "d83c5d2c3155982d3f1f92b676b94edb84a06ab1e07078b4cd50d72aab3d9478", "username": "artem_volkov", "created_at": "2025-12-10T07:07:47.753939"}	\N	admin	2025-12-10 11:07:16.619152
+861	document_content	INSERT	\N	{"id": 18, "id_batch": 1, "quantity": 10, "id_document": 12}	admin	2025-12-14 09:44:31.38504
 630	refresh_tokens	INSERT	\N	{"id": 178, "role": "admin", "token": "db94695ac58c98bda2a0b6ac2090df0cdf986fb771bf4046c593dd41d2c0c525", "username": "artem_volkov", "created_at": "2025-12-10T08:07:16.626705"}	admin	2025-12-10 11:07:16.626705
 631	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765354206743876625_washing_machine.jpeg", "id_producer": 20, "id_product_category": 3}	admin	2025-12-10 11:10:06.747938
 632	product	UPDATE	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/1765354277653639797_7-.webp", "id_producer": 19, "id_product_category": 1}	admin	2025-12-10 11:11:17.655518
@@ -2028,6 +2072,66 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 830	product	DELETE	{"id": 66, "name": "temp", "image_url": "/static/products/placeholder.png", "id_producer": 1, "id_product_category": 1}	\N	admin	2025-12-11 16:29:37.348726
 832	refresh_tokens	INSERT	\N	{"id": 231, "role": "admin", "token": "5a1b2b03e8843648da7d60c17c43570ea353a72549fe48ef28f6103f1bfbb224", "username": "roman", "created_at": "2025-12-12T08:29:33.730885"}	admin	2025-12-12 08:29:33.730885
 833	refresh_tokens	DELETE	{"id": 231, "role": "admin", "token": "5a1b2b03e8843648da7d60c17c43570ea353a72549fe48ef28f6103f1bfbb224", "username": "roman", "created_at": "2025-12-12T08:29:33.730885"}	\N	admin	2025-12-12 08:33:43.4265
+834	refresh_tokens	INSERT	\N	{"id": 232, "role": "admin", "token": "a022fe3a0bf27f7e0e42516e5327863c3ed53c5922ecf21850bf20ee9844db10", "username": "roman", "created_at": "2025-12-12T12:10:15.386483"}	admin	2025-12-12 12:10:15.386483
+835	refresh_tokens	DELETE	{"id": 232, "role": "admin", "token": "a022fe3a0bf27f7e0e42516e5327863c3ed53c5922ecf21850bf20ee9844db10", "username": "roman", "created_at": "2025-12-12T12:10:15.386483"}	\N	admin	2025-12-12 17:51:28.872135
+836	refresh_tokens	INSERT	\N	{"id": 233, "role": "admin", "token": "0c2aad6a106adcc0f0699973e41d932c8c8bb6e8146e69c0fd907c0795207e03", "username": "roman", "created_at": "2025-12-12T17:51:28.877506"}	admin	2025-12-12 17:51:28.877506
+837	refresh_tokens	INSERT	\N	{"id": 234, "role": "admin", "token": "9b1f08b0ed7a75f093aab1d3e84bd73426643784b64902bf54aea8d8cae3272c", "username": "roman", "created_at": "2025-12-12T17:51:28.877918"}	admin	2025-12-12 17:51:28.877918
+838	refresh_tokens	INSERT	\N	{"id": 235, "role": "admin", "token": "a5a1bfc6562780a746b6161df00d0f4e83e3abd2048e19b12c1fb76111f634e4", "username": "roman", "created_at": "2025-12-14T07:22:12.808696"}	admin	2025-12-14 07:22:12.808696
+839	refresh_tokens	INSERT	\N	{"id": 236, "role": "moderator", "token": "d93a43c06924ff85f2834990839a63be0043086e3211055c7abe00502ab2f3d6", "username": "artem_volkov", "created_at": "2025-12-14T07:34:58.69473"}	admin	2025-12-14 07:34:58.69473
+840	refresh_tokens	DELETE	{"id": 236, "role": "moderator", "token": "d93a43c06924ff85f2834990839a63be0043086e3211055c7abe00502ab2f3d6", "username": "artem_volkov", "created_at": "2025-12-14T07:34:58.69473"}	\N	admin	2025-12-14 07:38:40.757772
+841	refresh_tokens	INSERT	\N	{"id": 237, "role": "admin", "token": "160f026995984121e26f3b6b9e57d40b885ac15fe97926eff2477a1d0d846c91", "username": "roman", "created_at": "2025-12-14T07:39:38.973288"}	admin	2025-12-14 07:39:38.973288
+842	refresh_tokens	INSERT	\N	{"id": 238, "role": "admin", "token": "571668cb72590fa345cbc5819f16849bcf821299841dc74a7fb55beafe37b92d", "username": "roman", "created_at": "2025-12-14T08:39:32.263942"}	admin	2025-12-14 08:39:32.263942
+843	refresh_tokens	DELETE	{"id": 237, "role": "admin", "token": "160f026995984121e26f3b6b9e57d40b885ac15fe97926eff2477a1d0d846c91", "username": "roman", "created_at": "2025-12-14T07:39:38.973288"}	\N	admin	2025-12-14 09:09:42.851955
+844	refresh_tokens	INSERT	\N	{"id": 239, "role": "admin", "token": "a79f59be425390ee7b33c2584146522a5805466911e391f25542a3ec3c358df7", "username": "roman", "created_at": "2025-12-14T09:09:42.859728"}	admin	2025-12-14 09:09:42.859728
+845	document	INSERT	\N	{"id": 11, "date": "2025-12-14", "id_employee": 14, "id_document_category": 1}	admin	2025-12-14 09:23:37.916814
+846	document_content	INSERT	\N	{"id": 15, "id_batch": 1, "quantity": 11, "id_document": 11}	admin	2025-12-14 09:25:45.767704
+847	document	UPDATE	{"id": 11, "date": "2025-12-14", "id_employee": 14, "id_document_category": 1}	{"id": 11, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 09:25:48.292054
+848	document_content	DELETE	{"id": 15, "id_batch": 1, "quantity": 11, "id_document": 11}	\N	postgres	2025-12-14 09:27:55.059143
+849	document	DELETE	{"id": 11, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	\N	admin	2025-12-14 09:32:26.698902
+850	document	INSERT	\N	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 09:32:59.273678
+851	document	UPDATE	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 09:35:15.910314
+852	refresh_tokens	DELETE	{"id": 238, "role": "admin", "token": "571668cb72590fa345cbc5819f16849bcf821299841dc74a7fb55beafe37b92d", "username": "roman", "created_at": "2025-12-14T08:39:32.263942"}	\N	admin	2025-12-14 09:42:34.028362
+853	refresh_tokens	INSERT	\N	{"id": 240, "role": "admin", "token": "8dae547f3d7dd9320135e600894fd355f3c76174431ec8e6cd14ceb8d3214caa", "username": "roman", "created_at": "2025-12-14T09:42:34.036465"}	admin	2025-12-14 09:42:34.036465
+855	refresh_tokens	INSERT	\N	{"id": 241, "role": "admin", "token": "6e3e1bbd9bba3337baea306d4f9e8d8693275fea7eea7f6f99835fbe9e041395", "username": "roman", "created_at": "2025-12-14T09:42:34.036505"}	admin	2025-12-14 09:42:34.036505
+854	refresh_tokens	INSERT	\N	{"id": 242, "role": "admin", "token": "42c2f9d8d09b1a3b0eebbd98e1919fb88f3b47e213c315de75aa599f0740ec53", "username": "roman", "created_at": "2025-12-14T09:42:34.036532"}	admin	2025-12-14 09:42:34.036532
+856	refresh_tokens	INSERT	\N	{"id": 243, "role": "admin", "token": "5fa9cc3a65800f84bcf7d7303b126179fa864f8967a7dd804e18dc8e16d36f55", "username": "roman", "created_at": "2025-12-14T09:42:34.036614"}	admin	2025-12-14 09:42:34.036614
+857	document_content	INSERT	\N	{"id": 16, "id_batch": 1, "quantity": 10, "id_document": 12}	admin	2025-12-14 09:43:07.589629
+858	document_content	INSERT	\N	{"id": 17, "id_batch": 1, "quantity": 10, "id_document": 12}	admin	2025-12-14 09:43:14.264804
+864	document_content	INSERT	\N	{"id": 19, "id_batch": 1, "quantity": 10, "id_document": 12}	admin	2025-12-14 09:46:14.289828
+862	document	UPDATE	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 09:45:48.010613
+863	document_content	DELETE	{"id": 18, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:46:03.866071
+865	document_content	DELETE	{"id": 19, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:46:34.150082
+866	document	DELETE	{"id": 12, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	\N	admin	2025-12-14 09:49:40.32
+867	document	INSERT	\N	{"id": 13, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 09:50:29.224696
+868	document_content	INSERT	\N	{"id": 20, "id_batch": 1, "quantity": 10, "id_document": 13}	admin	2025-12-14 09:50:41.537753
+869	document_content	DELETE	{"id": 20, "id_batch": 1, "quantity": 10, "id_document": 13}	\N	postgres	2025-12-14 09:52:44.122598
+870	document_content	INSERT	\N	{"id": 21, "id_batch": 4, "quantity": 10, "id_document": 13}	admin	2025-12-14 10:10:35.659693
+871	refresh_tokens	DELETE	{"id": 239, "role": "admin", "token": "a79f59be425390ee7b33c2584146522a5805466911e391f25542a3ec3c358df7", "username": "roman", "created_at": "2025-12-14T09:09:42.859728"}	\N	admin	2025-12-14 10:13:08.873891
+872	refresh_tokens	INSERT	\N	{"id": 244, "role": "admin", "token": "de27e16cb2b0ea85655cd06241391b37a204beb075c38e3de23fcef24c9f06bc", "username": "roman", "created_at": "2025-12-14T10:13:08.886217"}	admin	2025-12-14 10:13:08.886217
+873	document_content	INSERT	\N	{"id": 22, "id_batch": 4, "quantity": 2, "id_document": 13}	admin	2025-12-14 10:15:55.955374
+874	document	UPDATE	{"id": 13, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	{"id": 13, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 10:16:01.947311
+875	document	INSERT	\N	{"id": 14, "date": "2025-12-14", "id_employee": 14, "id_document_category": 1}	admin	2025-12-14 10:16:21.610503
+876	document_content	INSERT	\N	{"id": 23, "id_batch": 1, "quantity": 1, "id_document": 14}	admin	2025-12-14 10:24:13.390238
+877	document	INSERT	\N	{"id": 15, "date": "2025-12-14", "id_employee": 14, "id_document_category": 1}	admin	2025-12-14 10:24:27.751429
+878	document_content	INSERT	\N	{"id": 24, "id_batch": 10, "quantity": 10, "id_document": 15}	admin	2025-12-14 10:24:38.322355
+879	document_content	INSERT	\N	{"id": 25, "id_batch": 11, "quantity": 5, "id_document": 15}	admin	2025-12-14 10:24:45.247246
+880	document	INSERT	\N	{"id": 16, "date": "2025-12-14", "id_employee": 14, "id_document_category": 3}	admin	2025-12-14 10:25:15.893615
+881	document_content	INSERT	\N	{"id": 26, "id_batch": 10, "quantity": 10, "id_document": 16}	admin	2025-12-14 10:31:39.907913
+882	document	INSERT	\N	{"id": 17, "date": "2025-12-14", "id_employee": 14, "id_document_category": 2}	admin	2025-12-14 10:32:10.528862
+883	document_content	INSERT	\N	{"id": 27, "id_batch": 10, "quantity": 9, "id_document": 17}	admin	2025-12-14 10:32:14.925137
+884	document_content	INSERT	\N	{"id": 28, "id_batch": 10, "quantity": 1, "id_document": 17}	admin	2025-12-14 10:32:21.862173
+885	refresh_tokens	INSERT	\N	{"id": 245, "role": "admin", "token": "f51978acf71dfc519f1a0f408e83ab4fb4e04f76284999d9dfab3212c8d3dbd2", "username": "roman", "created_at": "2025-12-14T10:52:05.115373"}	admin	2025-12-14 10:52:05.115373
+886	refresh_tokens	DELETE	{"id": 245, "role": "admin", "token": "f51978acf71dfc519f1a0f408e83ab4fb4e04f76284999d9dfab3212c8d3dbd2", "username": "roman", "created_at": "2025-12-14T10:52:05.115373"}	\N	admin	2025-12-14 11:10:31.626852
+887	refresh_tokens	INSERT	\N	{"id": 246, "role": "manager", "token": "4cbed94b1cf405990482a3646c0cb175a03fae15bb9c3a0d6822caa79526056d", "username": "anna_sokolova", "created_at": "2025-12-14T11:10:40.171811"}	admin	2025-12-14 11:10:40.171811
+888	refresh_tokens	DELETE	{"id": 246, "role": "manager", "token": "4cbed94b1cf405990482a3646c0cb175a03fae15bb9c3a0d6822caa79526056d", "username": "anna_sokolova", "created_at": "2025-12-14T11:10:40.171811"}	\N	admin	2025-12-14 11:11:40.062009
+889	refresh_tokens	INSERT	\N	{"id": 247, "role": "moderator", "token": "1a71268e8820dcf48251dff3050cfb3b52a2e1b6efe13af0adae9fba56adc8b8", "username": "artem_volkov", "created_at": "2025-12-14T11:11:54.2864"}	admin	2025-12-14 11:11:54.2864
+890	refresh_tokens	DELETE	{"id": 247, "role": "moderator", "token": "1a71268e8820dcf48251dff3050cfb3b52a2e1b6efe13af0adae9fba56adc8b8", "username": "artem_volkov", "created_at": "2025-12-14T11:11:54.2864"}	\N	admin	2025-12-14 11:12:26.348355
+891	refresh_tokens	INSERT	\N	{"id": 248, "role": "manager", "token": "d43bb6cff815ac16bb65436490e85b914a891a188a41ae23f6299d6e7977552d", "username": "anna_sokolova", "created_at": "2025-12-14T11:12:33.250979"}	admin	2025-12-14 11:12:33.250979
+892	refresh_tokens	DELETE	{"id": 248, "role": "manager", "token": "d43bb6cff815ac16bb65436490e85b914a891a188a41ae23f6299d6e7977552d", "username": "anna_sokolova", "created_at": "2025-12-14T11:12:33.250979"}	\N	admin	2025-12-14 11:13:06.305453
+893	refresh_tokens	INSERT	\N	{"id": 249, "role": "moderator", "token": "daed641a3cf9cefd4e4524395f51a8144b805ba97739e017c86b1ad320a15cd7", "username": "artem_volkov", "created_at": "2025-12-14T11:13:13.297161"}	admin	2025-12-14 11:13:13.297161
+894	refresh_tokens	DELETE	{"id": 249, "role": "moderator", "token": "daed641a3cf9cefd4e4524395f51a8144b805ba97739e017c86b1ad320a15cd7", "username": "artem_volkov", "created_at": "2025-12-14T11:13:13.297161"}	\N	admin	2025-12-14 11:21:12.505599
+895	refresh_tokens	INSERT	\N	{"id": 250, "role": "admin", "token": "70d7ec97abb7dc12d1be9a39bd849555a25551061021b1443cb9fbede5c30026", "username": "roman", "created_at": "2025-12-14T11:21:16.805759"}	admin	2025-12-14 11:21:16.805759
+896	sys_user	DELETE	{"id": 9, "login": "test", "id_role": 2, "id_employee": 17, "password_hash": "$2a$10$jOiUC7j6gA0qCYuxQRUEOeN62hUua/rz6OlrmQuGfGRPbB0rZ8o02"}	\N	admin	2025-12-14 11:21:26.57429
 \.
 
 
@@ -2059,6 +2163,11 @@ COPY public.document (id, date, id_employee, id_document_category) FROM stdin;
 4	2025-11-22	1	1
 5	2025-11-22	1	1
 6	2025-11-22	1	3
+13	2025-12-14	14	2
+14	2025-12-14	14	1
+15	2025-12-14	14	1
+16	2025-12-14	14	3
+17	2025-12-14	14	2
 \.
 
 
@@ -2089,6 +2198,14 @@ COPY public.document_content (id, id_document, id_batch, quantity) FROM stdin;
 9	3	3	2
 10	3	4	1
 11	3	5	1
+21	13	4	10
+22	13	4	2
+23	14	1	1
+24	15	10	10
+25	15	11	5
+26	16	10	10
+27	17	10	9
+28	17	10	1
 \.
 
 
@@ -2233,26 +2350,12 @@ COPY public.product_category (id, name) FROM stdin;
 --
 
 COPY public.refresh_tokens (id, token, username, role, created_at) FROM stdin;
-188	9123ed7125708448a527e30324b616093c4c9810e20a5c32bd01f641bfdfef5d	artem_volkov	admin	2025-12-10 10:03:47.381985
-194	616ee039f4bf98b8b926013f67fa81a96e9ecac51757739c17e70172807d0818	roman	admin	2025-12-10 11:00:06.783251
-196	bac59e1c13b36de9b379e33ea6764869798c29c74a92849e5486cb6e5845446b	roman	admin	2025-12-10 11:11:13.638082
-197	cca2e5c4c7021433cdb5a12fbeee568cc8c0ecd1e2b5955bb75b4d43f6799733	roman	admin	2025-12-10 11:48:08.735993
-205	96cfae208f7a7f7f604a5ceaa3af06ae5a3270606d195f9458d2f76c2d7bac00	roman	admin	2025-12-10 17:25:17.993073
-206	a86dcf9b9b29cc3b90d43c609d82cb51f7b0d4593b00930be41c1c84fe122c17	roman	admin	2025-12-10 17:25:17.993127
-209	d18b4e19a850007353a0d2a9a9a884eca2a6c87e2f48098416b3407ea79309ac	artem_volkov	admin	2025-12-10 17:50:38.361631
-210	3f11095c1cd268b904d8a2d421eaea467aa0b1d76ce039a188685b182045d47d	anna_sokolova	manager	2025-12-10 18:02:08.424851
-211	2fddf117639cbd38b120cf530cf91640436ba836171c04d830454c9c1e9da07a	roman	admin	2025-12-10 19:21:19.060457
-212	d5e2026a3300963a284ffcb07262d42fbf72e5a6b5c8898fe1bc4c92607af8c7	roman	admin	2025-12-10 19:28:53.799891
-214	5fcf6d8687bef4a39aa9a45600f67b217aa242d8d4b48dcc3491edb08df78a6b	moderator_login	moderator	2025-12-10 19:54:30.673316
-216	a484ed8e4683304072c53e7d85b7282980de9485b1580fd631424433519c592f	roman	admin	2025-12-11 10:32:18.501816
-217	7f5be2c7ef3cb5d5a51baefbc5bc4e2c532095fc24d0498946013e6db9e96831	roman	admin	2025-12-11 10:36:44.644326
-218	de2a622bfb09dc652cd4842a42427144c77815f79442705a7de8a9f6684acd11	roman	admin	2025-12-11 10:36:44.644384
-219	7a88c6d866e0e2b2d6c22fc7b6e1c0d55e320bce5067e641b36e29aee91d1cd6	roman	admin	2025-12-11 10:36:44.644516
-220	0201dd26389492cea2ec3187e01e4f076ffe441c4589a33ea6fae3029b36e9ac	roman	admin	2025-12-11 10:36:44.644719
-224	701a87ef486229d1db8c718f401741d996a4ec5eba2dd14183d272683d366cd1	roman	admin	2025-12-11 11:49:27.56543
-225	7f94091b6dd7dd4c05e6c2b57a5d41948f2990ee75b11698208a3ac90dc90faa	roman	admin	2025-12-11 12:56:30.930871
-229	13fda6fff23f9211746573a3bff14f4ea3014cfa0df0c1dfcc6061dcb9f9ff7e	roman	admin	2025-12-11 14:53:57.744773
-230	718fc4aba671be934b3de1d05ead93c6736e12b1b4b47b839c93e77f28bc29d8	roman	admin	2025-12-11 16:17:36.189206
+240	8dae547f3d7dd9320135e600894fd355f3c76174431ec8e6cd14ceb8d3214caa	roman	admin	2025-12-14 09:42:34.036465
+241	6e3e1bbd9bba3337baea306d4f9e8d8693275fea7eea7f6f99835fbe9e041395	roman	admin	2025-12-14 09:42:34.036505
+242	42c2f9d8d09b1a3b0eebbd98e1919fb88f3b47e213c315de75aa599f0740ec53	roman	admin	2025-12-14 09:42:34.036532
+243	5fa9cc3a65800f84bcf7d7303b126179fa864f8967a7dd804e18dc8e16d36f55	roman	admin	2025-12-14 09:42:34.036614
+244	de27e16cb2b0ea85655cd06241391b37a204beb075c38e3de23fcef24c9f06bc	roman	admin	2025-12-14 10:13:08.886217
+250	70d7ec97abb7dc12d1be9a39bd849555a25551061021b1443cb9fbede5c30026	roman	admin	2025-12-14 11:21:16.805759
 \.
 
 
@@ -2276,7 +2379,6 @@ COPY public.sys_user (id, login, password_hash, id_role, id_employee) FROM stdin
 2	anna_sokolova	$2a$10$ONDNHqgfrEHpioEyaVSDxOG3icMHs3nEsqP1TpzC9jYgB142ezb26	2	2
 7	roman	$2a$10$4MWSzOFhEH9X4P25w7YgCeJkH5FoB8lx4S69iRPsnFunJiPOXWYDa	4	14
 1	artem_volkov	$2a$10$z9I2uGqAHHc5paoMn9T5yOXLEEDnWMj/Pmwegsv/vdagYct7RKN1O	1	1
-9	test	$2a$10$jOiUC7j6gA0qCYuxQRUEOeN62hUua/rz6OlrmQuGfGRPbB0rZ8o02	2	17
 \.
 
 
@@ -2291,7 +2393,7 @@ SELECT pg_catalog.setval('public.address_id_seq', 26, true);
 -- Name: audit_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.audit_log_id_seq', 833, true);
+SELECT pg_catalog.setval('public.audit_log_id_seq', 896, true);
 
 
 --
@@ -2312,14 +2414,14 @@ SELECT pg_catalog.setval('public.document_category_id_seq', 13, true);
 -- Name: document_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_content_id_seq', 14, true);
+SELECT pg_catalog.setval('public.document_content_id_seq', 28, true);
 
 
 --
 -- Name: document_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_id_seq', 10, true);
+SELECT pg_catalog.setval('public.document_id_seq', 17, true);
 
 
 --
@@ -2368,7 +2470,7 @@ SELECT pg_catalog.setval('public.product_id_seq', 66, true);
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 231, true);
+SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 250, true);
 
 
 --
@@ -2669,7 +2771,7 @@ CREATE TRIGGER trigger_delete_old BEFORE INSERT ON public.audit_log FOR EACH ROW
 --
 
 ALTER TABLE ONLY public.batch
-    ADD CONSTRAINT batch_id_product_fkey FOREIGN KEY (id_product) REFERENCES public.product(id);
+    ADD CONSTRAINT batch_id_product_fkey FOREIGN KEY (id_product) REFERENCES public.product(id) ON DELETE CASCADE;
 
 
 --
@@ -2677,7 +2779,7 @@ ALTER TABLE ONLY public.batch
 --
 
 ALTER TABLE ONLY public.document_content
-    ADD CONSTRAINT document_content_id_batch_fkey FOREIGN KEY (id_batch) REFERENCES public.batch(id);
+    ADD CONSTRAINT document_content_id_batch_fkey FOREIGN KEY (id_batch) REFERENCES public.batch(id) ON DELETE CASCADE;
 
 
 --
@@ -2685,7 +2787,7 @@ ALTER TABLE ONLY public.document_content
 --
 
 ALTER TABLE ONLY public.document_content
-    ADD CONSTRAINT document_content_id_document_fkey FOREIGN KEY (id_document) REFERENCES public.document(id);
+    ADD CONSTRAINT document_content_id_document_fkey FOREIGN KEY (id_document) REFERENCES public.document(id) ON DELETE CASCADE;
 
 
 --
@@ -2693,7 +2795,7 @@ ALTER TABLE ONLY public.document_content
 --
 
 ALTER TABLE ONLY public.document
-    ADD CONSTRAINT document_id_document_category_fkey FOREIGN KEY (id_document_category) REFERENCES public.document_category(id);
+    ADD CONSTRAINT document_id_document_category_fkey FOREIGN KEY (id_document_category) REFERENCES public.document_category(id) ON DELETE CASCADE;
 
 
 --
@@ -2701,7 +2803,7 @@ ALTER TABLE ONLY public.document
 --
 
 ALTER TABLE ONLY public.document
-    ADD CONSTRAINT document_id_employee_fkey FOREIGN KEY (id_employee) REFERENCES public.employee(id);
+    ADD CONSTRAINT document_id_employee_fkey FOREIGN KEY (id_employee) REFERENCES public.employee(id) ON DELETE CASCADE;
 
 
 --
@@ -2709,7 +2811,7 @@ ALTER TABLE ONLY public.document
 --
 
 ALTER TABLE ONLY public.employee
-    ADD CONSTRAINT employee_id_address_fkey FOREIGN KEY (id_address) REFERENCES public.address(id);
+    ADD CONSTRAINT employee_id_address_fkey FOREIGN KEY (id_address) REFERENCES public.address(id) ON DELETE CASCADE;
 
 
 --
@@ -2717,7 +2819,7 @@ ALTER TABLE ONLY public.employee
 --
 
 ALTER TABLE ONLY public.employee
-    ADD CONSTRAINT employee_id_gender_fkey FOREIGN KEY (id_gender) REFERENCES public.gender(id);
+    ADD CONSTRAINT employee_id_gender_fkey FOREIGN KEY (id_gender) REFERENCES public.gender(id) ON DELETE CASCADE;
 
 
 --
@@ -2725,7 +2827,7 @@ ALTER TABLE ONLY public.employee
 --
 
 ALTER TABLE ONLY public.employee
-    ADD CONSTRAINT employee_id_position_fkey FOREIGN KEY (id_position) REFERENCES public."position"(id);
+    ADD CONSTRAINT employee_id_position_fkey FOREIGN KEY (id_position) REFERENCES public."position"(id) ON DELETE CASCADE;
 
 
 --
@@ -2733,7 +2835,7 @@ ALTER TABLE ONLY public.employee
 --
 
 ALTER TABLE ONLY public.producer
-    ADD CONSTRAINT producer_id_address_fkey FOREIGN KEY (id_address) REFERENCES public.address(id);
+    ADD CONSTRAINT producer_id_address_fkey FOREIGN KEY (id_address) REFERENCES public.address(id) ON DELETE CASCADE;
 
 
 --
@@ -2741,7 +2843,7 @@ ALTER TABLE ONLY public.producer
 --
 
 ALTER TABLE ONLY public.product
-    ADD CONSTRAINT product_id_producer_fkey FOREIGN KEY (id_producer) REFERENCES public.producer(id);
+    ADD CONSTRAINT product_id_producer_fkey FOREIGN KEY (id_producer) REFERENCES public.producer(id) ON DELETE CASCADE;
 
 
 --
@@ -2749,7 +2851,7 @@ ALTER TABLE ONLY public.product
 --
 
 ALTER TABLE ONLY public.product
-    ADD CONSTRAINT product_id_product_category_fkey FOREIGN KEY (id_product_category) REFERENCES public.product_category(id);
+    ADD CONSTRAINT product_id_product_category_fkey FOREIGN KEY (id_product_category) REFERENCES public.product_category(id) ON DELETE CASCADE;
 
 
 --
@@ -2757,7 +2859,7 @@ ALTER TABLE ONLY public.product
 --
 
 ALTER TABLE ONLY public.sys_user
-    ADD CONSTRAINT sys_user_id_employee_fkey FOREIGN KEY (id_employee) REFERENCES public.employee(id);
+    ADD CONSTRAINT sys_user_id_employee_fkey FOREIGN KEY (id_employee) REFERENCES public.employee(id) ON DELETE CASCADE;
 
 
 --
@@ -2765,7 +2867,7 @@ ALTER TABLE ONLY public.sys_user
 --
 
 ALTER TABLE ONLY public.sys_user
-    ADD CONSTRAINT sys_user_id_role_fkey FOREIGN KEY (id_role) REFERENCES public.role(id);
+    ADD CONSTRAINT sys_user_id_role_fkey FOREIGN KEY (id_role) REFERENCES public.role(id) ON DELETE CASCADE;
 
 
 --
@@ -2922,7 +3024,7 @@ GRANT SELECT ON TABLE public.gender TO manager;
 --
 
 GRANT ALL ON TABLE public."position" TO admin;
-GRANT SELECT ON TABLE public."position" TO moderator;
+GRANT SELECT,UPDATE ON TABLE public."position" TO moderator;
 GRANT SELECT ON TABLE public."position" TO manager;
 
 
@@ -2940,7 +3042,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.position_id_seq TO manager;
 --
 
 GRANT ALL ON TABLE public.producer TO admin;
-GRANT SELECT ON TABLE public.producer TO moderator;
+GRANT SELECT,UPDATE ON TABLE public.producer TO moderator;
 GRANT SELECT,INSERT,UPDATE ON TABLE public.producer TO manager;
 
 
@@ -2958,7 +3060,7 @@ GRANT ALL ON SEQUENCE public.producer_id_seq TO manager;
 --
 
 GRANT ALL ON TABLE public.product_category TO admin;
-GRANT SELECT ON TABLE public.product_category TO moderator;
+GRANT SELECT,UPDATE ON TABLE public.product_category TO moderator;
 GRANT SELECT,INSERT,UPDATE ON TABLE public.product_category TO manager;
 
 
@@ -3012,6 +3114,7 @@ GRANT SELECT ON TABLE public.report_batches TO manager;
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.report_documents_by_employee TO admin;
+GRANT SELECT ON TABLE public.report_documents_by_employee TO moderator;
 
 
 --
@@ -3028,6 +3131,7 @@ GRANT SELECT ON TABLE public.report_employees TO moderator;
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.report_expired_batches TO admin;
 GRANT SELECT ON TABLE public.report_expired_batches TO manager;
+GRANT SELECT ON TABLE public.report_expired_batches TO moderator;
 
 
 --
@@ -3056,10 +3160,20 @@ GRANT SELECT ON TABLE public.report_no_products TO moderator;
 
 
 --
+-- Name: TABLE report_non_fixed_batches; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.report_non_fixed_batches TO admin;
+GRANT SELECT ON TABLE public.report_non_fixed_batches TO moderator;
+GRANT SELECT ON TABLE public.report_non_fixed_batches TO manager;
+
+
+--
 -- Name: TABLE report_producer_subject_statistics; Type: ACL; Schema: public; Owner: postgres
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.report_producer_subject_statistics TO admin;
+GRANT SELECT ON TABLE public.report_producer_subject_statistics TO moderator;
 
 
 --
@@ -3077,6 +3191,16 @@ GRANT SELECT ON TABLE public.report_products_left TO moderator;
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.report_products_left_by_batch TO admin;
 GRANT SELECT ON TABLE public.report_products_left_by_batch TO manager;
+GRANT SELECT ON TABLE public.report_products_left_by_batch TO moderator;
+
+
+--
+-- Name: TABLE report_products_total_cost; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public.report_products_total_cost TO admin;
+GRANT SELECT ON TABLE public.report_products_total_cost TO manager;
+GRANT SELECT ON TABLE public.report_products_total_cost TO moderator;
 
 
 --
@@ -3135,5 +3259,5 @@ REFRESH MATERIALIZED VIEW public.batches_m;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict eIjdvO54jOwwaU9Ux3hoPsqFM3xTzhnRZ1tWhVHR09fzYaXIQFCVih91QjlwW4f
+\unrestrict FmJYTKcX9oQhycIA65rRx32fJ0f7HSiCbriuhnYAN7r91lGii0C6oPgcTRmSAZa
 

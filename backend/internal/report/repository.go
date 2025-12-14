@@ -197,6 +197,32 @@ func (r *ReportRepository) GetNoProducts(role string) (any, error) {
 	return response, nil
 }
 
+func (r *ReportRepository) GetProductsTotalSum(role string) (any, error) {
+	pool, err := r.db.GetPool(role)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := pool.Query(context.Background(), "SELECT * FROM report_products_total_sum")
+	if err != nil {
+		return nil, err
+	}
+
+	var response []ReportProductsTotalSum
+	for rows.Next() {
+		var item ReportProductsTotalSum
+
+		err = rows.Scan(&item.Number, &item.IdBatch, &item.ProductName, &item.Cost, &item.LeftQuantity, &item.Total)
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, item)
+	}
+
+	return response, nil
+}
+
 func (r *ReportRepository) GetProducerSubjectStatistics(role string) (any, error) {
 	pool, err := r.db.GetPool(role)
 	if err != nil {

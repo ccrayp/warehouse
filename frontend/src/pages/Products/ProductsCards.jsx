@@ -179,7 +179,7 @@ export default function ProductsCards() {
 
   const handleDelete = async (product) => {
     if (!hasDelete) return;
-    if (!window.confirm(`Удалить продукт "${product.name}"?`)) return;
+    if (!window.confirm(`Удалить продукт "${product.name}" (все связанные данные будут удалены)?`)) return;
 
     try {
       const resp = await apiRequest(`/products/${product.id}`, { method: "DELETE" });

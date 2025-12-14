@@ -21,6 +21,7 @@ func InitRoutes(r *gin.Engine, db *database.Connector) {
 		"grants":                      handler.Grants,
 		"interface_grants":            handler.InterfaceGrants,
 		"no_products":                 handler.NoProducts,
+		"products_total_sum":          handler.ProductsTotalSum,
 		"producer_subject_statistics": handler.ProducerSubjectStatistics,
 		"products_left":               handler.ProductLeft,
 		"products_left_by_batch":      handler.ProductLeftByBatch,

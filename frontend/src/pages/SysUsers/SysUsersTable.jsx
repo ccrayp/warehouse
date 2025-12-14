@@ -117,7 +117,7 @@ export default function SysUsersTable() {
 
 
   const handleDelete = async (user) => {
-    if (!window.confirm(`Удалить пользователя "${user.login}"?`)) return;
+    if (!window.confirm(`Удалить пользователя "${user.login}" (все связанные данные будут удалены)?`)) return;
     try {
         const resp = await apiRequest(`/sys_users/${user.id}`, { method: "DELETE" });
         if (resp.success) {

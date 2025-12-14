@@ -141,7 +141,7 @@ export default function BatchesTable() {
 
   const handleDelete = async batch => {
     if (!hasDelete) return;
-    if (!window.confirm(`Удалить партию №${batch.id}?`)) return;
+    if (!window.confirm(`Удалить партию №${batch.id} (все связанные данные будут удалены)?`)) return;
 
     try {
       const resp = await apiRequest(`/batches/${batch.id}`, { method: "DELETE" });
