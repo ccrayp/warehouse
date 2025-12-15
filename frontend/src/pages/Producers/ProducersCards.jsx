@@ -166,7 +166,7 @@ export default function ProducersCards() {
           />
         </Col>
         <Col md={8} className="text-end">
-          {hasInsert && <Button onClick={() => handleShowModal()}>Добавить производителя</Button>}
+          {hasInsert && <Button onClick={() => handleShowModal()}><i class="fa-solid fa-plus pe-2"></i>Добавить производителя</Button>}
         </Col>
       </Row>
 
@@ -221,9 +221,9 @@ export default function ProducersCards() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
-          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}>{saving ? "Сохраняем..." : "Сохранить"}</Button>}
-          {editingProducer && hasDelete && <Button variant="danger" onClick={() => handleDelete(editingProducer)}>Удалить</Button>}
+          <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
+          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}><i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}</Button>}
+          {editingProducer && hasDelete && <Button variant="danger" onClick={() => handleDelete(editingProducer)}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>}
         </Modal.Footer>
       </Modal>
     </Container>

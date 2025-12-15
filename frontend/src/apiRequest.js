@@ -52,5 +52,5 @@ export function useApi() {
   return { apiRequest, getImageUrl };
 }
 
-export const apiHost = 'http://localhost:8080/api';
-export const images = 'http://localhost:8080';
+export const apiHost = '/api';
+export const images = '';

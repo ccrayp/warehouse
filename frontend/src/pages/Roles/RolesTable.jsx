@@ -114,7 +114,7 @@ export default function RolesTable() {
     <Container className="mt-4">
       <h2>Администрирование: Роли пользователей</h2>
       <Button className="mb-3" onClick={() => handleShowModal()}>
-        Добавить роль
+        <i class="fa-solid fa-plus pe-2"></i>Добавить роль
       </Button>
 
       {loading ? (
@@ -182,17 +182,17 @@ export default function RolesTable() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          {editingRole && (
-            <Button variant="danger" onClick={handleDelete}>
-              Удалить
-            </Button>
-          )}
           <Button variant="secondary" onClick={handleCloseModal}>
-            Отмена
+            <i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена
           </Button>
           <Button variant="primary" onClick={handleSave} disabled={saving}>
-            {saving ? "Сохраняем..." : "Сохранить"}
+            <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
           </Button>
+          {editingRole && (
+            <Button variant="danger" onClick={handleDelete}>
+              <i class="fa-solid fa-trash pe-2"></i>Удалить
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </Container>

@@ -137,7 +137,7 @@ export default function PositionsTable() {
       <h2 className="pt-4">Справочник: Должности</h2>
       {hasInsert && (
         <Button className="mb-3" onClick={() => handleShowModal()}>
-          Добавить должность
+          <i class="fa-solid fa-plus pe-2"></i>Добавить должность
         </Button>
       )}
 
@@ -230,16 +230,16 @@ export default function PositionsTable() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Отмена
+           <i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена
           </Button>
           {(hasInsert || hasUpdate) && (
             <Button variant="primary" onClick={handleSave} disabled={saving}>
-              {saving ? "Сохраняем..." : "Сохранить"}
+              <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
             </Button>
           )}
           {editingPosition && hasDelete && (
             <Button variant="danger" onClick={() => handleDelete(editingPosition)}>
-              Удалить
+              <i class="fa-solid fa-trash pe-2"></i>Удалить
             </Button>
           )}
         </Modal.Footer>

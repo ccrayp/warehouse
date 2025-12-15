@@ -186,7 +186,7 @@ export default function AddressesTable() {
     <Container className="mt-4">
       <h2 className="pt-4">Справочник: Адреса</h2>
 
-      {hasInsert && <Button className="mb-3" onClick={() => handleShowModal()}>Добавить адрес</Button>}
+      {hasInsert && <Button className="mb-3" onClick={() => handleShowModal()}><i class="fa-solid fa-plus pe-2"></i>Добавить адрес</Button>}
 
       {loading ? (
         <Spinner animation="border" />
@@ -260,9 +260,9 @@ export default function AddressesTable() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          {editingAddress && hasDelete && <Button variant="danger" onClick={handleDelete}>Удалить</Button>}
-          <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
-          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}>{saving ? "Сохраняем..." : "Сохранить"}</Button>}
+          <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
+          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}><i class="fa-solid fa-floppy-disk pe-2" />{saving ? "Сохраняем..." : "Сохранить"}</Button>}
+          {editingAddress && hasDelete && <Button variant="danger" onClick={handleDelete}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>}
         </Modal.Footer>
       </Modal>
     </Container>

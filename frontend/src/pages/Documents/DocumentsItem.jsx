@@ -267,10 +267,10 @@ export default function DocumentsItemPage() {
         </Form.Group>
 
         {(hasInsert || hasUpdate) && (
-          <Button className="me-2" onClick={saveDocument}>Сохранить</Button>
+          <Button className="me-2" onClick={saveDocument}><i class="fa-solid fa-floppy-disk pe-2"></i>Сохранить</Button>
         )}
         {!isNew && hasDelete && (
-          <Button variant="danger" onClick={deleteDocument}>Удалить</Button>
+          <Button variant="danger" onClick={deleteDocument}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>
         )}
       </Form>
 
@@ -340,7 +340,7 @@ export default function DocumentsItemPage() {
             </tbody>
           </Table>
 
-          {hasUpdate && <Button onClick={addRow}>Добавить строку</Button>}
+          {hasUpdate && <Button onClick={addRow}><i class="fa-solid fa-plus pe-2"></i>Добавить строку</Button>}
         </>
       )}
     </Container>

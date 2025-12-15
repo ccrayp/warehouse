@@ -138,7 +138,7 @@ export default function SysUsersTable() {
     <Container className="mt-4">
       <h2>Администрирование: Пользователи системы</h2>
       <Button className="mb-3" onClick={() => handleShowModal()}>
-        Добавить пользователя
+        <i class="fa-solid fa-plus pe-2"></i>Добавить пользователя
       </Button>
 
       {loading ? (
@@ -247,14 +247,14 @@ export default function SysUsersTable() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Отмена
+            <i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена
           </Button>
           <Button variant="primary" onClick={handleSave} disabled={saving}>
-            {saving ? "Сохраняем..." : "Сохранить"}
+            <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
           </Button>
           {editingUser && (
             <Button variant="danger" onClick={() => handleDelete(editingUser)}>
-              Удалить
+              <i class="fa-solid fa-trash pe-2"></i>Удалить
             </Button>
           )}
         </Modal.Footer>

@@ -213,7 +213,7 @@ export default function EmployeesCards() {
           </Form.Select>
         </Col>
         <Col md={4} className="text-end">
-          {hasInsert && <Button onClick={() => handleShowModal()}>Добавить сотрудника</Button>}
+          {hasInsert && <Button onClick={() => handleShowModal()}><i class="fa-solid fa-plus pe-2"></i>Добавить сотрудника</Button>}
         </Col>
       </Row>
 
@@ -297,9 +297,9 @@ export default function EmployeesCards() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
-          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}>{saving ? "Сохраняем..." : "Сохранить"}</Button>}
-          {editingEmployee && hasDelete && <Button variant="danger" onClick={() => handleDelete(editingEmployee)}>Удалить</Button>}
+          <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
+          {(hasInsert || hasUpdate) && <Button variant="primary" onClick={handleSave} disabled={saving}><i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}</Button>}
+          {editingEmployee && hasDelete && <Button variant="danger" onClick={() => handleDelete(editingEmployee)}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>}
         </Modal.Footer>
       </Modal>
     </Container>

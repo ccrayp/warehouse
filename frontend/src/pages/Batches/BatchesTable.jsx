@@ -173,7 +173,7 @@ export default function BatchesTable() {
           }}
         />
         {hasInsert && (
-          <Button onClick={() => handleShowModal()}>Добавить партию</Button>
+          <Button onClick={() => handleShowModal()}><i class="fa-solid fa-plus pe-2"></i>Добавить партию</Button>
         )}
       </div>
 
@@ -288,15 +288,15 @@ export default function BatchesTable() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
+          <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
           {(hasInsert || hasUpdate) && (
             <Button variant="primary" onClick={handleSave} disabled={saving}>
-              {saving ? "Сохраняем..." : "Сохранить"}
+              <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
             </Button>
           )}
           {editingBatch && hasDelete && (
             <Button variant="danger" onClick={() => handleDelete(editingBatch)}>
-              Удалить
+              <i class="fa-solid fa-trash pe-2"></i>Удалить
             </Button>
           )}
         </Modal.Footer>

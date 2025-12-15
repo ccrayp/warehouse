@@ -132,7 +132,7 @@ export default function ProductCategoriesTable() {
       <h2 className="pt-4">Справочник: Категории продуктов</h2>
       {hasInsert && (
         <Button className="mb-3" onClick={() => handleShowModal()}>
-          Добавить категорию
+          <i class="fa-solid fa-plus pe-2"></i>Добавить категорию
         </Button>
       )}
 
@@ -212,14 +212,14 @@ export default function ProductCategoriesTable() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
+          <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
           {(hasInsert || hasUpdate) && (
             <Button variant="primary" onClick={handleSave} disabled={saving}>
-              {saving ? "Сохраняем..." : "Сохранить"}
+              <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
             </Button>
           )}
           {editingCategory && hasDelete && (
-            <Button variant="danger" onClick={() => handleDelete(editingCategory)}>Удалить</Button>
+            <Button variant="danger" onClick={() => handleDelete(editingCategory)}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>
           )}
         </Modal.Footer>
       </Modal>

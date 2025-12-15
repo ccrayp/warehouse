@@ -132,7 +132,7 @@ export default function GendersTable() {
 
       {hasInsert && (
         <Button className="mb-3" onClick={() => handleShowModal()}>
-          Добавить запись
+          <i class="fa-solid fa-plus pe-2"></i>Добавить запись
         </Button>
       )}
 
@@ -194,18 +194,18 @@ export default function GendersTable() {
 
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Отмена
+            <i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена
           </Button>
 
           {(hasInsert || hasUpdate) && (
             <Button variant="primary" onClick={handleSave} disabled={saving}>
-              {saving ? "Сохраняем..." : "Сохранить"}
+              <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
             </Button>
           )}
 
           {editingGender && hasDelete && (
             <Button variant="danger" onClick={() => handleDelete(editingGender)}>
-              Удалить
+              <i class="fa-solid fa-trash pe-2"></i>Удалить
             </Button>
           )}
         </Modal.Footer>

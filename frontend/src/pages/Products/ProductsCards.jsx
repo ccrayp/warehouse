@@ -234,7 +234,7 @@ export default function ProductsCards() {
           </Form.Select>
         </Col>
         <Col md={4} className="text-end">
-          {hasInsert && <Button onClick={() => handleShowModal()}>Добавить продукт</Button>}
+          {hasInsert && <Button onClick={() => handleShowModal()}><i class="fa-solid fa-plus pe-2"></i>Добавить продукт</Button>}
         </Col>
       </Row>
 
@@ -333,14 +333,14 @@ export default function ProductsCards() {
             </Form>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>Отмена</Button>
+            <Button variant="secondary" onClick={handleCloseModal}><i class="fa-solid fa-arrow-right-from-bracket pe-2"></i>Отмена</Button>
             {(hasInsert || hasUpdate) && (
             <Button variant="primary" onClick={handleSave} disabled={saving}>
-                {saving ? "Сохраняем..." : "Сохранить"}
+                <i class="fa-solid fa-floppy-disk pe-2"></i>{saving ? "Сохраняем..." : "Сохранить"}
             </Button>
             )}
             {editingProduct && hasDelete && (
-            <Button variant="danger" onClick={() => handleDelete(editingProduct)}>Удалить</Button>
+            <Button variant="danger" onClick={() => handleDelete(editingProduct)}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>
             )}
         </Modal.Footer>
         </Modal>
