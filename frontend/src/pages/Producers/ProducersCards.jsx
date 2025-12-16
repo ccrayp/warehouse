@@ -155,7 +155,7 @@ export default function ProducersCards() {
 
   return (
     <Container className="mt-4">
-      <h2 className="pt-4">Производители</h2>
+      <h2 className="pt-4">Склад: Производители</h2>
 
       <Row className="mb-3">
         <Col md={4}>

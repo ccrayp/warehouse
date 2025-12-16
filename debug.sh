@@ -9,7 +9,7 @@ docker ps
 if [ -n "$1" ]; then
     DUMP_FILE="$1"
 
-    CONTAINER="storage_db-warehouse_db-1"
+    CONTAINER="warehouse-warehouse_db-1"
 
     echo "Ожидание запуска PostgreSQL..."
     until docker exec "$CONTAINER" pg_isready -U postgres > /dev/null 2>&1; do

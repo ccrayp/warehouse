@@ -253,6 +253,7 @@ export default function ProductsCards() {
                   <Card.Img
                     variant="top"
                     src={getImageUrl(prod.image_url)}
+                    alt={prod.image_url}
                     style={{ objectFit: "contain", height: "200px" }}
                     className="mt-3"
                   />
