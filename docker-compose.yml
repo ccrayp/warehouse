@@ -16,7 +16,7 @@ services:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: NjFlZDNmOTM3M2JmMzZhOTE3MTA3NTk5N2RmMDNhMzUyNTZjMzEyNDUyMGE3NDll
       POSTGRES_DB: warehouse
     ports:
       - "8888:5432"

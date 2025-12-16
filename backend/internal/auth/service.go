@@ -15,7 +15,7 @@ import (
 var secretKey = []byte(os.Getenv("SECRET_KEY"))
 
 func GenerateToken(username string, role string) (string, error) {
-	expirationTime := time.Now().Add(time.Hour)
+	expirationTime := time.Now().Add(15 * time.Minute)
 
 	claims := &Claims{
 		Username: username,
