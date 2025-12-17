@@ -4,12 +4,15 @@ import { Offcanvas, Nav, Button, Alert } from "react-bootstrap";
 import { AuthContext } from "../AuthContext";
 
 export default function Sidebar() {
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
-
   const location = useLocation();
-  const { sections, role } = useContext(AuthContext);
+  const { loadUser, sections, role } = useContext(AuthContext);
+
+  const [show, setShow] = useState(false);
+  const handleShow = async () => {
+    //await loadUser()
+    setShow(true);
+  }
+  const handleClose = () => setShow(false);
 
   const sectionNames = {
     address: "Адреса",

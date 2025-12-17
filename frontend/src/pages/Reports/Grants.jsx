@@ -18,10 +18,10 @@ export default function ReportGrants() {
       section="report_grants"
       rows={rows}
       columns={[
-        { key: "number", label: "№" },
-        { key: "grantee", label: "Пользователь" },
         { key: "table_name", label: "Таблица" },
-        { key: "privileges", label: "Привилегии" },
+        { key: "admin", label: "Администратор" },
+        { key: "manager", label: "Менеджер" },
+        { key: "moderator", label: "Модератор" },
       ]}
     />
   );

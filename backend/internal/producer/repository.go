@@ -21,7 +21,7 @@ func (r *ProducerRepository) GetAll(role string) ([]Producer, error) {
 		return nil, err
 	}
 
-	rows, err := pool.Query(context.Background(), "SELECT * FROM producer")
+	rows, err := pool.Query(context.Background(), "SELECT * FROM producer ORDER BY name ASC")
 	if err != nil {
 		return nil, err
 	}

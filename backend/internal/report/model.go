@@ -37,10 +37,10 @@ type ReportExpiredBatches struct {
 }
 
 type ReportGrants struct {
-	Number     int    `json:"number"`
-	Grantee    string `json:"grantee"`
-	TableName  string `json:"table_name"`
-	Privileges string `json:"privileges"`
+	TableName string `json:"table_name"`
+	Admin     string `json:"admin"`
+	Manager   string `json:"manager"`
+	Moderator string `json:"moderator"`
 }
 
 type ReportNoProducts struct {

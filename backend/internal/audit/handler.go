@@ -21,26 +21,25 @@ func NewAuditHandler(db *database.Connector) *AuditHandler {
 }
 
 func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
-	if ctx.Query("limit") == "" || ctx.Query("offset") == "" {
+	limitStr := ctx.Query("limit")
+	offsetStr := ctx.Query("offset")
+
+	if limitStr == "" || offsetStr == "" {
 		utils.RespondError(ctx, http.StatusBadRequest, "", "missing pagination params", gin.H{
 			"required_data": "?limit=int&offset=int",
 		})
 		return
 	}
 
-	limit, err := strconv.Atoi(ctx.Query("limit"))
-	if err != nil || limit < 0 {
-		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid limit", gin.H{
-			"required_data": "?limit=int&offset=int",
-		})
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit <= 0 {
+		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid limit", nil)
 		return
 	}
 
-	offset, err := strconv.Atoi(ctx.Query("offset"))
+	offset, err := strconv.Atoi(offsetStr)
 	if err != nil || offset < 0 {
-		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid offset", gin.H{
-			"required_data": "?limit=int&offset=int",
-		})
+		utils.RespondError(ctx, http.StatusBadRequest, err.Error(), "invalid offset", nil)
 		return
 	}
 
@@ -49,14 +48,21 @@ func (h *AuditHandler) GetAuditPagination(ctx *gin.Context) {
 		return
 	}
 
-	logs, total, err := h.AuditRepository.GetPagination(limit, offset, claims.Role)
-	if err != nil {
-		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
-		return
+	// 🔥 фильтры
+	filters := AuditFilters{
+		Role:      ctx.Query("role"),
+		Action:    ctx.Query("action"),
+		TableName: ctx.Query("table_name"),
 	}
 
-	if logs == nil {
-		utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "query error", nil)
+	logs, total, err := h.AuditRepository.GetPagination(
+		limit,
+		offset,
+		claims.Role,
+		filters,
+	)
+	if err != nil {
+		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "query error", nil)
 		return
 	}
 

@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"fmt"
+	"strings"
 	"warehouse/pkg/database"
 )
 
@@ -43,7 +44,13 @@ func (r *ProductRepository) GetAll(role string) ([]Product, error) {
 	return products, nil
 }
 
-func (r *ProductRepository) GetPagination(limit, offset int, query, role string) ([]Product, *int, error) {
+func (r *ProductRepository) GetPagination(
+	limit, offset int,
+	query string,
+	categoryID string,
+	role string,
+) ([]Product, *int, error) {
+
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, nil, err
@@ -51,18 +58,48 @@ func (r *ProductRepository) GetPagination(limit, offset int, query, role string)
 
 	ctx := context.Background()
 
-	searchPattern := "%" + query + "%"
+	var (
+		conditions []string
+		args       []any
+		argID      = 1
+	)
+
+	if query != "" {
+		conditions = append(conditions, fmt.Sprintf("LOWER(name) LIKE $%d", argID))
+		args = append(args, "%"+strings.ToLower(query)+"%")
+		argID++
+	}
+
+	if categoryID != "" {
+		conditions = append(conditions, fmt.Sprintf("id_product_category = $%d", argID))
+		args = append(args, categoryID)
+		argID++
+	}
+
+	whereSQL := ""
+	if len(conditions) > 0 {
+		whereSQL = "WHERE " + strings.Join(conditions, " AND ")
+	}
+
+	countQuery := fmt.Sprintf(`SELECT COUNT(*) FROM product %s`, whereSQL)
 
 	var total int
-	countQuery := "SELECT COUNT(*) FROM product WHERE name LIKE $1"
-	err = pool.QueryRow(ctx, countQuery, searchPattern).Scan(&total)
+	err = pool.QueryRow(ctx, countQuery, args...).Scan(&total)
 	if err != nil {
 		return nil, nil, fmt.Errorf("counting products: %w", err)
 	}
 
-	selectQuery := `SELECT id, name, id_product_category, id_producer, image_url FROM product WHERE LOWER(name) LIKE $1 ORDER BY id ASC LIMIT $2 OFFSET $3`
+	args = append(args, limit, offset)
 
-	rows, err := pool.Query(ctx, selectQuery, searchPattern, limit, offset)
+	selectQuery := fmt.Sprintf(`
+		SELECT id, name, id_product_category, id_producer, image_url
+		FROM product
+		%s
+		ORDER BY id ASC
+		LIMIT $%d OFFSET $%d
+	`, whereSQL, argID, argID+1)
+
+	rows, err := pool.Query(ctx, selectQuery, args...)
 	if err != nil {
 		return nil, nil, fmt.Errorf("querying products: %w", err)
 	}
@@ -71,8 +108,13 @@ func (r *ProductRepository) GetPagination(limit, offset int, query, role string)
 	var products []Product
 	for rows.Next() {
 		var product Product
-		err := rows.Scan(&product.ID, &product.Name, &product.IdProductCategory, &product.IdProducer, &product.ImageURL)
-		if err != nil {
+		if err := rows.Scan(
+			&product.ID,
+			&product.Name,
+			&product.IdProductCategory,
+			&product.IdProducer,
+			&product.ImageURL,
+		); err != nil {
 			return nil, nil, fmt.Errorf("scanning product: %w", err)
 		}
 		products = append(products, product)

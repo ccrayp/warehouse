@@ -3,11 +3,9 @@ package audit
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"strings"
 	"warehouse/pkg/database"
-
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type AuditRepository struct {
@@ -20,52 +18,102 @@ func NewAuditRepository(db *database.Connector) *AuditRepository {
 	}
 }
 
-func (r *AuditRepository) GetPagination(limit int, offset int, role string) ([]Audit, *int, error) {
+func (r *AuditRepository) GetPagination(
+	limit int,
+	offset int,
+	role string,
+	filters AuditFilters,
+) ([]Audit, *int, error) {
+
 	pool, err := r.db.GetPool(role)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var logs []Audit
+	var (
+		args       []any
+		conditions []string
+		argID      = 1
+	)
 
-	rows, err := pool.Query(context.Background(), `
-        SELECT * FROM audit_log ORDER BY changed_at DESC LIMIT $1 OFFSET $2`, limit, offset)
+	if filters.Role != "" {
+		conditions = append(conditions, fmt.Sprintf("changed_by ILIKE $%d", argID))
+		args = append(args, "%"+filters.Role+"%")
+		argID++
+	}
+
+	if filters.Action != "" {
+		conditions = append(conditions, fmt.Sprintf("action ILIKE $%d", argID))
+		args = append(args, "%"+filters.Action+"%")
+		argID++
+	}
+
+	if filters.TableName != "" {
+		conditions = append(conditions, fmt.Sprintf("table_name ILIKE $%d", argID))
+		args = append(args, "%"+filters.TableName+"%")
+		argID++
+	}
+
+	whereSQL := ""
+	if len(conditions) > 0 {
+		whereSQL = "WHERE " + strings.Join(conditions, " AND ")
+	}
+
+	args = append(args, limit, offset)
+
+	query := fmt.Sprintf(`
+		SELECT id, table_name, action, old_data, new_data, changed_by, changed_at
+		FROM audit_log
+		%s
+		ORDER BY changed_at DESC
+		LIMIT $%d OFFSET $%d
+	`, whereSQL, argID, argID+1)
+
+	rows, err := pool.Query(context.Background(), query, args...)
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) {
-			if pgErr.Code == "42501" {
-				return nil, nil, fmt.Errorf("permission denied: %s", pgErr.Message)
-			}
-			return nil, nil, fmt.Errorf("PostgreSQL error %s: %s", pgErr.Code, pgErr.Message)
-		}
 		return nil, nil, err
 	}
 	defer rows.Close()
+
+	var logs []Audit
 
 	for rows.Next() {
 		var log Audit
 		var oldData, newData []byte
 
-		if err := rows.Scan(&log.ID, &log.TableName, &log.Action, &oldData, &newData, &log.ChangedBy, &log.ChangetAt); err != nil {
+		if err := rows.Scan(
+			&log.ID,
+			&log.TableName,
+			&log.Action,
+			&oldData,
+			&newData,
+			&log.ChangedBy,
+			&log.ChangetAt,
+		); err != nil {
 			return nil, nil, err
 		}
 
 		if len(oldData) > 0 {
-			var o any
-			_ = json.Unmarshal(oldData, &o)
-			log.OldData = o
+			_ = json.Unmarshal(oldData, &log.OldData)
 		}
 		if len(newData) > 0 {
-			var n any
-			_ = json.Unmarshal(newData, &n)
-			log.NewData = n
+			_ = json.Unmarshal(newData, &log.NewData)
 		}
 
 		logs = append(logs, log)
 	}
 
+	countQuery := fmt.Sprintf(`
+		SELECT COUNT(*)
+		FROM audit_log
+		%s
+	`, whereSQL)
+
 	var total int
-	_ = pool.QueryRow(context.Background(), "SELECT COUNT(*) AS total FROM audit_log").Scan(&total)
+	err = pool.QueryRow(context.Background(), countQuery, args[:len(args)-2]...).Scan(&total)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	return logs, &total, nil
 }

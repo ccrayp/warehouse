@@ -11,3 +11,9 @@ type Audit struct {
 	ChangedBy string    `json:"changer_by"`
 	ChangetAt time.Time `json:"changer_at"`
 }
+
+type AuditFilters struct {
+	Role      string
+	Action    string
+	TableName string
+}

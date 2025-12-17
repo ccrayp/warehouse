@@ -61,7 +61,13 @@ export default function UniversalReport({ title, columns, rows, section }) {
             Сохранить
           </button>
 
-          <h1 style={{ marginBottom: "16px" }}>{title}</h1>
+          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px" }}>
+            {title}
+          </h1>
+
+          <p style={{ fontSize: "16px", color: "#555", marginBottom: "20px" }}>
+            Сгенерирован автоматически из базы данных
+          </p>
 
           <table
             style={{

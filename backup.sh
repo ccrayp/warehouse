@@ -8,9 +8,9 @@ DB_USER="postgres"
 
 IMAGES_VOLUME="product_images"
 
-WORKDIR="warehouse_backup"
+WORKDIR="warehouse"
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-ARCHIVE="warehouse_backup_${TIMESTAMP}.tar.gz"
+ARCHIVE="warehouse_${TIMESTAMP}.tar.gz"
 
 SCRIPTS=(
   start.sh

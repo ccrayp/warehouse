@@ -11,52 +11,78 @@ export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(JSON.parse(localStorage.getItem("role") || "null"));
   const [employee_id, setEmployeeId] = useState(JSON.parse(localStorage.getItem("employee_id") || "null"));
 
+  /* =======================
+     sync state -> localStorage
+     ======================= */
   useEffect(() => {
-    if (accessToken) localStorage.setItem("access_token", accessToken);
-    if (refreshToken) localStorage.setItem("refresh_token", refreshToken);
+    accessToken
+      ? localStorage.setItem("access_token", accessToken)
+      : localStorage.removeItem("access_token");
+
+    refreshToken
+      ? localStorage.setItem("refresh_token", refreshToken)
+      : localStorage.removeItem("refresh_token");
+
     localStorage.setItem("sections", JSON.stringify(sections));
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("role", JSON.stringify(role));
     localStorage.setItem("employee_id", JSON.stringify(employee_id));
   }, [accessToken, refreshToken, sections, user, role, employee_id]);
 
+  /* =======================
+     refresh access token
+     ======================= */
+ let refreshPromise = null;
+
   const refreshAccessToken = async () => {
-    try {
-      const res = await fetch(`${apiHost}/auth/refresh`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setAccessToken(data.data.access_token);
-        setRefreshToken(data.data.refresh_token);
-        return data.data.access_token;
-      } else {
-        throw new Error("Refresh failed");
-      }
-    } catch (err) {
-      console.error(err);
-      await logout();
-      return null;
+    if (!refreshToken) return null;
+
+    if (!refreshPromise) {
+      refreshPromise = (async () => {
+        try {
+          const res = await fetch(`${apiHost}/auth/refresh`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: refreshToken }),
+          });
+
+          if (!res.ok) {
+            setAccessToken(null);
+            setRefreshToken(null);
+            return null;
+          }
+
+          const data = await res.json();
+          if (!data.success) return null;
+
+          setAccessToken(data.data.access_token);
+          setRefreshToken(data.data.refresh_token);
+
+          return data.data.access_token;
+        } catch (err) {
+          console.error("Refresh token error:", err);
+          return null;
+        } finally {
+          refreshPromise = null;
+        }
+      })();
     }
+
+    return refreshPromise;
   };
 
-  const logout = async () => {
-    const tokenToSend = localStorage.getItem("refresh_token");
-    const access = localStorage.getItem("access_token");
 
+  /* =======================
+     logout
+     ======================= */
+  const logout = async () => {
     try {
-      if (tokenToSend) {
-        const res = await fetch(`${apiHost}/auth/logout`, {
+      if (refreshToken) {
+        await fetch(`${apiHost}/auth/logout`, {
           method: "POST",
-          headers: { 
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-           },
-          body: JSON.stringify({ refresh_token: tokenToSend }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh_token: refreshToken }),
         });
-        if (!res.ok) console.error("Logout request failed");
       }
     } catch (err) {
       console.error("Logout error:", err);
@@ -71,6 +97,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /* =======================
+     load user info
+     ======================= */
   const loadUser = async (token = accessToken) => {
     if (!token) return;
 
@@ -82,17 +111,26 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 401) {
+        const newToken = await refreshAccessToken();
+        if (!newToken) {
+          await logout();
+          return;
+        }
+        return loadUser(newToken);
+      }
+
       const data = await res.json();
 
       if (data.success) {
         setUser({ name: data.data.name });
         setSections(data.data.permissions || []);
-        setRole({role: data.data.role});
-        setEmployeeId({employee_id: data.data.employee_id});
-      } else {
-        await logout();
+        setRole({ role: data.data.role });
+        setEmployeeId({ employee_id: data.data.employee_id });
       }
-    } catch {
+    } catch (err) {
+      console.error("Load user error:", err);
       await logout();
     }
   };
@@ -111,8 +149,8 @@ export const AuthProvider = ({ children }) => {
         setUser,
         setRole,
         refreshAccessToken,
-        logout,
         loadUser,
+        logout,
       }}
     >
       {children}

@@ -134,7 +134,7 @@ func (r *ReportRepository) GetGrants(role string) (any, error) {
 	for rows.Next() {
 		var item ReportGrants
 
-		err = rows.Scan(&item.Number, &item.Grantee, &item.TableName, &item.Privileges)
+		err = rows.Scan(&item.TableName, &item.Admin, &item.Manager, &item.Moderator)
 		if err != nil {
 			return nil, err
 		}

@@ -18,8 +18,8 @@ export default function ReportDocumentsByEmployee() {
       section="report_documents_by_employee"
       rows={rows}
       columns={[
-        { key: "employee_number", label: "Табельный номер" },
-        { key: "employee", label: "Сотрудник" },
+        { key: "employee_number", label: "Сотрудник" },
+        { key: "employee", label: "ФИО" },
         { key: "position", label: "Должность" },
         { key: "document_category", label: "Категория документа" },
         { key: "documents", label: "Количество документов" },

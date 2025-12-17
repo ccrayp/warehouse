@@ -9,7 +9,7 @@ if [ -n "$1" ]; then
 
     # Создаём дамп ролей и пишем в файл
     echo "Создаём дамп ролей в файл $DUMP_FILE_WITH_TIME ..."
-    docker exec -i storage_db-warehouse_db-1 pg_dumpall -U postgres --globals-only > "$DUMP_FILE_WITH_TIME"
+    docker exec -i warehouse-warehouse_db-1 pg_dumpall -U postgres --globals-only > "$DUMP_FILE_WITH_TIME"
 
     if [ $? -eq 0 ]; then
         echo "Дамп ролей успешно создан."
@@ -23,7 +23,7 @@ if [ -n "$1" ]; then
 
     # Создаём дамп базы и добавляем в тот же файл
     echo "Создаём дамп базы и добавляем в файл $DUMP_FILE_WITH_TIME ..."
-    docker exec -i storage_db-warehouse_db-1 pg_dump -F p -U postgres -d warehouse >> "$DUMP_FILE_WITH_TIME"
+    docker exec -i warehouse-warehouse_db-1 pg_dump -F p -U postgres -d warehouse >> "$DUMP_FILE_WITH_TIME"
 
     if [ $? -eq 0 ]; then
         echo "Дамп базы успешно добавлен в файл: $DUMP_FILE_WITH_TIME"

@@ -49,12 +49,12 @@ func (h *ProductHandler) GetProductAll(ctx *gin.Context) {
 
 func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
 	if ctx.Query("limit") == "" || ctx.Query("offset") == "" {
-		utils.RespondError(ctx, http.StatusBadRequest, "no limit of offset parameter", "no limit or offset parameter", nil)
+		utils.RespondError(ctx, http.StatusBadRequest, "no limit or offset parameter", "invalid params", nil)
 		return
 	}
 
 	limit, err := strconv.Atoi(ctx.Query("limit"))
-	if err != nil || limit < 0 {
+	if err != nil || limit <= 0 {
 		utils.RespondError(ctx, http.StatusBadRequest, "invalid limit", "invalid limit", nil)
 		return
 	}
@@ -66,17 +66,19 @@ func (h *ProductHandler) GetProductPagination(ctx *gin.Context) {
 	}
 
 	query := ctx.Query("q")
+	categoryID := ctx.Query("category_id")
 
-	products, total, err := h.productRepository.GetPagination(limit, offset, query, "manager")
+	products, total, err := h.productRepository.GetPagination(
+		limit,
+		offset,
+		query,
+		categoryID,
+		"manager",
+	)
 	if err != nil {
 		utils.RespondError(ctx, http.StatusInternalServerError, err.Error(), "error while select", nil)
 		return
 	}
-
-	// if products == nil {
-	// 	utils.RespondError(ctx, http.StatusForbidden, "permission denied for table", "permission denied for table", nil)
-	// 	return
-	// }
 
 	utils.RespondSuccess(ctx, http.StatusOK, "products selected successfully", gin.H{
 		"products": products,

@@ -7,17 +7,20 @@ import { useNavigate } from "react-router-dom";
 
 const reports = [
   { id: "report_batches", name: "Принятые партии", description: "Информация о принятых партиях товара", type: "table" },
-  { id: "report_non_fixed_batches", name: "Непринятые партии", description: "Информация о партиях, которые еще не были задокументированы", type: "table" },
-  { id: "report_documents_by_employee", name: "Документы по сотрудникам", description: "Список сотрудников и количество документов", type: "table" },
-  { id: "report_employees", name: "Сотрудники", description: "Информация о сотрудниках компании", type: "table" },
+  { id: "report_non_fixed_batches", name: "Непринятые партии", description: "Информация о партиях, которые еще не были задокументированны", type: "table" },
   { id: "report_expired_batches", name: "Просроченные партии", description: "Информация о просроченных партиях", type: "table" },
-  { id: "report_grants", name: "Права ролей", description: "Права для ролей в системе", type: "table" },
-  { id: "report_interface_grants", name: "Доступные разделы", description: "Доступные разделы и права пользователей", type: "table" },
+  { id: "report_products_left_by_batch", name: "Остатки по партиям", description: "Остаток продукции по партиям", type: "table" },
+  
   { id: "report_no_products", name: "Отсутствующие товары", description: "Товары, которых нет на складе", type: "table" },
+  { id: "report_products_left", name: "Остатки продукции", description: "Остатки продукции на складе", type: "table" },
   { id: "report_products_total_cost", name: "Стоимость товаров", description: "Суммарная стоимость товаров, находящихся на складе", type: "table" },
   { id: "report_producer_subject_statistics", name: "Производители по регионам", description: "Количество производителей по регионам", type: "chart" },
-  { id: "report_products_left", name: "Остатки продукции", description: "Остатки продукции на складе", type: "table" },
-  { id: "report_products_left_by_batch", name: "Остатки по партиям", description: "Остаток продукции по партиям", type: "table" },
+  
+  { id: "report_employees", name: "Сотрудники", description: "Информация о сотрудниках склада", type: "table" },
+  { id: "report_documents_by_employee", name: "Документы по сотрудникам", description: "Список сотрудников и количество документов", type: "table" },
+
+  { id: "report_grants", name: "Права ролей", description: "Права для ролей в системе", type: "table" },
+  { id: "report_interface_grants", name: "Доступные разделы", description: "Доступные разделы и права пользователей", type: "table" },
   { id: "report_system_users", name: "Пользователи системы", description: "Список пользователей", type: "table" },
   { id: "report_tables_activity", name: "Активность по таблицам", description: "Активность за 7 дней", type: "chart" },
   { id: "report_tables_activity_per_hour", name: "Активность по часам", description: "Активность по часам за месяц", type: "chart" },
