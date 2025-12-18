@@ -123,7 +123,7 @@ export default function DocumentsCards() {
         {hasInsert && (
             <div className="pt-4">
           <Button variant="primary" onClick={createDocument}>
-            <i class="fa-solid fa-plus pe-2"></i>Создать документ
+            <i class="fa-solid fa-plus pe-2"></i>Добавить документ
           </Button>
           </div>
         )}

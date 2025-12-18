@@ -205,7 +205,7 @@ export default function ProducersCards() {
             <Form.Group className="mb-3"><Form.Label>Название</Form.Label>
               <Form.Control type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} disabled={!hasInsert && !hasUpdate} /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>ИНН</Form.Label>
-              <Form.Control type="text" value={form.inn} onChange={e => setForm({ ...form, inn: e.target.value })} disabled={!hasInsert && !hasUpdate} /></Form.Group>
+              <Form.Control type="text" maxLength={10} minLength={10} value={form.inn} onChange={e => setForm({ ...form, inn: e.target.value })} disabled={!hasInsert && !hasUpdate} /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Фамилия</Form.Label>
               <Form.Control type="text" value={form.surname} onChange={e => setForm({ ...form, surname: e.target.value })} disabled={!hasInsert && !hasUpdate} /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Имя</Form.Label>

@@ -109,8 +109,8 @@ export default function BatchesTable() {
     try {
       const payload = {
         cost: Number(form.cost),
-        production_date: form.production_date,
-        expiration_date: form.expiration_date,
+        production_date: form.production_date ? new Date(form.production_date).toISOString() : null,
+        expiration_date: form.expiration_date ? new Date(form.expiration_date).toISOString() : null,
         id_product: Number(form.id_product)
       };
 

@@ -21,7 +21,7 @@ export default function ReportProductsTotalCost() {
         { key: "number", label: "№" },
         { key: "id_batch", label: "ID партии" },
         { key: "product_name", label: "Название товара" },
-        { key: "cost", label: "Стоимость за 1 У.е." },
+        { key: "cost", label: "Стоимость за 1 у.е." },
         { key: "left_quantity", label: "Остаток на складе" },
         { key: "total", label: "Суммарная стоимость" },
       ]}

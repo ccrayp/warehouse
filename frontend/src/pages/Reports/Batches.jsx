@@ -14,7 +14,7 @@ export default function ReportBatches() {
 
   return (
     <UniversalReport
-      title="Партии товаров"
+      title="Принятые партии"
       section="report_batches"
       rows={rows}
       columns={[

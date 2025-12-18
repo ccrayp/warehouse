@@ -1,10 +1,12 @@
 package product
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+	"unicode/utf8"
 	"warehouse/internal/auth"
 	"warehouse/pkg/database"
 	"warehouse/pkg/utils"
@@ -146,6 +148,12 @@ func (h *ProductHandler) CreateProduct(ctx *gin.Context) {
 		return
 	}
 
+	if utf8.RuneCountInString(req.Name) < 0 || utf8.RuneCountInString(req.Name) > 100 {
+		text := fmt.Sprintf("name too long (%d) out of 100", utf8.RuneCountInString(req.Name))
+		utils.RespondError(ctx, http.StatusBadRequest, text, text, nil)
+		return
+	}
+
 	req.ImageURL = "/static/products/placeholder.png"
 
 	id, err := h.productRepository.Create(req, claims.Role)
@@ -154,7 +162,7 @@ func (h *ProductHandler) CreateProduct(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondSuccess(ctx, http.StatusOK, "product created", gin.H{
+	utils.RespondSuccess(ctx, http.StatusCreated, "product created", gin.H{
 		"id": id,
 	})
 }

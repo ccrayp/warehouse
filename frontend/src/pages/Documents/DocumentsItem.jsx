@@ -56,7 +56,6 @@ export default function DocumentsItemPage() {
 
   const [categories, setCategories] = useState([]);
   const [contents, setContents] = useState([]);
-
   const [products, setProducts] = useState([]);
   const [batches, setBatches] = useState([]);
   const [batchesReport, setBatchesReport] = useState([]);
@@ -139,17 +138,6 @@ export default function DocumentsItemPage() {
     [products]
   );
 
-  const batchMap = useMemo(
-    () => Object.fromEntries(batches.map(b => [b.id, b])),
-    [batches]
-  );
-
-  const batchLabel = (id_batch) => {
-    const b = batchMap[id_batch];
-    if (!b) return `№${id_batch}`;
-    return `№${id_batch} — ${productMap[b.id_product]} | ${b.cost} ₽`;
-  };
-
   /* ================= SAVE DOCUMENT ================= */
 
   const saveDocument = async () => {
@@ -167,7 +155,7 @@ export default function DocumentsItemPage() {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      navigate(`/documents/${r.data.id}`);
+      navigate(`/document/${r.data.id}`);
     } else {
       await apiRequest(`/documents/${id}`, {
         method: "PUT",
@@ -183,7 +171,7 @@ export default function DocumentsItemPage() {
     if (!window.confirm("Удалить документ (все связанные данные будут удалены)?")) return;
 
     await apiRequest(`/documents/${id}`, { method: "DELETE" });
-    navigate("/documents");
+    navigate("/document");
   };
 
   /* ================= ADD ROW ================= */
@@ -198,7 +186,16 @@ export default function DocumentsItemPage() {
 
     let quantity = Number(newRow.quantity);
 
-    // Переоценка → всё количество остатка
+    // 🔴 СПИСАНИЕ — проверка остатка
+    if (document.id_document_category === 2) {
+      if (quantity > batch.left_quantity) {
+        return setError(
+          `Недостаточно остатка. Доступно: ${batch.left_quantity}`
+        );
+      }
+    }
+
+    // 🟡 ПЕРЕОЦЕНКА — всё количество остатка
     if (document.id_document_category === 3) {
       quantity = batch.left_quantity;
     }
@@ -212,18 +209,18 @@ export default function DocumentsItemPage() {
       }),
     });
 
-    // Переоценка → обновляем цену партии
+    // Переоценка → новая цена
     if (document.id_document_category === 3) {
       await apiRequest(`/batches/${newRow.id_batch}`, {
         method: "PUT",
         body: JSON.stringify({
-          ...batchMap[newRow.id_batch],
           cost: Number(newRow.new_cost),
         }),
       });
     }
 
     setNewRow({ id_batch: "", quantity: "", new_cost: "" });
+    setError("");
     loadContents();
     loadBatches();
     loadBatchesByType();
@@ -235,7 +232,9 @@ export default function DocumentsItemPage() {
 
   return (
     <Container className="mt-4">
-      <h2 className="pt-4">{isNew ? "Склад: Создание документа" : `Склад: Документ №${id}`}</h2>
+      <h2 className="pt-4">
+        {isNew ? "Склад: Создание документа" : `Склад: Документ №${id}`}
+      </h2>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
@@ -267,10 +266,14 @@ export default function DocumentsItemPage() {
         </Form.Group>
 
         {(hasInsert || hasUpdate) && (
-          <Button className="me-2" onClick={saveDocument}><i class="fa-solid fa-floppy-disk pe-2"></i>Сохранить</Button>
+          <Button className="me-2" onClick={saveDocument}>
+            <i class="fa-solid fa-floppy-disk pe-2"></i>Сохранить
+          </Button>
         )}
         {!isNew && hasDelete && (
-          <Button variant="danger" onClick={deleteDocument}><i class="fa-solid fa-trash pe-2"></i>Удалить</Button>
+          <Button variant="danger" onClick={deleteDocument}>
+            <i class="fa-solid fa-trash pe-2"></i>Удалить
+          </Button>
         )}
       </Form>
 
@@ -289,7 +292,7 @@ export default function DocumentsItemPage() {
             <tbody>
               {contents.map(c => (
                 <tr key={c.id}>
-                  <td>{batchLabel(c.id_batch)}</td>
+                  <td>№{c.id_batch} - {productMap[c.id_batch]}</td>
                   <td>{c.quantity}</td>
                   {document.id_document_category === 3 && <td>—</td>}
                 </tr>
@@ -305,7 +308,9 @@ export default function DocumentsItemPage() {
                       <option value="">Партия</option>
                       {batchesReport.map(b => (
                         <option key={b.id_batch} value={b.id_batch}>
-                          {batchLabel(b.id_batch)}
+                          №{b.id_batch} — {productMap[b.id_product]}
+                          {" | остаток: "}
+                          {b.left_quantity}
                         </option>
                       ))}
                     </Form.Select>
@@ -315,6 +320,11 @@ export default function DocumentsItemPage() {
                     {document.id_document_category === 3 ? "Авто" : (
                       <Form.Control
                         type="number"
+                        max={
+                          document.id_document_category === 2
+                            ? batchesReport.find(b => b.id_batch == newRow.id_batch)?.left_quantity
+                            : undefined
+                        }
                         value={newRow.quantity}
                         onChange={e =>
                           setNewRow({ ...newRow, quantity: e.target.value })
@@ -340,7 +350,11 @@ export default function DocumentsItemPage() {
             </tbody>
           </Table>
 
-          {hasUpdate && <Button onClick={addRow}><i class="fa-solid fa-plus pe-2"></i>Добавить строку</Button>}
+          {hasUpdate && (
+            <Button onClick={addRow}>
+              <i class="fa-solid fa-plus pe-2"></i>Добавить строку
+            </Button>
+          )}
         </>
       )}
     </Container>

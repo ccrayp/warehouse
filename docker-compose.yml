@@ -18,7 +18,7 @@ services:
       TZ: Europe/Moscow
       POSTGRES_INITDB_ARGS: --timezone=Europe/Moscow
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: NjFlZDNmOTM3M2JmMzZhOTE3MTA3NTk5N2RmMDNhMzUyNTZjMzEyNDUyMGE3NDll
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: warehouse
     command: postgres -c timezone=Europe/Moscow
     ports:

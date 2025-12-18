@@ -182,7 +182,7 @@ export default function ProductsCards() {
       fetchData(page);
       handleCloseModal();
     } catch (err) {
-      alert(err.message);
+      //alert(err.message);
     } finally {
       setSaving(false);
     }
@@ -193,7 +193,10 @@ export default function ProductsCards() {
     if (!window.confirm(`Удалить "${product.name}"? (все связанные данные будут удалены)`)) return;
 
     const resp = await apiRequest(`/products/${product.id}`, { method: "DELETE" });
-    if (resp.success) fetchData(page);
+    if (resp.success) {
+      handleCloseModal();
+      fetchData(page);
+    }
     else alert(resp.message || "Ошибка удаления");
   };
 

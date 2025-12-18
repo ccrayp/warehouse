@@ -25,7 +25,7 @@ func (r *ProductRepository) GetAll(role string) ([]Product, error) {
 
 	var products []Product
 
-	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY id ASC")
+	rows, err := pool.Query(context.Background(), "SELECT id, name, id_product_category, id_producer, image_url FROM product ORDER BY name ASC")
 	if err != nil {
 		return nil, err
 	}
