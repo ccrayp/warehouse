@@ -2,7 +2,7 @@
 -- PostgreSQL database cluster dump
 --
 
-\restrict cjTC5JyBjcFFfNfI71lFg3lscGOIcKOKJSDy7N19z4SQJmu9ZhaKVWLcyGAjNuJ
+\restrict dukR56YOsOxxXy3u29b96NvTpqAXB6WuO9ACMokYhAdp66yqEo56yq5elRck8VN
 
 SET default_transaction_read_only = off;
 
@@ -33,7 +33,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 
 
 
-\unrestrict cjTC5JyBjcFFfNfI71lFg3lscGOIcKOKJSDy7N19z4SQJmu9ZhaKVWLcyGAjNuJ
+\unrestrict dukR56YOsOxxXy3u29b96NvTpqAXB6WuO9ACMokYhAdp66yqEo56yq5elRck8VN
 
 --
 -- PostgreSQL database cluster dump complete
@@ -43,7 +43,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- PostgreSQL database dump
 --
 
-\restrict nilbHQB73wdEagUv0GXwg0xiKeRtgKv31ycOxVapj654xtW0TLiG3b4w7wmLyTt
+\restrict 73PNpKlNZ9wEJvGh3PwHWGRq7fvnmIGv7lDG7DBSbguer83bScxDfzHOFQ7FheM
 
 -- Dumped from database version 15.15 (Debian 15.15-1.pgdg13+1)
 -- Dumped by pg_dump version 15.15 (Debian 15.15-1.pgdg13+1)
@@ -58,20 +58,6 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
-
 
 --
 -- Name: audit_trigger(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -762,17 +748,14 @@ ALTER TABLE public.report_expired_batches OWNER TO postgres;
 --
 
 CREATE VIEW public.report_grants AS
- SELECT row_number() OVER () AS number,
-    t.grantee,
-    t.table_name,
-    t.privileges
-   FROM ( SELECT role_table_grants.grantee,
-            role_table_grants.table_name,
-            string_agg((role_table_grants.privilege_type)::text, ', '::text) AS privileges
-           FROM information_schema.role_table_grants
-          WHERE (((role_table_grants.grantee)::name = ANY (ARRAY['admin'::name, 'moderator'::name, 'manager'::name])) AND ((role_table_grants.table_name)::name <> 'refresh_tokens'::name))
-          GROUP BY role_table_grants.grantee, role_table_grants.table_name
-          ORDER BY role_table_grants.grantee, role_table_grants.table_name) t;
+ SELECT table_privileges.table_name,
+    COALESCE(string_agg((table_privileges.privilege_type)::text, ', '::text ORDER BY (table_privileges.privilege_type)::text) FILTER (WHERE ((table_privileges.grantee)::name = 'admin'::name)), '-'::text) AS admin,
+    COALESCE(string_agg((table_privileges.privilege_type)::text, ', '::text ORDER BY (table_privileges.privilege_type)::text) FILTER (WHERE ((table_privileges.grantee)::name = 'manager'::name)), '-'::text) AS manager,
+    COALESCE(string_agg((table_privileges.privilege_type)::text, ', '::text ORDER BY (table_privileges.privilege_type)::text) FILTER (WHERE ((table_privileges.grantee)::name = 'moderator'::name)), '-'::text) AS moderator
+   FROM information_schema.table_privileges
+  WHERE (((table_privileges.grantee)::name = ANY (ARRAY['admin'::name, 'manager'::name, 'moderator'::name])) AND ((table_privileges.privilege_type)::text = ANY ((ARRAY['SELECT'::character varying, 'INSERT'::character varying, 'UPDATE'::character varying, 'DELETE'::character varying])::text[])))
+  GROUP BY table_privileges.table_name
+  ORDER BY table_privileges.table_name;
 
 
 ALTER TABLE public.report_grants OWNER TO postgres;
@@ -1237,8 +1220,8 @@ COPY public.address (id, subject, region, city, street, building) FROM stdin;
 --
 
 COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, changed_at) FROM stdin;
-747	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008872100895552_7179111216.jpg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008872100895552_7179111216.jpg", "id_producer": 3, "id_product_category": 2}	admin	2025-12-10 13:42:35.186477
-495	refresh_tokens	INSERT	\N	{"id": 113, "role": "manager", "token": "595cb504cdc827e0b54a79c43363c6a5e36fc89ff4a3380c5e4f4a7061f8eaf2", "username": "anna_sokolova", "created_at": "2025-12-09T12:36:19.952073"}	admin	2025-12-09 15:36:19.952073
+1192	refresh_tokens	DELETE	{"id": 291, "role": "admin", "token": "7eed6ac88f19552f91f848632cab3eb6161dc315a7e42a7a0903802ba0e2399a", "username": "roman", "created_at": "2025-12-17T09:26:07.116055"}	\N	admin	2025-12-17 10:06:49.195476
+1193	refresh_tokens	INSERT	\N	{"id": 292, "role": "manager", "token": "d94142d7c246851fdbb800ed87806b5da7c2ff898c99b67cc04fc3ff31c8d278", "username": "anna_sokolova", "created_at": "2025-12-17T10:06:56.531383"}	admin	2025-12-17 10:06:56.531383
 525	refresh_tokens	DELETE	{"id": 128, "role": "admin", "token": "927ba55fb6bab277a3991a077ed5a43c46eb956c43e72934a6680242484fa3be", "username": "artem_volkov", "created_at": "2025-12-09T13:37:34.840008"}	\N	admin	2025-12-09 16:40:57.620994
 526	refresh_tokens	INSERT	\N	{"id": 129, "role": "admin", "token": "ccaada3d84ce075c9ebb197bfeea9f74cb51ceb74dfec2794e9b2ec20daaedab", "username": "artem_volkov", "created_at": "2025-12-09T13:41:10.74989"}	admin	2025-12-09 16:41:10.74989
 527	refresh_tokens	DELETE	{"id": 129, "role": "admin", "token": "ccaada3d84ce075c9ebb197bfeea9f74cb51ceb74dfec2794e9b2ec20daaedab", "username": "artem_volkov", "created_at": "2025-12-09T13:41:10.74989"}	\N	admin	2025-12-09 16:43:23.726001
@@ -1260,510 +1243,179 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 658	refresh_tokens	INSERT	\N	{"id": 185, "role": "manager", "token": "fc9bd9901206160d89f64a4f20687598befe31e9e5c79183cb3ff66af7e54ce1", "username": "anna_sokolova", "created_at": "2025-12-10T09:34:37.725926"}	admin	2025-12-10 12:34:37.725926
 663	position	DELETE	{"id": 6, "name": "тест", "description": "тес"}	\N	admin	2025-12-10 12:35:38.122646
 689	position	INSERT	\N	{"id": 10, "name": "", "description": ""}	postgres	2025-12-10 14:42:16.624822
-26	refresh_tokens	INSERT	\N	{"id": 21, "role": "admin", "token": "c4047bf1b6a35318377d1d62e8c017eae155bef3a323ba8b3749df0c8f6e1d4e", "username": "manager", "created_at": "2025-11-27T14:42:41.252856"}	admin	2025-11-27 17:42:41.252856
-2	producer	UPDATE	{"id": 3, "inn": "8901234567", "name": "ООО \\"МикроТех\\"", "surname": "Белов", "firstname": "Дмитрий", "id_address": 8, "patronymic": "Игоревич"}	{"id": 3, "inn": "8901234567", "name": "ООО \\"МикроТех\\"", "surname": "Белочкин", "firstname": "Дмитрий", "id_address": 8, "patronymic": "Игоревич"}	postgres	2025-11-23 12:01:25.747191
-3	refresh_tokens	INSERT	\N	{"id": 5, "role": "admin", "token": "cba4fd00c94d24c294c03e229c32c26a883f21d7b64090e1b4e8c84b7fea8d77", "username": "roman", "created_at": "2025-11-26T13:44:34.193637"}	admin	2025-11-26 16:44:34.193637
-4	refresh_tokens	INSERT	\N	{"id": 6, "role": "admin", "token": "331f7d0e39b7208afda01cc0de9c9eee633ba0b8ab4e593ea5290ca95d978007", "username": "roman", "created_at": "2025-11-26T13:53:17.617212"}	admin	2025-11-26 16:53:17.617212
-5	refresh_tokens	INSERT	\N	{"id": 7, "role": "admin", "token": "94b73e8c98bd3c09f277f15c0bc6b5d25bc139c87dc067cf3e1061a39b76c68a", "username": "roman", "created_at": "2025-11-26T13:53:20.513858"}	admin	2025-11-26 16:53:20.513858
-6	refresh_tokens	INSERT	\N	{"id": 8, "role": "admin", "token": "49daff6915a3f11892764200b755529cf7a0e3835acce53083d255d6c0ec3229", "username": "roman", "created_at": "2025-11-26T13:53:21.423941"}	admin	2025-11-26 16:53:21.423941
-35	refresh_tokens	INSERT	\N	{"id": 25, "role": "admin", "token": "9185d5b6e4de2a57af618f62cf5f5cde1719477e46834a4794941620275fe6ee", "username": "admin", "created_at": "2025-11-28T09:23:53.178776"}	admin	2025-11-28 12:23:53.178776
-7	sys_user	UPDATE	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2b$12$A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6 "}	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$rgYYBEQoDW9f3dxPAgweruahkWXVL/EaX85oJaTY.SxpLHVhrRWsC"}	postgres	2025-11-26 17:10:46.647639
-8	sys_user	UPDATE	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2b$12$L8Q9zR6nS2tV1WxY3Z4A7uB8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q"}	{"id": 1, "login": "artem_volkov", "id_role": 4, "id_employee": 1, "password_hash": "$2a$10$FVCCd92Vbpubj1004.Df8eVP4LVbyttxm1wXserInQnEbHcE5oFLm"}	postgres	2025-11-26 17:10:46.647639
-9	refresh_tokens	INSERT	\N	{"id": 9, "role": "admin", "token": "943f03ab3a4f25a87cc71e5816dc1cadb987c215fb5ac55def363a9ee92bacbc", "username": "artem_volkov", "created_at": "2025-11-26T14:13:11.123677"}	admin	2025-11-26 17:13:11.123677
-10	refresh_tokens	INSERT	\N	{"id": 10, "role": "admin", "token": "97c6bfd5e9067a095070646cebe2751d3b3a7ada884fa670f0e55146a89a1d62", "username": "artem_volkov", "created_at": "2025-11-26T14:13:39.912611"}	admin	2025-11-26 17:13:39.912611
-11	refresh_tokens	DELETE	{"id": 10, "role": "admin", "token": "97c6bfd5e9067a095070646cebe2751d3b3a7ada884fa670f0e55146a89a1d62", "username": "artem_volkov", "created_at": "2025-11-26T14:13:39.912611"}	\N	admin	2025-11-26 17:14:54.969474
-12	refresh_tokens	INSERT	\N	{"id": 11, "role": "admin", "token": "1cbe2f88d2f2ae7f9f9830c50708a987b72746beb26f69714c481d4b68b2a63c", "username": "artem_volkov", "created_at": "2025-11-26T14:19:15.076778"}	admin	2025-11-26 17:19:15.076778
-13	refresh_tokens	INSERT	\N	{"id": 12, "role": "admin", "token": "4128f11f7639650ab58e66dc2de8c697259df3a0fff99ffefb1be1a135f82492", "username": "artem_volkov", "created_at": "2025-11-26T14:55:31.582029"}	admin	2025-11-26 17:55:31.582029
-14	refresh_tokens	INSERT	\N	{"id": 13, "role": "admin", "token": "ca2cf4331fb90f0dba3b72d21b2619f4c94e05806e17cc725f32d31db19b9639", "username": "artem_volkov", "created_at": "2025-11-26T15:00:45.651163"}	admin	2025-11-26 18:00:45.651163
-15	refresh_tokens	INSERT	\N	{"id": 14, "role": "admin", "token": "e69760612a8e12fc6b4c594aa6c91d43f360c7f741c3dc8d47a2b1f0d15d8012", "username": "artem_volkov", "created_at": "2025-11-27T06:29:01.211081"}	admin	2025-11-27 09:29:01.211081
-16	sys_user	INSERT	\N	{"id": 4, "login": "manager", "id_role": 2, "id_employee": 4, "password_hash": "$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu"}	postgres	2025-11-27 09:41:25.719506
-17	sys_user	INSERT	\N	{"id": 5, "login": "moderator", "id_role": 2, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	postgres	2025-11-27 09:41:25.719506
-18	sys_user	UPDATE	{"id": 5, "login": "moderator", "id_role": 2, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	{"id": 5, "login": "moderator", "id_role": 1, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	postgres	2025-11-27 09:41:43.393199
-19	refresh_tokens	INSERT	\N	{"id": 15, "role": "manager", "token": "a64ab6b5588249005d97f3620ffa83f3b6e2bf03e19463a0e5bffb667533caee", "username": "manager", "created_at": "2025-11-27T06:55:11.668623"}	manager	2025-11-27 09:55:11.668623
-20	refresh_tokens	INSERT	\N	{"id": 16, "role": "admin", "token": "938f447ec5bcc121a17ef5df648da8e40e4806bdae73462c2579e066e8d442a2", "username": "artem_volkov", "created_at": "2025-11-27T06:56:30.238745"}	admin	2025-11-27 09:56:30.238745
-21	refresh_tokens	INSERT	\N	{"id": 17, "role": "admin", "token": "10c6f457d5a4eea17421afbb0ba546956096905abded10a241a1330e31f1bf7a", "username": "artem_volkov", "created_at": "2025-11-27T07:09:46.021445"}	admin	2025-11-27 10:09:46.021445
-22	refresh_tokens	INSERT	\N	{"id": 18, "role": "manager", "token": "25d631c35949d6aea6bda090c8ba45265658fe0c16e37f0247e95e23c3f66776", "username": "manager", "created_at": "2025-11-27T07:12:43.617149"}	manager	2025-11-27 10:12:43.617149
-23	refresh_tokens	INSERT	\N	{"id": 19, "role": "manager", "token": "d369e960e74a00713ba90203a693fb21b2dda030689c52e1f698337c44a0980c", "username": "manager", "created_at": "2025-11-27T07:12:46.164956"}	manager	2025-11-27 10:12:46.164956
-24	refresh_tokens	INSERT	\N	{"id": 20, "role": "manager", "token": "5e6ba8e70891f90d174244ec3b80300f862a88a1116ccc2bfcdf19d4f73284e8", "username": "manager", "created_at": "2025-11-27T12:46:28.835829"}	manager	2025-11-27 15:46:28.835829
-25	refresh_tokens	DELETE	{"id": 20, "role": "manager", "token": "5e6ba8e70891f90d174244ec3b80300f862a88a1116ccc2bfcdf19d4f73284e8", "username": "manager", "created_at": "2025-11-27T12:46:28.835829"}	\N	admin	2025-11-27 17:41:24.553096
-27	employee	INSERT	\N	{"id": 8, "inn": "111111111111", "surname": "test", "firstname": "test", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test", "id_position": 1, "phone_number": "1111111111111111"}	postgres	2025-11-27 18:27:41.815369
-28	sys_user	INSERT	\N	{"id": 6, "login": "admin", "id_role": 4, "id_employee": 2, "password_hash": "$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK"}	postgres	2025-11-27 18:37:02.562526
-225	document_category	DELETE	{"id": 4, "name": "test2", "description": "test1"}	\N	admin	2025-12-08 13:30:59.11395
-29	refresh_tokens	INSERT	\N	{"id": 22, "role": "admin", "token": "a439faab054f288efe9c5355a01d02d21d61615c60a760b5aa0a7817e3de8413", "username": "admin", "created_at": "2025-11-27T15:37:15.190072"}	admin	2025-11-27 18:37:15.190072
-30	employee	DELETE	{"id": 8, "inn": "111111111111", "surname": "test", "firstname": "test", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test", "id_position": 1, "phone_number": "1111111111111111"}	\N	admin	2025-11-27 18:37:29.955842
-31	employee	INSERT	\N	{"id": 9, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-27 19:11:16.739013
-32	employee	DELETE	{"id": 9, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	\N	admin	2025-11-27 19:11:29.296145
-33	refresh_tokens	INSERT	\N	{"id": 23, "role": "admin", "token": "a64188161c526a29d54cf5007846a90dd8dd9567e8fed04aaa2a2a46dfb26ba8", "username": "admin", "created_at": "2025-11-28T08:31:54.748409"}	admin	2025-11-28 11:31:54.748409
-34	refresh_tokens	INSERT	\N	{"id": 24, "role": "admin", "token": "4641efb53de98e5bb5a3c97adb117e1336bd4b8ed70e5178d649132074425e5a", "username": "manager", "created_at": "2025-11-28T08:32:56.011581"}	admin	2025-11-28 11:32:56.011581
-36	employee	INSERT	\N	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 12:25:01.630915
-37	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 12:28:41.22616
-38	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 12:32:47.599062
-39	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 2, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-28 12:33:46.830059
-40	refresh_tokens	DELETE	{"id": 25, "role": "admin", "token": "9185d5b6e4de2a57af618f62cf5f5cde1719477e46834a4794941620275fe6ee", "username": "admin", "created_at": "2025-11-28T09:23:53.178776"}	\N	admin	2025-11-28 14:56:11.112342
-41	refresh_tokens	INSERT	\N	{"id": 26, "role": "admin", "token": "c93bd7b4e8e4f62db2eb2435e4e3ad002f45038ac88d01afb8e110d3065a186a", "username": "admin", "created_at": "2025-11-30T07:12:15.150566"}	admin	2025-11-30 10:12:15.150566
-42	refresh_tokens	DELETE	{"id": 26, "role": "admin", "token": "c93bd7b4e8e4f62db2eb2435e4e3ad002f45038ac88d01afb8e110d3065a186a", "username": "admin", "created_at": "2025-11-30T07:12:15.150566"}	\N	admin	2025-11-30 10:12:48.338728
-43	refresh_tokens	INSERT	\N	{"id": 27, "role": "admin", "token": "00633a60c1c4944e9f0d4fa9c1d42bab3dc4285613dfe830d2ca69ef64b2b4b1", "username": "manager", "created_at": "2025-11-30T07:32:39.664678"}	admin	2025-11-30 10:32:39.664678
-44	refresh_tokens	INSERT	\N	{"id": 28, "role": "admin", "token": "05910c7f2a0f650e7dc2d80ba4d7466d45678aa6e33ee453585057d99df4816b", "username": "manager", "created_at": "2025-11-30T07:44:25.200399"}	admin	2025-11-30 10:44:25.200399
-45	refresh_tokens	INSERT	\N	{"id": 29, "role": "admin", "token": "4944a01c570ddec78e028f48feb8c643e7f92a8f0813589b327a15ef091cd3a7", "username": "manager", "created_at": "2025-11-30T08:28:43.838285"}	admin	2025-11-30 11:28:43.838285
-46	refresh_tokens	DELETE	{"id": 29, "role": "admin", "token": "4944a01c570ddec78e028f48feb8c643e7f92a8f0813589b327a15ef091cd3a7", "username": "manager", "created_at": "2025-11-30T08:28:43.838285"}	\N	admin	2025-11-30 11:29:08.314482
-47	refresh_tokens	INSERT	\N	{"id": 30, "role": "admin", "token": "bdbe5123c0c8105880407442d94f5fbc00fe05e5d312bf5686d3d08024f74177", "username": "manager", "created_at": "2025-11-30T08:29:08.316015"}	admin	2025-11-30 11:29:08.316015
-48	refresh_tokens	INSERT	\N	{"id": 31, "role": "admin", "token": "c1ac4cc5bb8c027547a5283e87b77b0063fa9c98a530ab0dbb975155b412a826", "username": "admin", "created_at": "2025-11-30T08:29:21.472275"}	admin	2025-11-30 11:29:21.472275
-49	refresh_tokens	DELETE	{"id": 31, "role": "admin", "token": "c1ac4cc5bb8c027547a5283e87b77b0063fa9c98a530ab0dbb975155b412a826", "username": "admin", "created_at": "2025-11-30T08:29:21.472275"}	\N	admin	2025-11-30 11:29:34.610208
-50	refresh_tokens	INSERT	\N	{"id": 32, "role": "admin", "token": "e5269021174b218ab7dfc0c09d02446c7e085ef7fbddcf31bf7cc79a15ed6adb", "username": "admin", "created_at": "2025-11-30T08:29:34.611839"}	admin	2025-11-30 11:29:34.611839
-51	refresh_tokens	INSERT	\N	{"id": 33, "role": "admin", "token": "81b2147712dcf76a6e615617874b617c0ab35ba65e7847b58843a041e5ff2b24", "username": "admin", "created_at": "2025-11-30T08:29:50.245921"}	admin	2025-11-30 11:29:50.245921
-52	refresh_tokens	DELETE	{"id": 33, "role": "admin", "token": "81b2147712dcf76a6e615617874b617c0ab35ba65e7847b58843a041e5ff2b24", "username": "admin", "created_at": "2025-11-30T08:29:50.245921"}	\N	admin	2025-11-30 11:29:55.69218
-53	refresh_tokens	INSERT	\N	{"id": 34, "role": "admin", "token": "76fb8be14f37a849518a794e50331f186c0223a77ecf23066d607b95761ccfe8", "username": "admin", "created_at": "2025-11-30T08:29:55.693487"}	admin	2025-11-30 11:29:55.693487
-54	refresh_tokens	DELETE	{"id": 34, "role": "admin", "token": "76fb8be14f37a849518a794e50331f186c0223a77ecf23066d607b95761ccfe8", "username": "admin", "created_at": "2025-11-30T08:29:55.693487"}	\N	admin	2025-11-30 11:30:00.359268
-55	refresh_tokens	INSERT	\N	{"id": 35, "role": "admin", "token": "5f080e2de4dfc45315af118571437281d9e155efb1a07923011e07c3fc02ff26", "username": "admin", "created_at": "2025-11-30T08:30:00.360945"}	admin	2025-11-30 11:30:00.360945
-56	refresh_tokens	INSERT	\N	{"id": 36, "role": "admin", "token": "40f18e21f80e0537f54f0f6b7c21453d1df6f51bc597c4ec7140857c2ed5dae8", "username": "admin", "created_at": "2025-11-30T08:50:22.033023"}	admin	2025-11-30 11:50:22.033023
-57	refresh_tokens	INSERT	\N	{"id": 37, "role": "admin", "token": "761e8ed6d58798c8f328573452961a1f237c1386ad6b9c810bc6d5dd9e3c45e1", "username": "manager", "created_at": "2025-11-30T08:50:52.604475"}	admin	2025-11-30 11:50:52.604475
-58	refresh_tokens	DELETE	{"id": 36, "role": "admin", "token": "40f18e21f80e0537f54f0f6b7c21453d1df6f51bc597c4ec7140857c2ed5dae8", "username": "admin", "created_at": "2025-11-30T08:50:22.033023"}	\N	admin	2025-11-30 11:51:03.929454
-59	refresh_tokens	INSERT	\N	{"id": 38, "role": "admin", "token": "52982be6dd3ff06f3b20aeb25ba5585f5364ee839a8d7a65dfe35f4a87083b49", "username": "admin", "created_at": "2025-11-30T08:51:03.931101"}	admin	2025-11-30 11:51:03.931101
-60	refresh_tokens	DELETE	{"id": 37, "role": "admin", "token": "761e8ed6d58798c8f328573452961a1f237c1386ad6b9c810bc6d5dd9e3c45e1", "username": "manager", "created_at": "2025-11-30T08:50:52.604475"}	\N	admin	2025-11-30 11:51:10.605204
-61	refresh_tokens	INSERT	\N	{"id": 39, "role": "admin", "token": "b0117da6b1b3be3dfd34e85852271cb9e48a79ccaa3b779bc020325c3437d1e8", "username": "manager", "created_at": "2025-11-30T08:51:10.606166"}	admin	2025-11-30 11:51:10.606166
-62	refresh_tokens	INSERT	\N	{"id": 40, "role": "admin", "token": "17392d5f05da99a1c7f973738897a00c0cbdd79f877746176b9a65ac0abb702a", "username": "manager", "created_at": "2025-11-30T08:54:05.622474"}	admin	2025-11-30 11:54:05.622474
-63	refresh_tokens	INSERT	\N	{"id": 41, "role": "admin", "token": "bd7032dfb7551d2712450e286d67f600cb561c58eccf00569a811e8664b0a23e", "username": "manager", "created_at": "2025-11-30T08:59:00.768525"}	admin	2025-11-30 11:59:00.768525
-64	sys_user	UPDATE	{"id": 4, "login": "manager", "id_role": 2, "id_employee": 4, "password_hash": "$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu"}	{"id": 4, "login": "manager_login", "id_role": 2, "id_employee": 4, "password_hash": "$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu"}	postgres	2025-11-30 12:00:28.861994
-65	sys_user	UPDATE	{"id": 5, "login": "moderator", "id_role": 1, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	{"id": 5, "login": "moderator_login", "id_role": 1, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	postgres	2025-11-30 12:00:28.861994
-66	sys_user	UPDATE	{"id": 6, "login": "admin", "id_role": 4, "id_employee": 2, "password_hash": "$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK"}	{"id": 6, "login": "admin_login", "id_role": 4, "id_employee": 2, "password_hash": "$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK"}	postgres	2025-11-30 12:00:28.861994
-67	refresh_tokens	INSERT	\N	{"id": 42, "role": "admin", "token": "7334f5e8a5206659e8bd9328af820fa885253a120e4a956724e0270921301d27", "username": "manager_login", "created_at": "2025-11-30T09:00:36.376971"}	admin	2025-11-30 12:00:36.376971
-68	refresh_tokens	INSERT	\N	{"id": 43, "role": "manager", "token": "0e5d2ab8cd62d5bbdcc1c1c328592a282f3ed355e5ea0396c46183a971ba3d16", "username": "manager_login", "created_at": "2025-11-30T09:09:32.18135"}	admin	2025-11-30 12:09:32.18135
-69	refresh_tokens	DELETE	{"id": 43, "role": "manager", "token": "0e5d2ab8cd62d5bbdcc1c1c328592a282f3ed355e5ea0396c46183a971ba3d16", "username": "manager_login", "created_at": "2025-11-30T09:09:32.18135"}	\N	admin	2025-11-30 12:09:53.258969
-70	refresh_tokens	INSERT	\N	{"id": 44, "role": "manager", "token": "92227fe161a5dc011fe1525f513967eb7e4aca999423755e64ffdc57094c55cd", "username": "manager_login", "created_at": "2025-11-30T09:09:53.260424"}	admin	2025-11-30 12:09:53.260424
-71	refresh_tokens	INSERT	\N	{"id": 45, "role": "manager", "token": "c1c1be46efb6a4a3fa21b8f3672a6c98c11e339c613240224c572620c817534b", "username": "manager_login", "created_at": "2025-11-30T09:11:04.226608"}	admin	2025-11-30 12:11:04.226608
-72	refresh_tokens	DELETE	{"id": 45, "role": "manager", "token": "c1c1be46efb6a4a3fa21b8f3672a6c98c11e339c613240224c572620c817534b", "username": "manager_login", "created_at": "2025-11-30T09:11:04.226608"}	\N	admin	2025-11-30 12:11:19.489622
-73	refresh_tokens	INSERT	\N	{"id": 46, "role": "manager", "token": "1386634e8bec9a32fb40ffd6fb22d4bd4786b2ea4da80c83d70dbe2ff5ed7cb9", "username": "manager_login", "created_at": "2025-11-30T09:11:19.491277"}	admin	2025-11-30 12:11:19.491277
-74	refresh_tokens	INSERT	\N	{"id": 47, "role": "admin", "token": "05a78610e67b4982f84e54d1820eee7e7519820be5a952eac2eaf418ac446630", "username": "admin_login", "created_at": "2025-11-30T09:12:47.870291"}	admin	2025-11-30 12:12:47.870291
-75	refresh_tokens	DELETE	{"id": 47, "role": "admin", "token": "05a78610e67b4982f84e54d1820eee7e7519820be5a952eac2eaf418ac446630", "username": "admin_login", "created_at": "2025-11-30T09:12:47.870291"}	\N	admin	2025-11-30 12:12:55.607542
-76	refresh_tokens	INSERT	\N	{"id": 48, "role": "admin", "token": "2bf9eb0b8ed71a7ec7ef9c14eda3fb01bcb75a360850cd28b74edef015b19da4", "username": "admin_login", "created_at": "2025-11-30T09:12:55.60894"}	admin	2025-11-30 12:12:55.60894
-77	employee	UPDATE	{"id": 10, "inn": "111111111111", "surname": "test1", "firstname": "test1", "id_gender": 1, "birth_date": "2025-11-27", "id_address": 1, "patronymic": "test1", "id_position": 1, "phone_number": "1111111111111111"}	{"id": 10, "inn": "111111111111", "surname": "test2", "firstname": "test2", "id_gender": 1, "birth_date": "2025-01-01", "id_address": 1, "patronymic": "test2", "id_position": 1, "phone_number": "1111111111111111"}	admin	2025-11-30 12:52:13.449175
-78	refresh_tokens	DELETE	{"id": 46, "role": "manager", "token": "1386634e8bec9a32fb40ffd6fb22d4bd4786b2ea4da80c83d70dbe2ff5ed7cb9", "username": "manager_login", "created_at": "2025-11-30T09:11:19.491277"}	\N	admin	2025-11-30 13:14:31.80156
-79	refresh_tokens	INSERT	\N	{"id": 49, "role": "manager", "token": "0ca9e2bb281bf54d371f929c5fde835b16f19e004694ab6b5ba36c7eafaebc3a", "username": "manager_login", "created_at": "2025-11-30T10:14:31.808879"}	admin	2025-11-30 13:14:31.808879
-80	refresh_tokens	DELETE	{"id": 48, "role": "admin", "token": "2bf9eb0b8ed71a7ec7ef9c14eda3fb01bcb75a360850cd28b74edef015b19da4", "username": "admin_login", "created_at": "2025-11-30T09:12:55.60894"}	\N	admin	2025-11-30 13:17:10.982628
-81	refresh_tokens	INSERT	\N	{"id": 50, "role": "admin", "token": "e0db01645df5afb701c0510f905218f930c18c04b4e73902eddcfbf974695d95", "username": "admin_login", "created_at": "2025-11-30T10:17:10.988637"}	admin	2025-11-30 13:17:10.988637
-82	employee	INSERT	\N	{"id": 11, "inn": "222222222222", "surname": "a", "firstname": "a", "id_gender": 1, "birth_date": "0001-01-01", "id_address": 1, "patronymic": "a", "id_position": 1, "phone_number": "2222222222222222"}	admin	2025-11-30 13:17:35.035909
-83	refresh_tokens	DELETE	{"id": 49, "role": "manager", "token": "0ca9e2bb281bf54d371f929c5fde835b16f19e004694ab6b5ba36c7eafaebc3a", "username": "manager_login", "created_at": "2025-11-30T10:14:31.808879"}	\N	admin	2025-11-30 13:53:00.543844
-84	refresh_tokens	INSERT	\N	{"id": 51, "role": "manager", "token": "999efdf14db436045f5ea7b3db3ed280bba96529d03cdc215851bf200bf19ae1", "username": "manager_login", "created_at": "2025-11-30T10:53:00.554936"}	admin	2025-11-30 13:53:00.554936
-85	refresh_tokens	DELETE	{"id": 51, "role": "manager", "token": "999efdf14db436045f5ea7b3db3ed280bba96529d03cdc215851bf200bf19ae1", "username": "manager_login", "created_at": "2025-11-30T10:53:00.554936"}	\N	admin	2025-11-30 15:22:42.514068
-86	refresh_tokens	INSERT	\N	{"id": 52, "role": "manager", "token": "a7023d162a807bd39e0a90f0a43325a4750b0aecb9c91b49bd4fc8aaf68728bd", "username": "manager_login", "created_at": "2025-11-30T12:22:42.518898"}	admin	2025-11-30 15:22:42.518898
-87	refresh_tokens	DELETE	{"id": 50, "role": "admin", "token": "e0db01645df5afb701c0510f905218f930c18c04b4e73902eddcfbf974695d95", "username": "admin_login", "created_at": "2025-11-30T10:17:10.988637"}	\N	admin	2025-11-30 15:22:49.495698
-88	refresh_tokens	INSERT	\N	{"id": 53, "role": "admin", "token": "99a9fa7fed06cbfe236377fe27d65480720596cdbc696a0f23526b2026de2a31", "username": "admin_login", "created_at": "2025-11-30T12:22:49.496807"}	admin	2025-11-30 15:22:49.496807
-89	refresh_tokens	DELETE	{"id": 53, "role": "admin", "token": "99a9fa7fed06cbfe236377fe27d65480720596cdbc696a0f23526b2026de2a31", "username": "admin_login", "created_at": "2025-11-30T12:22:49.496807"}	\N	admin	2025-11-30 16:28:02.642445
-90	refresh_tokens	INSERT	\N	{"id": 54, "role": "admin", "token": "0ba0631536e9d23048183e6997fc134ee1d0bb72d71e61839082719e908987e4", "username": "admin_login", "created_at": "2025-11-30T13:28:02.648157"}	admin	2025-11-30 16:28:02.648157
-91	refresh_tokens	DELETE	{"id": 52, "role": "manager", "token": "a7023d162a807bd39e0a90f0a43325a4750b0aecb9c91b49bd4fc8aaf68728bd", "username": "manager_login", "created_at": "2025-11-30T12:22:42.518898"}	\N	admin	2025-11-30 16:30:38.49293
-92	refresh_tokens	INSERT	\N	{"id": 55, "role": "manager", "token": "dc8a9108bc26c647475fef62c219badb9d99dee14dce0e19280f033eced13cbd", "username": "manager_login", "created_at": "2025-11-30T13:30:38.501962"}	admin	2025-11-30 16:30:38.501962
-93	batch	INSERT	\N	{"id": 8, "cost": 1, "created_at": "2025-11-30T14:27:02.406452", "id_product": 1, "expiration_date": "2025-11-30", "production_date": "2025-11-30"}	postgres	2025-11-30 17:27:02.406452
-94	batch	UPDATE	{"id": 8, "cost": 1, "created_at": "2025-11-30T14:27:02.406452", "id_product": 1, "expiration_date": "2025-11-30", "production_date": "2025-11-30"}	{"id": 8, "cost": 2, "created_at": "2025-11-30T14:27:02.406452", "id_product": 1, "expiration_date": "2026-01-30", "production_date": "2025-10-30"}	postgres	2025-11-30 17:28:03.059234
-95	batch	INSERT	\N	{"id": 9, "cost": 2, "created_at": "2025-11-30T14:28:46.581513", "id_product": 3, "expiration_date": "2025-12-30", "production_date": "2025-01-30"}	postgres	2025-11-30 17:28:46.581513
-96	refresh_tokens	DELETE	{"id": 54, "role": "admin", "token": "0ba0631536e9d23048183e6997fc134ee1d0bb72d71e61839082719e908987e4", "username": "admin_login", "created_at": "2025-11-30T13:28:02.648157"}	\N	admin	2025-11-30 18:21:30.045022
-97	refresh_tokens	INSERT	\N	{"id": 56, "role": "admin", "token": "271ee7e19922baa281276e15b39752405e7dea3b50df417a5c73288e3bdaae7c", "username": "admin_login", "created_at": "2025-11-30T15:21:30.050496"}	admin	2025-11-30 18:21:30.050496
-98	batch	INSERT	\N	{"id": 10, "cost": 0, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-11-30", "production_date": "2025-11-29"}	admin	2025-11-30 18:25:23.003956
-99	batch	UPDATE	{"id": 10, "cost": 0, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-11-30", "production_date": "2025-11-29"}	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	admin	2025-11-30 18:33:52.860007
-100	batch	UPDATE	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	admin	2025-11-30 18:34:26.726005
-101	batch	UPDATE	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	admin	2025-11-30 18:35:04.669851
-102	batch	UPDATE	{"id": 10, "cost": 100, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	{"id": 10, "cost": 10, "created_at": "2025-11-30T15:25:23.003956", "id_product": 4, "expiration_date": "2025-12-30", "production_date": "2025-11-29"}	admin	2025-11-30 18:35:21.497039
-103	refresh_tokens	DELETE	{"id": 55, "role": "manager", "token": "dc8a9108bc26c647475fef62c219badb9d99dee14dce0e19280f033eced13cbd", "username": "manager_login", "created_at": "2025-11-30T13:30:38.501962"}	\N	admin	2025-11-30 19:43:14.956824
-104	refresh_tokens	INSERT	\N	{"id": 57, "role": "manager", "token": "755f8c6b5d0b56badc69d2935a7e4f36def3dd84cddd5d2cafda1d34347385b9", "username": "manager_login", "created_at": "2025-11-30T16:43:14.962878"}	admin	2025-11-30 19:43:14.962878
-105	refresh_tokens	INSERT	\N	{"id": 58, "role": "admin", "token": "1432d41450719516046bdd01c92fa06cd1d169c8790f023bf140f254cea812e1", "username": "admin_login", "created_at": "2025-12-01T06:06:31.197576"}	admin	2025-12-01 09:06:31.197576
-106	refresh_tokens	DELETE	{"id": 58, "role": "admin", "token": "1432d41450719516046bdd01c92fa06cd1d169c8790f023bf140f254cea812e1", "username": "admin_login", "created_at": "2025-12-01T06:06:31.197576"}	\N	admin	2025-12-01 09:06:39.550254
-107	refresh_tokens	INSERT	\N	{"id": 59, "role": "admin", "token": "211f8f489af394bc0e59d5d3e468bd64e6f00c4a5856556542ec87d45cb43f09", "username": "admin_login", "created_at": "2025-12-01T06:06:39.552779"}	admin	2025-12-01 09:06:39.552779
-108	refresh_tokens	INSERT	\N	{"id": 60, "role": "manager", "token": "868852c8be49faa90ce107fc870fc4814895d8df77a4671723eeb69c902f4113", "username": "manager_login", "created_at": "2025-12-01T06:06:49.834222"}	admin	2025-12-01 09:06:49.834222
-109	refresh_tokens	DELETE	{"id": 60, "role": "manager", "token": "868852c8be49faa90ce107fc870fc4814895d8df77a4671723eeb69c902f4113", "username": "manager_login", "created_at": "2025-12-01T06:06:49.834222"}	\N	admin	2025-12-01 09:06:58.816987
-110	refresh_tokens	INSERT	\N	{"id": 61, "role": "manager", "token": "113415de5b947858e7bdcf797306349a9de999f368c0241232e5ee7848ce4bef", "username": "manager_login", "created_at": "2025-12-01T06:06:58.81918"}	admin	2025-12-01 09:06:58.81918
-111	employee	INSERT	\N	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 6, "phone_number": "1111111111111111"}	postgres	2025-12-05 12:25:30.011977
-112	sys_user	INSERT	\N	{"id": 7, "login": "valentin_admin", "id_role": 4, "id_employee": 14, "password_hash": "$2a$10$20LdgaOXwKGG9jQAJXDkMeIjzJo4jn5pMcr/Forby.IdMLDA9vuCK"}	postgres	2025-12-05 12:28:09.382849
-113	refresh_tokens	INSERT	\N	{"id": 62, "role": "admin", "token": "88a6d1d348d14aef39c595b470446caf2a3e1579ca0c366f08bd776c3037da5b", "username": "valentin_admin", "created_at": "2025-12-05T09:28:35.024116"}	admin	2025-12-05 12:28:35.024116
-114	refresh_tokens	INSERT	\N	{"id": 63, "role": "admin", "token": "d165cd4d7c9f627fe7fd2f7d99e642229e438b9ca9f713a331351e58a04fdef3", "username": "valentin_admin", "created_at": "2025-12-06T07:09:31.652981"}	admin	2025-12-06 10:09:31.652981
-115	refresh_tokens	DELETE	{"id": 63, "role": "admin", "token": "d165cd4d7c9f627fe7fd2f7d99e642229e438b9ca9f713a331351e58a04fdef3", "username": "valentin_admin", "created_at": "2025-12-06T07:09:31.652981"}	\N	admin	2025-12-06 10:21:53.016154
-116	refresh_tokens	INSERT	\N	{"id": 64, "role": "admin", "token": "08b3e5282f76f7fa9a7e960c15fe7d6b92dd4ee4e3ba41fd4fd0233d68dd7e4f", "username": "valentin_admin", "created_at": "2025-12-06T07:21:53.020384"}	admin	2025-12-06 10:21:53.020384
-117	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "placeholder.png", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765007844082536256_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 10:57:24.084569
-118	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765007844082536256_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008034406405720_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:00:34.408334
-119	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008034406405720_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/1765008060255653468_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:01:00.259002
-120	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/1765008060255653468_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/1765008556902235503_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:09:16.903558
-121	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/1765008556902235503_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008573472322094_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:09:33.475365
-122	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008573472322094_бандитка.jpeg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008652953227464_p6.jpg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:10:52.953432
-123	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008652953227464_p6.jpg", "id_producer": 3, "id_product_category": 3}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008872100895552_7179111216.jpg", "id_producer": 3, "id_product_category": 3}	admin	2025-12-06 11:14:32.10403
-124	refresh_tokens	DELETE	{"id": 64, "role": "admin", "token": "08b3e5282f76f7fa9a7e960c15fe7d6b92dd4ee4e3ba41fd4fd0233d68dd7e4f", "username": "valentin_admin", "created_at": "2025-12-06T07:21:53.020384"}	\N	admin	2025-12-06 11:17:10.965933
-125	refresh_tokens	INSERT	\N	{"id": 65, "role": "admin", "token": "0a09202fc2fad6bfd6311920a2b2acd6d856f95c8673e7fc078f003702c2c82a", "username": "valentin_admin", "created_at": "2025-12-06T08:17:10.972563"}	admin	2025-12-06 11:17:10.972563
-126	refresh_tokens	DELETE	{"id": 65, "role": "admin", "token": "0a09202fc2fad6bfd6311920a2b2acd6d856f95c8673e7fc078f003702c2c82a", "username": "valentin_admin", "created_at": "2025-12-06T08:17:10.972563"}	\N	admin	2025-12-06 11:44:28.402223
-127	refresh_tokens	INSERT	\N	{"id": 66, "role": "admin", "token": "3fd9b04bf172bfa89f3ffc55590387274cbe290739b02514dcae507528c257a6", "username": "valentin_admin", "created_at": "2025-12-06T08:44:28.410055"}	admin	2025-12-06 11:44:28.410055
-128	refresh_tokens	DELETE	{"id": 66, "role": "admin", "token": "3fd9b04bf172bfa89f3ffc55590387274cbe290739b02514dcae507528c257a6", "username": "valentin_admin", "created_at": "2025-12-06T08:44:28.410055"}	\N	admin	2025-12-06 11:50:16.150939
-245	document_content	INSERT	\N	{"id": 14, "id_batch": 3, "quantity": 500, "id_document": 1}	admin	2025-12-08 16:04:12.443516
-129	refresh_tokens	INSERT	\N	{"id": 67, "role": "admin", "token": "00b14650f0f376d609bbb9f6bfa77b307d1938777cd07d8a450e5937b1433bdd", "username": "valentin_admin", "created_at": "2025-12-06T08:50:16.169089"}	admin	2025-12-06 11:50:16.169089
-130	refresh_tokens	DELETE	{"id": 67, "role": "admin", "token": "00b14650f0f376d609bbb9f6bfa77b307d1938777cd07d8a450e5937b1433bdd", "username": "valentin_admin", "created_at": "2025-12-06T08:50:16.169089"}	\N	admin	2025-12-06 11:50:38.724637
-131	refresh_tokens	INSERT	\N	{"id": 68, "role": "admin", "token": "625ccf489d78027be4e630c77554ed67a7b1bbdca458b55edd3f1d2730cac123", "username": "valentin_admin", "created_at": "2025-12-06T08:50:38.726435"}	admin	2025-12-06 11:50:38.726435
-316	product	INSERT	\N	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-132	product	UPDATE	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "placeholder.png", "id_producer": 1, "id_product_category": 1}	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "/static/products/1765011046095675919_a4c7c78c78a454e231f7718718ae6195.jpg", "id_producer": 1, "id_product_category": 1}	admin	2025-12-06 11:50:46.097652
-133	product	UPDATE	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "placeholder.png", "id_producer": 2, "id_product_category": 2}	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "/static/products/1765011070099983639_images (3).jpeg", "id_producer": 2, "id_product_category": 2}	admin	2025-12-06 11:51:10.100518
-134	product	UPDATE	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "placeholder.png", "id_producer": 1, "id_product_category": 1}	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "/static/products/1765011089390225675_images (2).jpeg", "id_producer": 1, "id_product_category": 1}	admin	2025-12-06 11:51:29.391089
-135	product	UPDATE	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "placeholder.png", "id_producer": 2, "id_product_category": 2}	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "/static/products/1765011109815931171_images.jpeg", "id_producer": 2, "id_product_category": 2}	admin	2025-12-06 11:51:49.816443
-169	document	INSERT	\N	{"id": 8, "date": "2025-01-20", "id_employee": 2, "id_document_category": 2}	postgres	2025-12-06 16:49:52.765176
-136	refresh_tokens	DELETE	{"id": 68, "role": "admin", "token": "625ccf489d78027be4e630c77554ed67a7b1bbdca458b55edd3f1d2730cac123", "username": "valentin_admin", "created_at": "2025-12-06T08:50:38.726435"}	\N	admin	2025-12-06 13:45:17.012505
-137	refresh_tokens	INSERT	\N	{"id": 69, "role": "admin", "token": "e2752681b877f708f2747682bf6d221971b36044b54571bb810f80c071febdfc", "username": "valentin_admin", "created_at": "2025-12-06T10:45:17.019766"}	admin	2025-12-06 13:45:17.019766
-138	refresh_tokens	DELETE	{"id": 62, "role": "admin", "token": "88a6d1d348d14aef39c595b470446caf2a3e1579ca0c366f08bd776c3037da5b", "username": "valentin_admin", "created_at": "2025-12-05T09:28:35.024116"}	\N	postgres	2025-12-06 13:45:56.560168
-139	refresh_tokens	DELETE	{"id": 61, "role": "manager", "token": "113415de5b947858e7bdcf797306349a9de999f368c0241232e5ee7848ce4bef", "username": "manager_login", "created_at": "2025-12-01T06:06:58.81918"}	\N	postgres	2025-12-06 13:46:02.613549
-140	refresh_tokens	DELETE	{"id": 59, "role": "admin", "token": "211f8f489af394bc0e59d5d3e468bd64e6f00c4a5856556542ec87d45cb43f09", "username": "admin_login", "created_at": "2025-12-01T06:06:39.552779"}	\N	postgres	2025-12-06 13:46:05.258675
-141	refresh_tokens	DELETE	{"id": 57, "role": "manager", "token": "755f8c6b5d0b56badc69d2935a7e4f36def3dd84cddd5d2cafda1d34347385b9", "username": "manager_login", "created_at": "2025-11-30T16:43:14.962878"}	\N	postgres	2025-12-06 13:46:07.396837
-142	refresh_tokens	DELETE	{"id": 56, "role": "admin", "token": "271ee7e19922baa281276e15b39752405e7dea3b50df417a5c73288e3bdaae7c", "username": "admin_login", "created_at": "2025-11-30T15:21:30.050496"}	\N	postgres	2025-12-06 13:46:10.713063
-143	refresh_tokens	DELETE	{"id": 69, "role": "admin", "token": "e2752681b877f708f2747682bf6d221971b36044b54571bb810f80c071febdfc", "username": "valentin_admin", "created_at": "2025-12-06T10:45:17.019766"}	\N	admin	2025-12-06 13:57:31.554838
-144	refresh_tokens	INSERT	\N	{"id": 70, "role": "admin", "token": "e5c4ea5d108bdc6cea4eab69ffbc853cec95969d0901318f7303d2a0b77d7a10", "username": "valentin_admin", "created_at": "2025-12-06T10:57:31.561397"}	admin	2025-12-06 13:57:31.561397
-145	product	INSERT	\N	{"id": 6, "name": "Placeholder", "image_url": "", "id_producer": 2, "id_product_category": 3}	admin	2025-12-06 14:06:17.546029
-146	product	UPDATE	{"id": 6, "name": "Placeholder", "image_url": "", "id_producer": 2, "id_product_category": 3}	{"id": 6, "name": "Placeholder", "image_url": "/static/products/1765019273075046504_product-placeholder.png", "id_producer": 2, "id_product_category": 3}	admin	2025-12-06 14:07:53.080201
-147	refresh_tokens	DELETE	{"id": 70, "role": "admin", "token": "e5c4ea5d108bdc6cea4eab69ffbc853cec95969d0901318f7303d2a0b77d7a10", "username": "valentin_admin", "created_at": "2025-12-06T10:57:31.561397"}	\N	admin	2025-12-06 14:13:40.134178
-148	refresh_tokens	INSERT	\N	{"id": 71, "role": "admin", "token": "a9b1b3b18dfaf114916b28c16979fd19036e1fd667d8d4afa6e034854a99a98f", "username": "valentin_admin", "created_at": "2025-12-06T11:13:40.147373"}	admin	2025-12-06 14:13:40.147373
-149	refresh_tokens	DELETE	{"id": 71, "role": "admin", "token": "a9b1b3b18dfaf114916b28c16979fd19036e1fd667d8d4afa6e034854a99a98f", "username": "valentin_admin", "created_at": "2025-12-06T11:13:40.147373"}	\N	admin	2025-12-06 14:19:39.251792
-150	refresh_tokens	INSERT	\N	{"id": 72, "role": "admin", "token": "71b6adff68788397a0013731763f10d0d912fb78a33074e82115e78570b4312f", "username": "valentin_admin", "created_at": "2025-12-06T11:19:39.260462"}	admin	2025-12-06 14:19:39.260462
-151	product	UPDATE	{"id": 6, "name": "Placeholder", "image_url": "/static/products/1765019273075046504_product-placeholder.png", "id_producer": 2, "id_product_category": 3}	{"id": 6, "name": "Placehold", "image_url": "/static/products/1765019273075046504_product-placeholder.png", "id_producer": 1, "id_product_category": 1}	admin	2025-12-06 14:19:46.529985
-152	product	DELETE	{"id": 6, "name": "Placehold", "image_url": "/static/products/1765019273075046504_product-placeholder.png", "id_producer": 1, "id_product_category": 1}	\N	admin	2025-12-06 14:22:46.408884
-153	refresh_tokens	DELETE	{"id": 72, "role": "admin", "token": "71b6adff68788397a0013731763f10d0d912fb78a33074e82115e78570b4312f", "username": "valentin_admin", "created_at": "2025-12-06T11:19:39.260462"}	\N	admin	2025-12-06 15:13:13.129492
-154	refresh_tokens	INSERT	\N	{"id": 73, "role": "admin", "token": "f664ffe1be2eccda7122c8c3c18572a69535fdf8aa0ce2b28d15e5255110c895", "username": "valentin_admin", "created_at": "2025-12-06T12:13:13.133744"}	admin	2025-12-06 15:13:13.133744
-155	product_category	INSERT	\N	{"id": 4, "name": "тест"}	postgres	2025-12-06 15:28:08.279316
-156	refresh_tokens	DELETE	{"id": 73, "role": "admin", "token": "f664ffe1be2eccda7122c8c3c18572a69535fdf8aa0ce2b28d15e5255110c895", "username": "valentin_admin", "created_at": "2025-12-06T12:13:13.133744"}	\N	admin	2025-12-06 15:28:20.146233
-157	refresh_tokens	INSERT	\N	{"id": 74, "role": "admin", "token": "b947f9a86494edabc7c731e319d938aa1bd9a7d34cc5260c21cbefb09401ce5b", "username": "valentin_admin", "created_at": "2025-12-06T12:28:20.148218"}	admin	2025-12-06 15:28:20.148218
-158	product_category	DELETE	{"id": 4, "name": "тест"}	\N	admin	2025-12-06 15:36:05.680591
-716	product	DELETE	{"id": 57, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	\N	postgres	2025-12-10 15:56:38.90379
-159	refresh_tokens	DELETE	{"id": 74, "role": "admin", "token": "b947f9a86494edabc7c731e319d938aa1bd9a7d34cc5260c21cbefb09401ce5b", "username": "valentin_admin", "created_at": "2025-12-06T12:28:20.148218"}	\N	admin	2025-12-06 16:11:28.205135
-160	refresh_tokens	INSERT	\N	{"id": 75, "role": "admin", "token": "f7737d326e65a407c96a7dcdfff78370597e8ee38c7f83e3ec738668ffd5be69", "username": "valentin_admin", "created_at": "2025-12-06T13:11:28.212287"}	admin	2025-12-06 16:11:28.212287
-161	product_category	INSERT	\N	{"id": 5, "name": "Посуда"}	admin	2025-12-06 16:13:59.849689
-162	product_category	DELETE	{"id": 5, "name": "Посуда"}	\N	admin	2025-12-06 16:14:57.003044
-163	product_category	INSERT	\N	{"id": 7, "name": "Посуда"}	admin	2025-12-06 16:15:02.663377
-164	product_category	UPDATE	{"id": 7, "name": "Посуда"}	{"id": 7, "name": "Placeholder"}	admin	2025-12-06 16:18:39.759869
-165	product_category	DELETE	{"id": 7, "name": "Placeholder"}	\N	admin	2025-12-06 16:20:09.886505
-166	batch	INSERT	\N	{"id": 11, "cost": 134, "created_at": "2025-12-06T13:45:45.295078", "id_product": 3, "expiration_date": "2024-12-05", "production_date": "2024-12-06"}	postgres	2025-12-06 16:45:45.295078
-167	document	INSERT	\N	{"id": 7, "date": "2024-12-23", "id_employee": 1, "id_document_category": 1}	postgres	2025-12-06 16:46:25.303401
-168	document_content	INSERT	\N	{"id": 12, "id_batch": 11, "quantity": 100, "id_product": 1, "id_document": 7}	postgres	2025-12-06 16:47:12.80487
-170	document_content	INSERT	\N	{"id": 13, "id_batch": 11, "quantity": 37, "id_document": 8}	postgres	2025-12-06 16:50:08.846909
-171	producer	INSERT	\N	{"id": 4, "inn": "1234323858", "name": "ИП \\"Михайлов\\"", "surname": "Михайлов", "firstname": "Роман", "id_address": 1, "patronymic": "Александрович"}	postgres	2025-12-06 17:19:30.631278
-172	producer	INSERT	\N	{"id": 5, "inn": "5467823934", "name": "АО \\"АвтоВлад\\"", "surname": "Судный", "firstname": "Максим", "id_address": 6, "patronymic": "Рэмович"}	postgres	2025-12-06 17:20:51.176793
-173	refresh_tokens	INSERT	\N	{"id": 76, "role": "manager", "token": "9c3dc39afb2dffead0a18529248d58cbcab217e3f9606c8ac3886e4a15d66992", "username": "manager_login", "created_at": "2025-12-07T06:52:48.444446"}	admin	2025-12-07 09:52:48.444446
-174	product_category	INSERT	\N	{"id": 8, "name": "Посуда"}	manager	2025-12-07 09:52:57.435728
-175	refresh_tokens	DELETE	{"id": 75, "role": "admin", "token": "f7737d326e65a407c96a7dcdfff78370597e8ee38c7f83e3ec738668ffd5be69", "username": "valentin_admin", "created_at": "2025-12-06T13:11:28.212287"}	\N	admin	2025-12-07 13:37:52.83045
-176	refresh_tokens	INSERT	\N	{"id": 77, "role": "admin", "token": "c1fc0c5a81402767019b601eece71c0bee2060bc7b0819a3a40ec8760f4f1dd0", "username": "valentin_admin", "created_at": "2025-12-07T10:37:52.836468"}	admin	2025-12-07 13:37:52.836468
-177	refresh_tokens	DELETE	{"id": 77, "role": "admin", "token": "c1fc0c5a81402767019b601eece71c0bee2060bc7b0819a3a40ec8760f4f1dd0", "username": "valentin_admin", "created_at": "2025-12-07T10:37:52.836468"}	\N	admin	2025-12-07 14:21:40.196783
-178	refresh_tokens	INSERT	\N	{"id": 78, "role": "admin", "token": "e4dc483a873c06e0d2e4ed11c67e19940b2fd65e5a96de4a06c37f3e913fa32f", "username": "valentin_admin", "created_at": "2025-12-07T11:21:40.205741"}	admin	2025-12-07 14:21:40.205741
-179	refresh_tokens	DELETE	{"id": 78, "role": "admin", "token": "e4dc483a873c06e0d2e4ed11c67e19940b2fd65e5a96de4a06c37f3e913fa32f", "username": "valentin_admin", "created_at": "2025-12-07T11:21:40.205741"}	\N	admin	2025-12-07 15:24:33.991088
-180	refresh_tokens	INSERT	\N	{"id": 79, "role": "admin", "token": "5d6088bcee48fed7ef4f35785a47e9f5c80b281585474e624216d5567ce1f849", "username": "valentin_admin", "created_at": "2025-12-07T12:24:33.996466"}	admin	2025-12-07 15:24:33.996466
-181	refresh_tokens	DELETE	{"id": 79, "role": "admin", "token": "5d6088bcee48fed7ef4f35785a47e9f5c80b281585474e624216d5567ce1f849", "username": "valentin_admin", "created_at": "2025-12-07T12:24:33.996466"}	\N	admin	2025-12-07 15:56:31.462401
-182	refresh_tokens	INSERT	\N	{"id": 80, "role": "admin", "token": "7c1a2e545f5ededc4d9880eb8f58b979382301a7d3aa4d6a3dd45f8afe30324d", "username": "valentin_admin", "created_at": "2025-12-07T12:56:31.477525"}	admin	2025-12-07 15:56:31.477525
-183	product_category	INSERT	\N	{"id": 9, "name": "test"}	admin	2025-12-07 15:57:36.228564
-184	product_category	DELETE	{"id": 9, "name": "test"}	\N	admin	2025-12-07 15:57:48.399966
-185	producer	INSERT	\N	{"id": 6, "inn": "0123456789", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	admin	2025-12-07 16:00:02.180802
-186	producer	INSERT	\N	{"id": 8, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	admin	2025-12-07 16:00:32.393072
-187	producer	DELETE	{"id": 6, "inn": "0123456789", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	\N	admin	2025-12-07 16:00:50.680936
-188	producer	DELETE	{"id": 8, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	\N	admin	2025-12-07 16:00:52.822328
-189	producer	INSERT	\N	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	admin	2025-12-07 16:02:58.491127
-246	document_content	UPDATE	{"id": 1, "id_batch": 1, "quantity": 5, "id_document": 1}	{"id": 1, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-190	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 3, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:04:35.023077
-191	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:04:54.609017
-192	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:02.922873
-193	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:07.393071
-194	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:08.305619
-195	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:08.967501
-196	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:09.667729
-197	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:10.296162
-224	document_category	UPDATE	{"id": 4, "name": "test", "description": "test"}	{"id": 4, "name": "test2", "description": "test1"}	admin	2025-12-08 13:30:45.594678
-198	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:10.885358
-199	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:11.468342
-200	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:12.044059
-201	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:12.581566
-202	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:13.147355
-203	producer	UPDATE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	admin	2025-12-07 16:05:25.994683
-204	producer	DELETE	{"id": 9, "inn": "0123456790", "name": "test", "surname": "test", "firstname": "test", "id_address": 1, "patronymic": "test"}	\N	admin	2025-12-07 16:05:43.99447
-205	refresh_tokens	DELETE	{"id": 80, "role": "admin", "token": "7c1a2e545f5ededc4d9880eb8f58b979382301a7d3aa4d6a3dd45f8afe30324d", "username": "valentin_admin", "created_at": "2025-12-07T12:56:31.477525"}	\N	admin	2025-12-07 18:58:22.542464
-206	refresh_tokens	INSERT	\N	{"id": 81, "role": "admin", "token": "05a775164a2c23a61825345f0ef0148e7a2d0b2f88f800bc9410f4e097b2fd2e", "username": "valentin_admin", "created_at": "2025-12-07T15:58:22.553163"}	admin	2025-12-07 18:58:22.553163
-207	position	INSERT	\N	{"id": 7, "name": "temp", "description": "temp"}	postgres	2025-12-07 19:39:01.00384
-208	position	DELETE	{"id": 7, "name": "temp", "description": "temp"}	\N	admin	2025-12-07 19:40:24.739229
-209	refresh_tokens	DELETE	{"id": 81, "role": "admin", "token": "05a775164a2c23a61825345f0ef0148e7a2d0b2f88f800bc9410f4e097b2fd2e", "username": "valentin_admin", "created_at": "2025-12-07T15:58:22.553163"}	\N	admin	2025-12-07 20:00:49.515657
-210	refresh_tokens	INSERT	\N	{"id": 82, "role": "admin", "token": "a98b217c5f9c872538b892fd1f04f1de079a78efb8a889b1846e9a777c95406b", "username": "valentin_admin", "created_at": "2025-12-07T17:00:49.523404"}	admin	2025-12-07 20:00:49.523404
-211	position	INSERT	\N	{"id": 8, "name": "test", "description": "test"}	admin	2025-12-07 20:04:10.541119
-212	position	UPDATE	{"id": 8, "name": "test", "description": "test"}	{"id": 8, "name": "test21", "description": "test12"}	admin	2025-12-07 20:04:44.881632
-213	position	DELETE	{"id": 8, "name": "test21", "description": "test12"}	\N	admin	2025-12-07 20:04:56.548691
-214	refresh_tokens	DELETE	{"id": 82, "role": "admin", "token": "a98b217c5f9c872538b892fd1f04f1de079a78efb8a889b1846e9a777c95406b", "username": "valentin_admin", "created_at": "2025-12-07T17:00:49.523404"}	\N	admin	2025-12-08 11:48:33.604689
-215	refresh_tokens	INSERT	\N	{"id": 83, "role": "admin", "token": "050bc96f21cc7f36a74602bdd3b1973cde806c1c477f0df19b78c7bc8c7cf160", "username": "valentin_admin", "created_at": "2025-12-08T08:48:33.615528"}	admin	2025-12-08 11:48:33.615528
-247	document_content	UPDATE	{"id": 2, "id_batch": 2, "quantity": 3, "id_document": 1}	{"id": 2, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-216	employee	UPDATE	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 6, "phone_number": "1111111111111111"}	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 4, "phone_number": "1111111111111111"}	admin	2025-12-08 11:55:13.264927
-217	employee	UPDATE	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 4, "phone_number": "1111111111111111"}	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 4, "phone_number": "1111111111111111"}	admin	2025-12-08 11:56:52.388334
-218	refresh_tokens	DELETE	{"id": 83, "role": "admin", "token": "050bc96f21cc7f36a74602bdd3b1973cde806c1c477f0df19b78c7bc8c7cf160", "username": "valentin_admin", "created_at": "2025-12-08T08:48:33.615528"}	\N	admin	2025-12-08 13:12:36.200916
-717	product	DELETE	{"id": 58, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	\N	postgres	2025-12-10 15:56:41.017452
-219	refresh_tokens	INSERT	\N	{"id": 84, "role": "admin", "token": "77bb2a9b4c761f6fd7554e05bd812b9109b6e221345f9ddddb95f965a006a025", "username": "valentin_admin", "created_at": "2025-12-08T10:12:36.205304"}	admin	2025-12-08 13:12:36.205304
-220	address	INSERT	\N	{"id": 16, "city": "test", "region": "test", "street": "test", "subject": "test", "building": 12}	admin	2025-12-08 13:14:36.338868
-221	address	UPDATE	{"id": 16, "city": "test", "region": "test", "street": "test", "subject": "test", "building": 12}	{"id": 16, "city": "test1", "region": "test2", "street": "test0", "subject": "test3", "building": 1}	admin	2025-12-08 13:15:12.944608
-222	address	DELETE	{"id": 16, "city": "test1", "region": "test2", "street": "test0", "subject": "test3", "building": 1}	\N	admin	2025-12-08 13:15:33.070826
-223	document_category	INSERT	\N	{"id": 4, "name": "test", "description": "test"}	admin	2025-12-08 13:30:18.348391
-226	refresh_tokens	DELETE	{"id": 84, "role": "admin", "token": "77bb2a9b4c761f6fd7554e05bd812b9109b6e221345f9ddddb95f965a006a025", "username": "valentin_admin", "created_at": "2025-12-08T10:12:36.205304"}	\N	admin	2025-12-08 14:14:54.610279
-227	refresh_tokens	INSERT	\N	{"id": 85, "role": "admin", "token": "f12fb44c074cb932351aa7ac412c1ca16f873da98bf45e6c8eda93ec205291c2", "username": "valentin_admin", "created_at": "2025-12-08T11:14:54.619104"}	admin	2025-12-08 14:14:54.619104
-228	refresh_tokens	DELETE	{"id": 85, "role": "admin", "token": "f12fb44c074cb932351aa7ac412c1ca16f873da98bf45e6c8eda93ec205291c2", "username": "valentin_admin", "created_at": "2025-12-08T11:14:54.619104"}	\N	admin	2025-12-08 14:58:43.335946
-229	refresh_tokens	INSERT	\N	{"id": 86, "role": "admin", "token": "1dd141264597581e199603c9597d659326c48069db263c7ae12e01c87fc0add6", "username": "valentin_admin", "created_at": "2025-12-08T11:58:43.343928"}	admin	2025-12-08 14:58:43.343928
-230	refresh_tokens	DELETE	{"id": 86, "role": "admin", "token": "1dd141264597581e199603c9597d659326c48069db263c7ae12e01c87fc0add6", "username": "valentin_admin", "created_at": "2025-12-08T11:58:43.343928"}	\N	admin	2025-12-08 15:50:16.757027
-231	refresh_tokens	INSERT	\N	{"id": 87, "role": "admin", "token": "2cb9cd6505793f0c14a9735c3336c3bf7f807d448511f006e67ee025799fcefc", "username": "valentin_admin", "created_at": "2025-12-08T12:50:16.763149"}	admin	2025-12-08 15:50:16.763149
-232	document	INSERT	\N	{"id": 9, "date": "2025-12-08", "id_employee": 2, "id_document_category": 1}	admin	2025-12-08 15:57:23.351389
-233	document	DELETE	{"id": 9, "date": "2025-12-08", "id_employee": 2, "id_document_category": 1}	\N	postgres	2025-12-08 15:58:13.057678
-234	document	INSERT	\N	{"id": 10, "date": "2025-12-08", "id_employee": 2, "id_document_category": 1}	admin	2025-12-08 15:58:16.556003
-235	document	UPDATE	{"id": 1, "date": "2024-03-10", "id_employee": 2, "id_document_category": 1}	{"id": 1, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-236	document	UPDATE	{"id": 2, "date": "2024-03-18", "id_employee": 2, "id_document_category": 2}	{"id": 2, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-237	document	UPDATE	{"id": 3, "date": "2024-03-25", "id_employee": 2, "id_document_category": 3}	{"id": 3, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-238	document	UPDATE	{"id": 4, "date": "2025-11-22", "id_employee": 1, "id_document_category": 1}	{"id": 4, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-239	document	UPDATE	{"id": 5, "date": "2025-11-22", "id_employee": 1, "id_document_category": 1}	{"id": 5, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-240	document	UPDATE	{"id": 6, "date": "2025-11-22", "id_employee": 1, "id_document_category": 3}	{"id": 6, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-241	document	UPDATE	{"id": 7, "date": "2024-12-23", "id_employee": 1, "id_document_category": 1}	{"id": 7, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-242	document	UPDATE	{"id": 8, "date": "2025-01-20", "id_employee": 2, "id_document_category": 2}	{"id": 8, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-243	document	UPDATE	{"id": 10, "date": "2025-12-08", "id_employee": 2, "id_document_category": 1}	{"id": 10, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	admin	2025-12-08 15:59:25.342038
-244	document	DELETE	{"id": 10, "date": "2025-10-08", "id_employee": 1, "id_document_category": 2}	\N	admin	2025-12-08 15:59:56.505616
-248	document_content	UPDATE	{"id": 3, "id_batch": 3, "quantity": 10, "id_document": 1}	{"id": 3, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-249	document_content	UPDATE	{"id": 4, "id_batch": 4, "quantity": 15, "id_document": 1}	{"id": 4, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-250	document_content	UPDATE	{"id": 5, "id_batch": 5, "quantity": 2, "id_document": 1}	{"id": 5, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-251	document_content	UPDATE	{"id": 6, "id_batch": 1, "quantity": 4, "id_document": 2}	{"id": 6, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-252	document_content	UPDATE	{"id": 7, "id_batch": 4, "quantity": 3, "id_document": 2}	{"id": 7, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-253	document_content	UPDATE	{"id": 9, "id_batch": 3, "quantity": 2, "id_document": 3}	{"id": 9, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-254	document_content	UPDATE	{"id": 10, "id_batch": 4, "quantity": 1, "id_document": 3}	{"id": 10, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-255	document_content	UPDATE	{"id": 11, "id_batch": 5, "quantity": 1, "id_document": 3}	{"id": 11, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-256	document_content	UPDATE	{"id": 8, "id_batch": 5, "quantity": 2, "id_document": 2}	{"id": 8, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-257	document_content	UPDATE	{"id": 12, "id_batch": 11, "quantity": 100, "id_document": 7}	{"id": 12, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-258	document_content	UPDATE	{"id": 13, "id_batch": 11, "quantity": 37, "id_document": 8}	{"id": 13, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-259	document_content	UPDATE	{"id": 14, "id_batch": 3, "quantity": 500, "id_document": 1}	{"id": 14, "id_batch": 3, "quantity": 5000, "id_document": 1}	admin	2025-12-08 16:06:10.718255
-260	document_content	DELETE	{"id": 14, "id_batch": 3, "quantity": 5000, "id_document": 1}	\N	admin	2025-12-08 16:06:26.943108
-261	refresh_tokens	DELETE	{"id": 87, "role": "admin", "token": "2cb9cd6505793f0c14a9735c3336c3bf7f807d448511f006e67ee025799fcefc", "username": "valentin_admin", "created_at": "2025-12-08T12:50:16.763149"}	\N	admin	2025-12-08 17:24:58.373132
-262	refresh_tokens	INSERT	\N	{"id": 88, "role": "admin", "token": "b1538156433473107447b1fd69239686c3de2b43fbd39bda93dc74612e3b6d54", "username": "valentin_admin", "created_at": "2025-12-08T14:24:58.383009"}	admin	2025-12-08 17:24:58.383009
-263	document_content	UPDATE	{"id": 13, "id_batch": 3, "quantity": 5000, "id_document": 1}	{"id": 13, "id_batch": 3, "quantity": 500, "id_document": 1}	admin	2025-12-08 17:25:20.367266
-264	document	INSERT	\N	{"id": 1, "date": "2024-03-10", "id_employee": 2, "id_document_category": 1}	postgres	2025-12-08 17:28:39.90088
-265	document	INSERT	\N	{"id": 2, "date": "2024-03-18", "id_employee": 2, "id_document_category": 2}	postgres	2025-12-08 17:28:39.90088
-266	document	INSERT	\N	{"id": 3, "date": "2024-03-25", "id_employee": 2, "id_document_category": 3}	postgres	2025-12-08 17:28:39.90088
-267	document	INSERT	\N	{"id": 4, "date": "2025-11-22", "id_employee": 1, "id_document_category": 1}	postgres	2025-12-08 17:28:39.90088
-268	document	INSERT	\N	{"id": 5, "date": "2025-11-22", "id_employee": 1, "id_document_category": 1}	postgres	2025-12-08 17:28:39.90088
-269	document	INSERT	\N	{"id": 6, "date": "2025-11-22", "id_employee": 1, "id_document_category": 3}	postgres	2025-12-08 17:28:39.90088
-270	document_content	INSERT	\N	{"id": 1, "id_batch": 1, "quantity": 5, "id_document": 1}	postgres	2025-12-08 17:29:26.098872
-271	document_content	INSERT	\N	{"id": 2, "id_batch": 2, "quantity": 3, "id_document": 1}	postgres	2025-12-08 17:29:26.098872
-272	document_content	INSERT	\N	{"id": 3, "id_batch": 3, "quantity": 10, "id_document": 1}	postgres	2025-12-08 17:29:26.098872
-273	document_content	INSERT	\N	{"id": 4, "id_batch": 4, "quantity": 15, "id_document": 1}	postgres	2025-12-08 17:29:26.098872
-274	document_content	INSERT	\N	{"id": 5, "id_batch": 5, "quantity": 2, "id_document": 1}	postgres	2025-12-08 17:29:26.098872
-275	document_content	INSERT	\N	{"id": 6, "id_batch": 1, "quantity": 4, "id_document": 2}	postgres	2025-12-08 17:29:26.098872
-276	document_content	INSERT	\N	{"id": 7, "id_batch": 4, "quantity": 3, "id_document": 2}	postgres	2025-12-08 17:29:26.098872
-277	document_content	INSERT	\N	{"id": 8, "id_batch": 5, "quantity": 2, "id_document": 2}	postgres	2025-12-08 17:29:26.098872
-278	document_content	INSERT	\N	{"id": 9, "id_batch": 3, "quantity": 2, "id_document": 3}	postgres	2025-12-08 17:29:26.098872
-279	document_content	INSERT	\N	{"id": 10, "id_batch": 4, "quantity": 1, "id_document": 3}	postgres	2025-12-08 17:29:26.098872
-280	document_content	INSERT	\N	{"id": 11, "id_batch": 5, "quantity": 1, "id_document": 3}	postgres	2025-12-08 17:29:26.098872
-281	refresh_tokens	DELETE	{"id": 88, "role": "admin", "token": "b1538156433473107447b1fd69239686c3de2b43fbd39bda93dc74612e3b6d54", "username": "valentin_admin", "created_at": "2025-12-08T14:24:58.383009"}	\N	admin	2025-12-08 17:54:21.532986
-282	refresh_tokens	INSERT	\N	{"id": 89, "role": "admin", "token": "b3bc6fa09deb6ef0221bd9d5fda49b7e7ec6534fbc45bf4e34b31d9b8f6cebfa", "username": "valentin_admin", "created_at": "2025-12-08T14:54:21.536731"}	admin	2025-12-08 17:54:21.536731
-283	refresh_tokens	DELETE	{"id": 89, "role": "admin", "token": "b3bc6fa09deb6ef0221bd9d5fda49b7e7ec6534fbc45bf4e34b31d9b8f6cebfa", "username": "valentin_admin", "created_at": "2025-12-08T14:54:21.536731"}	\N	admin	2025-12-08 15:36:55.445537
-284	refresh_tokens	INSERT	\N	{"id": 90, "role": "admin", "token": "462baf2b63285c363b6d217eb1c9962adc2cb2495a269694c5a9691068b5abab", "username": "valentin_admin", "created_at": "2025-12-08T12:36:55.456698"}	admin	2025-12-08 15:36:55.456698
-285	position	INSERT	\N	{"id": 9, "name": "Системный администратов", "description": "Администрирование информационной системой, полный доступ к ИС"}	admin	2025-12-08 15:37:02.343669
-314	product	INSERT	\N	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-315	product	INSERT	\N	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-286	employee	UPDATE	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 4, "phone_number": "1111111111111111"}	{"id": 14, "inn": "111111111112", "surname": "Баранов", "firstname": "Валентин", "id_gender": 1, "birth_date": "2025-12-05", "id_address": 1, "patronymic": "Александрович", "id_position": 9, "phone_number": "1111111111111111"}	admin	2025-12-08 15:38:15.068513
-287	sys_user	DELETE	{"id": 6, "login": "admin_login", "id_role": 4, "id_employee": 2, "password_hash": "$2a$10$0fBtSXi9CAHsY0i4TON2aeLRaeR1NTn9CENl.LkZbFEsJS.gsagmK"}	\N	admin	2025-12-08 15:41:58.580165
-288	address	INSERT	\N	{"id": 17, "city": "Санкт-Петербург", "region": "Центральный", "street": "Невский проспект", "subject": "Санкт-Петербург", "building": 12}	postgres	2025-12-08 17:16:09.019164
-289	address	INSERT	\N	{"id": 18, "city": "Выборг", "region": "Выборгский", "street": "Ленинградская улица", "subject": "Ленинградская область", "building": 7}	postgres	2025-12-08 17:16:09.019164
-290	address	INSERT	\N	{"id": 19, "city": "Екатеринбург", "region": "Екатеринбургский", "street": "Ленина", "subject": "Свердловская область", "building": 18}	postgres	2025-12-08 17:16:09.019164
+1323	refresh_tokens	DELETE	{"id": 311, "role": "admin", "token": "6a44bcf71b471d39c9991269246ef74522afc48b234155fcab9b6cb5d05d2b6f", "username": "roman", "created_at": "2025-12-17T14:22:32.411505"}	\N	admin	2025-12-17 14:22:46.800459
+1194	product	INSERT	\N	{"id": 67, "name": "Утюг \\"Ceramic Heat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 3}	manager	2025-12-17 10:07:32.817532
+1195	product	UPDATE	{"id": 67, "name": "Утюг \\"Ceramic Heat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 3}	{"id": 67, "name": "Утюг \\"Ceramic Heat\\"", "image_url": "/static/products/1765955252842400588_6.jpeg", "id_producer": 25, "id_product_category": 3}	manager	2025-12-17 10:07:32.843685
+1324	refresh_tokens	INSERT	\N	{"id": 312, "role": "admin", "token": "ae383d10173d10ecfce4ab883200c9a4a2772469d2ffd880bc15f9da81f46f15", "username": "roman", "created_at": "2025-12-17T14:26:52.151806"}	admin	2025-12-17 14:26:52.151806
+1331	refresh_tokens	INSERT	\N	{"id": 318, "role": "admin", "token": "010be9a2336420cb1b95a67b3f803953bc6f567331abddc2b4bd9b7aaac25768", "username": "roman", "created_at": "2025-12-17T16:21:59.827534"}	admin	2025-12-17 16:21:59.827534
+1333	sys_user	INSERT	\N	{"id": 11, "login": "test", "id_role": 1, "id_employee": 3, "password_hash": "$2a$10$NSThg/ovlf5fqE0WNhfEEu38UtXoVgy.ZNHh1hyLEg0dM9lJR7iU6"}	admin	2025-12-17 16:26:10.901139
+1334	refresh_tokens	INSERT	\N	{"id": 319, "role": "moderator", "token": "ef901f70f8e4428bf2e19c5bf5bef4628dc4d523e0cdbeb55e0c426d9b042072", "username": "test", "created_at": "2025-12-17T16:26:19.405285"}	admin	2025-12-17 16:26:19.405285
+1348	refresh_tokens	INSERT	\N	{"id": 327, "role": "manager", "token": "d80cc6b149f248d049d58ae3b076de2d82723bc3fcb6b8ebaac651c34a9cc7d9", "username": "anna_sokolova", "created_at": "2025-12-17T19:09:05.835201"}	admin	2025-12-17 19:09:05.835201
+1349	refresh_tokens	INSERT	\N	{"id": 328, "role": "moderator", "token": "80f9ae9cba6e8843e6f082f090f19814b151a304d54dac12c50a05414c22959a", "username": "artem_volkov", "created_at": "2025-12-17T19:11:03.047322"}	admin	2025-12-17 19:11:03.047322
+1350	refresh_tokens	INSERT	\N	{"id": 329, "role": "manager", "token": "5655dc24a82080cb21b335ee356630c0c2bb7a306dba5437c880e67cb211a38c", "username": "anna_sokolova", "created_at": "2025-12-17T19:12:43.774039"}	admin	2025-12-17 19:12:43.774039
+1358	product	UPDATE	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/1765989317015642669_70.jpg", "id_producer": 28, "id_product_category": 13}	{"id": 70, "name": "Тетрадь в клетку", "image_url": "/static/products/1765989317015642669_70.jpg", "id_producer": 28, "id_product_category": 13}	manager	2025-12-17 19:48:37.828811
+1379	refresh_tokens	INSERT	\N	{"id": 336, "role": "manager", "token": "089ee28b14dbee52f31f722c086b4f9ea69c5fddff6abc55e7aa91c2f72dabf5", "username": "anna_sokolova", "created_at": "2025-12-18T11:56:20.588464"}	admin	2025-12-18 11:56:20.588464
+1389	product	INSERT	\N	{"id": 72, "name": "тест", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 3}	admin	2025-12-18 13:48:54.075695
+1196	refresh_tokens	DELETE	{"id": 292, "role": "manager", "token": "d94142d7c246851fdbb800ed87806b5da7c2ff898c99b67cc04fc3ff31c8d278", "username": "anna_sokolova", "created_at": "2025-12-17T10:06:56.531383"}	\N	admin	2025-12-17 10:07:40.042221
+1197	refresh_tokens	INSERT	\N	{"id": 293, "role": "admin", "token": "cab0cbe39cebdf3cfacc30f191565b671512f19d541495c51e2acd59bc6b178c", "username": "roman", "created_at": "2025-12-17T10:07:43.968462"}	admin	2025-12-17 10:07:43.968462
+1325	refresh_tokens	INSERT	\N	{"id": 313, "role": "admin", "token": "fd6b15a551b1714519b9afaca22e47acc810045307a2b672a64fb6ec998f01c8", "username": "roman", "created_at": "2025-12-17T15:34:43.388973"}	admin	2025-12-17 15:34:43.388973
+1332	product	UPDATE	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "/static/products/1765952717072174470_2.jpeg", "id_producer": 2, "id_product_category": 2}	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "/static/products/1765952717072174470_2.jpeg", "id_producer": 2, "id_product_category": 3}	admin	2025-12-17 16:22:46.688236
+1335	refresh_tokens	INSERT	\N	{"id": 320, "role": "manager", "token": "6663ea65dfc816f809e2bf72cde8101277259979c11f01cc660787af7cd1346a", "username": "anna_sokolova", "created_at": "2025-12-17T16:26:49.504421"}	admin	2025-12-17 16:26:49.504421
+1351	producer	INSERT	\N	{"id": 28, "inn": "6456387568", "name": "тест", "surname": "Иванов", "firstname": "Петр", "id_address": 9, "patronymic": "Сидорович"}	manager	2025-12-17 19:25:33.792229
+1352	product_category	INSERT	\N	{"id": 13, "name": "Канцелярские принадлежности"}	manager	2025-12-17 19:30:14.732279
+1359	batch	INSERT	\N	{"id": 12, "cost": 45, "created_at": "2025-12-17T19:53:27.255671", "id_product": 70, "expiration_date": "2035-12-17", "production_date": "2025-12-17"}	manager	2025-12-17 19:53:27.255671
+1380	refresh_tokens	INSERT	\N	{"id": 337, "role": "moderator", "token": "c1cfb326b2dd510bd2bd0fade9ab922d52febd8967f6165e1e7c8fe31fcca69f", "username": "artem_volkov", "created_at": "2025-12-18T12:43:13.448528"}	admin	2025-12-18 12:43:13.448528
+1381	refresh_tokens	INSERT	\N	{"id": 338, "role": "moderator", "token": "095981009a74eb724c335cdbb0aedb7a55a9732d02430c2fa7da3c9df20fff78", "username": "artem_volkov", "created_at": "2025-12-18T12:46:54.095311"}	admin	2025-12-18 12:46:54.095311
+1382	refresh_tokens	DELETE	{"id": 338, "role": "moderator", "token": "095981009a74eb724c335cdbb0aedb7a55a9732d02430c2fa7da3c9df20fff78", "username": "artem_volkov", "created_at": "2025-12-18T12:46:54.095311"}	\N	admin	2025-12-18 12:54:36.236921
+1383	refresh_tokens	INSERT	\N	{"id": 339, "role": "moderator", "token": "80147c40e86e60963dd7cb8af0760a61c4f7516c7e9494d49b9a3dc5ad98fc10", "username": "artem_volkov", "created_at": "2025-12-18T12:54:36.238138"}	admin	2025-12-18 12:54:36.238138
+1390	product	DELETE	{"id": 72, "name": "тест", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 3}	\N	admin	2025-12-18 13:49:45.334201
+1198	refresh_tokens	DELETE	{"id": 293, "role": "admin", "token": "cab0cbe39cebdf3cfacc30f191565b671512f19d541495c51e2acd59bc6b178c", "username": "roman", "created_at": "2025-12-17T10:07:43.968462"}	\N	admin	2025-12-17 10:34:39.422817
+1327	refresh_tokens	INSERT	\N	{"id": 314, "role": "admin", "token": "75a0792e162f4b741e384d45e20290cf68d77ac8128a72f3f408d6de09e108d0", "username": "roman", "created_at": "2025-12-17T15:39:23.392631"}	admin	2025-12-17 15:39:23.392631
+1328	refresh_tokens	INSERT	\N	{"id": 315, "role": "admin", "token": "70b481b63070d94342fd7a7f4f0e1f180ceffe4d8b047e9ae99f1e46301cb486", "username": "roman", "created_at": "2025-12-17T15:40:35.762648"}	admin	2025-12-17 15:40:35.762648
+1336	product	INSERT	\N	{"id": 68, "name": "Тестовый товар", "image_url": "/static/products/placeholder.png", "id_producer": 4, "id_product_category": 1}	manager	2025-12-17 16:27:15.120236
+1337	product	UPDATE	{"id": 68, "name": "Тестовый товар", "image_url": "/static/products/placeholder.png", "id_producer": 4, "id_product_category": 1}	{"id": 68, "name": "Тестовый товар", "image_url": "", "id_producer": 4, "id_product_category": 1}	manager	2025-12-17 16:28:06.886055
+1338	product	UPDATE	{"id": 68, "name": "Тестовый товар", "image_url": "", "id_producer": 4, "id_product_category": 1}	{"id": 68, "name": "Тестовый товар", "image_url": "/static/products/1765978086932498588_placeholder.png", "id_producer": 4, "id_product_category": 1}	manager	2025-12-17 16:28:06.934406
+1353	producer	UPDATE	{"id": 28, "inn": "6456387568", "name": "тест", "surname": "Иванов", "firstname": "Петр", "id_address": 9, "patronymic": "Сидорович"}	{"id": 28, "inn": "6456387568", "name": "ООО \\"Первый класс\\"", "surname": "Иванов", "firstname": "Петр", "id_address": 9, "patronymic": "Сидорович"}	manager	2025-12-17 19:33:29.660815
+1354	product	INSERT	\N	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/placeholder.png", "id_producer": 28, "id_product_category": 13}	manager	2025-12-17 19:34:08.981539
+1355	product	UPDATE	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/placeholder.png", "id_producer": 28, "id_product_category": 13}	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/1765989248998332346_58.jpg", "id_producer": 28, "id_product_category": 13}	manager	2025-12-17 19:34:08.999841
+1360	refresh_tokens	INSERT	\N	{"id": 330, "role": "admin", "token": "d3708f6357e5a0e80f2cb0c4c723fa015a9506409a5807d729a48e4bfcbd499f", "username": "roman", "created_at": "2025-12-17T19:57:02.656177"}	admin	2025-12-17 19:57:02.656177
+1384	refresh_tokens	INSERT	\N	{"id": 340, "role": "admin", "token": "442f66368cb47cf445190b787eb9a4c4e4fe297f3c4ec0404a780a08471d7ecd", "username": "roman", "created_at": "2025-12-18T12:58:20.912379"}	admin	2025-12-18 12:58:20.912379
+1391	product	INSERT	\N	{"id": 73, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 2}	admin	2025-12-18 13:49:53.13803
+1392	product	DELETE	{"id": 73, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 2}	\N	admin	2025-12-18 13:50:08.088504
+1199	refresh_tokens	INSERT	\N	{"id": 294, "role": "manager", "token": "7d958e353ba2d58f47642ccce180af4350fef8015af291ffcf2295e101e9c270", "username": "anna_sokolova", "created_at": "2025-12-17T10:34:57.970164"}	admin	2025-12-17 10:34:57.970164
+1329	refresh_tokens	INSERT	\N	{"id": 316, "role": "admin", "token": "7f67c832795a36f1caa4ede536ee9196cb98af87d9d1dfe071ba8ab672697b98", "username": "roman", "created_at": "2025-12-17T15:41:41.499096"}	admin	2025-12-17 15:41:41.499096
+1339	refresh_tokens	INSERT	\N	{"id": 321, "role": "admin", "token": "f594e892406be435a604e34e28db4c2f635c543a3e2d66bcdd87928999fe461c", "username": "roman", "created_at": "2025-12-17T16:28:58.804567"}	admin	2025-12-17 16:28:58.804567
+1356	product	UPDATE	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/1765989248998332346_58.jpg", "id_producer": 28, "id_product_category": 13}	{"id": 70, "name": "Тетрадь", "image_url": "", "id_producer": 28, "id_product_category": 13}	manager	2025-12-17 19:35:16.996451
+1357	product	UPDATE	{"id": 70, "name": "Тетрадь", "image_url": "", "id_producer": 28, "id_product_category": 13}	{"id": 70, "name": "Тетрадь", "image_url": "/static/products/1765989317015642669_70.jpg", "id_producer": 28, "id_product_category": 13}	manager	2025-12-17 19:35:17.01624
+1361	refresh_tokens	INSERT	\N	{"id": 331, "role": "manager", "token": "e2f90a931eeaf3784b5ae2f998bf308b83dc49341b1f233d9ae05400cc145d4c", "username": "anna_sokolova", "created_at": "2025-12-17T19:59:23.802914"}	admin	2025-12-17 19:59:23.802914
+1385	sys_user	INSERT	\N	{"id": 12, "login": "denis_orlov", "id_role": 4, "id_employee": 4, "password_hash": "$2a$10$ZKe3pjOAPtB5CIMWcvT0q.B8/gldZefclTGV9ruv60CvI/RHKtWeO"}	admin	2025-12-18 12:58:49.929693
+1388	product	DELETE	{"id": 71, "name": "576345643786534657468754376573648756436543657346785436875643756436584365687346534668543654353257", "image_url": "/static/products/placeholder.png", "id_producer": 2, "id_product_category": 1}	\N	admin	2025-12-18 13:25:55.854979
+1200	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765902884396074001_14.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:38:37.095554
+1201	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765957117118564756_14.jpeg", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:38:37.120084
+1204	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/1765902893007872922_16.jpg", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:38:43.593395
+1205	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/1765957123605219718_16.jpg", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:38:43.605751
+1208	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/1765902901690138259_18.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:38:51.986084
+1209	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/1765957131997504097_18.jpeg", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:38:51.998054
+1214	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/1765902914378054293_21.jpeg", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:39:01.701851
+1215	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/1765957141710564754_21.jpeg", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:39:01.711011
+1220	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765902943202935500_24.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:39:14.182594
+1221	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765957154192326426_24.jpeg", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:39:14.192704
+1232	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/1765902979319774753_30.png", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	manager	2025-12-17 10:39:40.675458
+1233	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/1765957180690130300_30.png", "id_producer": 20, "id_product_category": 3}	manager	2025-12-17 10:39:40.690801
+1234	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765902983964183755_31.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:39:44.706895
+1235	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765957184719296760_31.jpg", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:39:44.720133
+1330	refresh_tokens	INSERT	\N	{"id": 317, "role": "admin", "token": "2ed9311c9f5e64b0bdc0f82db18960f431067a3010ed8b51dc3431d5cabf32d0", "username": "roman", "created_at": "2025-12-17T15:42:59.676015"}	admin	2025-12-17 15:42:59.676015
+1340	product	DELETE	{"id": 68, "name": "Тестовый товар", "image_url": "/static/products/1765978086932498588_placeholder.png", "id_producer": 4, "id_product_category": 1}	\N	admin	2025-12-17 16:29:08.395169
+1362	document	INSERT	\N	{"id": 18, "date": "2025-12-17", "id_employee": 2, "id_document_category": 1}	manager	2025-12-17 20:04:33.553938
+1386	refresh_tokens	INSERT	\N	{"id": 341, "role": "admin", "token": "3ed44c11de507638488207485956ccb91a91076e1f3c3f2a4a80ac5cb7d32e14", "username": "roman", "created_at": "2025-12-18T13:22:00.92475"}	admin	2025-12-18 13:22:00.92475
+1202	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/1765902889238710628_15.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:38:40.809084
+1203	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/1765957120820601966_15.jpeg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:38:40.822685
+1207	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/1765957127035473261_17.jpeg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:38:47.036118
+1210	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/1765902905078576511_19.avif", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:38:55.047584
+1211	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/1765957135057974126_19.avif", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:38:55.058242
+1212	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/1765902909008158846_20.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:38:58.515544
+1213	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/1765957138526011169_20.jpeg", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:38:58.52638
+1218	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/1765902924337540214_23.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:39:10.140367
+1219	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/1765957150151930841_23.jpeg", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:39:10.152417
+1224	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/1765902949354806378_26.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:39:23.369147
+1225	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/1765957163376438333_26.jpeg", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:39:23.376772
+1228	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765902966870945595_28.webp", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:39:32.103917
+1229	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765957172116750046_28.webp", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:39:32.117209
+1230	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/1765902971176220014_29.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:39:37.091469
+1231	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/1765957177103111631_29.jpeg", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:39:37.104237
+1341	refresh_tokens	INSERT	\N	{"id": 322, "role": "manager", "token": "e9d189671e08e2ad52a146812d3fc28e802e6969bc668f4bfad16ccf8a3dd4d0", "username": "anna_sokolova", "created_at": "2025-12-17T16:30:34.28805"}	admin	2025-12-17 16:30:34.28805
+1344	refresh_tokens	INSERT	\N	{"id": 323, "role": "admin", "token": "7cc6ca11a4749409ab53415bd26ad8b1ebb543a389e9e6c4c60b6c1f23a7e9d3", "username": "roman", "created_at": "2025-12-17T16:31:07.814227"}	admin	2025-12-17 16:31:07.814227
+1363	refresh_tokens	INSERT	\N	{"id": 332, "role": "admin", "token": "f3255461bbe89584e7bd063ced5a36f07008212985714469fc433882f30fc7b3", "username": "roman", "created_at": "2025-12-17T20:06:06.971254"}	admin	2025-12-17 20:06:06.971254
+1387	product	INSERT	\N	{"id": 71, "name": "576345643786534657468754376573648756436543657346785436875643756436584365687346534668543654353257", "image_url": "/static/products/placeholder.png", "id_producer": 2, "id_product_category": 1}	admin	2025-12-18 13:25:39.763342
+1206	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/1765902896208012382_17.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:38:47.023721
+1216	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/1765902918947207586_22.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:39:06.250546
+1217	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/1765957146260570714_22.jpeg", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:39:06.261357
+1222	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/1765902938592861846_25.webp", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "", "id_producer": 24, "id_product_category": 8}	manager	2025-12-17 10:39:18.245395
+1223	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/1765957158257484678_25.webp", "id_producer": 24, "id_product_category": 8}	manager	2025-12-17 10:39:18.258046
+1226	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/1765902955871612256_27.webp", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:39:27.022213
+1227	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/1765957167032808710_27.webp", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:39:27.033264
+1342	product	INSERT	\N	{"id": 69, "name": "Ноутбук", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 16:30:56.074143
+1343	product	UPDATE	{"id": 69, "name": "Ноутбук", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 69, "name": "Ноутбук", "image_url": "/static/products/1765978256093059347_1.jpeg", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 16:30:56.09446
+1364	document	DELETE	{"id": 18, "date": "2025-12-17", "id_employee": 2, "id_document_category": 1}	\N	admin	2025-12-17 20:06:13.017553
+1236	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/1765902990957545800_32.webp", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:39:49.846433
+1237	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/1765957189862935304_32.webp", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:39:49.863141
+1240	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/1765903002725423000_34.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:39:58.465612
+1241	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/1765957198478194169_34.jpeg", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:39:58.478794
+1246	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765903016922236132_37.webp", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:40:11.463704
+1247	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765957211474830383_37.webp", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:40:11.47526
+1254	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/1765903130437245420_41.jpeg", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:40:30.856976
+1255	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/1765957230863736670_41.jpeg", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:40:30.864349
+1258	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/1765903140958636092_43.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:40:40.930573
+1259	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/1765957240945953466_43.jpeg", "id_producer": 24, "id_product_category": 2}	manager	2025-12-17 10:40:40.94651
+1266	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765903176524594261_47.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:41:01.172435
+1267	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765957261185824504_46.jpg", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:41:01.186362
+1268	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765957261185824504_46.jpg", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:41:08.653265
+1269	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765957268661142799_47.jpeg", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:41:08.661462
+1345	refresh_tokens	INSERT	\N	{"id": 324, "role": "admin", "token": "f34ece8a737481660d0fe055d834d36416cb807ffd1117e8fa8385c885411f75", "username": "roman", "created_at": "2025-12-17T17:15:58.961162"}	admin	2025-12-17 17:15:58.961162
+1365	refresh_tokens	INSERT	\N	{"id": 333, "role": "manager", "token": "d1b24a2fe9fa9992ed480f0b28a74c1e448d9fb19617d5636373f83eb660905e", "username": "anna_sokolova", "created_at": "2025-12-17T20:06:20.544899"}	admin	2025-12-17 20:06:20.544899
+1238	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/1765902996829507053_33.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:39:53.716778
+1239	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/1765957193732642500_33.jpeg", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:39:53.732919
+1242	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/1765903007913705919_35.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:40:03.277329
+1243	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/1765957203287260630_35.jpeg", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:40:03.287622
+1250	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/1765903119722697138_39.jpg", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:40:23.050073
+1251	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/1765957223068063458_39.jpg", "id_producer": 19, "id_product_category": 1}	manager	2025-12-17 10:40:23.069358
+1260	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/1765903147824702137_44.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:46.845152
+1261	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/1765957246858076386_44.jpeg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:46.85826
+1262	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/1765903153843628542_45.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:51.411064
+1263	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/1765957251431221846_45.jpg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:51.431921
+1272	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765903187145978752_49.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:41:17.677511
+1273	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765957277688558595_49.jpg", "id_producer": 20, "id_product_category": 2}	manager	2025-12-17 10:41:17.68895
+1346	refresh_tokens	INSERT	\N	{"id": 325, "role": "admin", "token": "97f3ee44bc606e32645dfa792ce539a85bbeaa340eee8e4ef7574aee4915676d", "username": "roman", "created_at": "2025-12-17T17:35:38.623463"}	admin	2025-12-17 17:35:38.623463
+1347	refresh_tokens	INSERT	\N	{"id": 326, "role": "manager", "token": "16ad8077cb7e7c2b34a0a2c7b403420c8ffe10d238066af6bcc30790d304b27c", "username": "anna_sokolova", "created_at": "2025-12-17T17:35:53.899284"}	admin	2025-12-17 17:35:53.899284
+1366	document	INSERT	\N	{"id": 19, "date": "2025-12-17", "id_employee": 2, "id_document_category": 1}	manager	2025-12-17 20:06:26.286402
+1244	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/1765903011995595088_36.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:07.089681
+1245	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/1765957207099011173_36.jpg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:07.099307
+1248	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/1765903114376768427_38.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:18.933311
+1249	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/1765957218945988429_38.jpg", "id_producer": 24, "id_product_category": 1}	manager	2025-12-17 10:40:18.946504
+1252	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/1765903125172666585_40.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:40:26.633769
+1253	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/1765957226645823668_40.jpeg", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:40:26.646263
+1256	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/1765903136001616381_42.webp", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:40:36.85103
+1257	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/1765957236865497715_42.webp", "id_producer": 25, "id_product_category": 2}	manager	2025-12-17 10:40:36.86608
+1264	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/1765903159611992045_46.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:40:56.3078
+1265	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/1765957256316873918_46.jpeg", "id_producer": 21, "id_product_category": 8}	manager	2025-12-17 10:40:56.317375
+1270	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/1765903181767449666_48.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:41:13.200091
+1271	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/1765957273217070551_48.jpeg", "id_producer": 26, "id_product_category": 3}	manager	2025-12-17 10:41:13.217832
+1367	document_content	INSERT	\N	{"id": 29, "id_batch": 12, "quantity": 100, "id_document": 19}	manager	2025-12-17 20:08:12.062653
 859	document_content	DELETE	{"id": 16, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:43:53.443618
-291	address	INSERT	\N	{"id": 20, "city": "Краснодар", "region": "Центральный", "street": "Красная", "subject": "Краснодарский край", "building": 33}	postgres	2025-12-08 17:16:09.019164
-292	address	INSERT	\N	{"id": 21, "city": "Химки", "region": "Химкинский", "street": "Ленинградская", "subject": "Московская область", "building": 5}	postgres	2025-12-08 17:16:09.019164
-293	address	INSERT	\N	{"id": 22, "city": "Ростов-на-Дону", "region": "Ростовский", "street": "Пушкинская", "subject": "Ростовская область", "building": 20}	postgres	2025-12-08 17:16:09.019164
-294	address	INSERT	\N	{"id": 23, "city": "Самара", "region": "Самарский", "street": "Советская", "subject": "Самарская область", "building": 44}	postgres	2025-12-08 17:16:09.019164
-295	address	INSERT	\N	{"id": 24, "city": "Челябинск", "region": "Челябинский", "street": "Космонавтов", "subject": "Челябинская область", "building": 3}	postgres	2025-12-08 17:16:09.019164
-296	address	INSERT	\N	{"id": 25, "city": "Воронеж", "region": "Центральный", "street": "Комсомольская", "subject": "Воронежская область", "building": 10}	postgres	2025-12-08 17:16:09.019164
-297	producer	INSERT	\N	{"id": 18, "inn": "1234567890", "name": "ООО \\"ТехноДом\\"", "surname": "Иванов", "firstname": "Игорь", "id_address": 1, "patronymic": "Сергеевич"}	postgres	2025-12-08 17:16:58.286105
-298	producer	INSERT	\N	{"id": 19, "inn": "2345678901", "name": "АО \\"СтройМебель\\"", "surname": "Петрова", "firstname": "Марина", "id_address": 2, "patronymic": "Владимировна"}	postgres	2025-12-08 17:16:58.286105
-299	producer	INSERT	\N	{"id": 20, "inn": "3456789012", "name": "ООО \\"ЭлектроникСистем\\"", "surname": "Сидоров", "firstname": "Дмитрий", "id_address": 3, "patronymic": "Александрович"}	postgres	2025-12-08 17:16:58.286105
-300	producer	INSERT	\N	{"id": 21, "inn": "4567890123", "name": "ИП \\"Кулинария\\"", "surname": "Кузнецов", "firstname": "Алексей", "id_address": 4, "patronymic": "Игоревич"}	postgres	2025-12-08 17:16:58.286105
-301	producer	INSERT	\N	{"id": 22, "inn": "5678901234", "name": "ООО \\"КомфортДом\\"", "surname": "Смирнов", "firstname": "Никита", "id_address": 5, "patronymic": "Петрович"}	postgres	2025-12-08 17:16:58.286105
-302	producer	INSERT	\N	{"id": 23, "inn": "6789012345", "name": "АО \\"АвтоПром\\"", "surname": "Морозова", "firstname": "Ольга", "id_address": 6, "patronymic": "Алексеевна"}	postgres	2025-12-08 17:16:58.286105
-303	producer	INSERT	\N	{"id": 24, "inn": "7890123456", "name": "ООО \\"МебельЛюкс\\"", "surname": "Федоров", "firstname": "Сергей", "id_address": 7, "patronymic": "Иванович"}	postgres	2025-12-08 17:16:58.286105
-304	producer	INSERT	\N	{"id": 25, "inn": "8911234567", "name": "ИП \\"ТехМаркет\\"", "surname": "Григорьев", "firstname": "Павел", "id_address": 8, "patronymic": "Викторович"}	postgres	2025-12-08 17:16:58.286105
-305	producer	INSERT	\N	{"id": 26, "inn": "9012345678", "name": "ООО \\"ХолодСервис\\"", "surname": "Васильева", "firstname": "Елена", "id_address": 9, "patronymic": "Александровна"}	postgres	2025-12-08 17:16:58.286105
-306	product	INSERT	\N	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-307	product	INSERT	\N	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-308	product	INSERT	\N	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-309	product	INSERT	\N	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-310	product	INSERT	\N	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-311	product	INSERT	\N	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:18:59.134905
-312	product	INSERT	\N	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-313	product	INSERT	\N	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-718	product	INSERT	\N	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 15:58:21.414366
-317	product	INSERT	\N	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-318	product	INSERT	\N	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-319	product	INSERT	\N	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-320	product	INSERT	\N	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-321	product	INSERT	\N	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:18:59.134905
-322	product	INSERT	\N	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-323	product	INSERT	\N	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-324	product	INSERT	\N	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 8}	postgres	2025-12-08 17:18:59.134905
-325	product	INSERT	\N	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-326	product	INSERT	\N	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-327	product	INSERT	\N	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-328	product	INSERT	\N	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-329	product	INSERT	\N	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:18:59.134905
-330	product	INSERT	\N	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-331	product	INSERT	\N	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-332	product	INSERT	\N	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:18:59.134905
-333	product	INSERT	\N	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-334	product	INSERT	\N	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:18:59.134905
-335	product	INSERT	\N	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:18:59.134905
-336	product	INSERT	\N	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:19:30.879792
-337	product	INSERT	\N	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-338	product	INSERT	\N	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-339	product	INSERT	\N	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:19:30.879792
-340	product	INSERT	\N	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-341	product	INSERT	\N	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-342	product	INSERT	\N	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-343	product	INSERT	\N	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-344	product	INSERT	\N	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-345	product	INSERT	\N	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:19:30.879792
-346	product	INSERT	\N	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-347	product	INSERT	\N	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:19:30.879792
-348	product	INSERT	\N	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-349	product	INSERT	\N	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-350	product	INSERT	\N	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-351	product	INSERT	\N	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-352	product	INSERT	\N	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:19:30.879792
-353	product	INSERT	\N	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:19:30.879792
-354	product	INSERT	\N	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:19:30.879792
-355	product	INSERT	\N	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:19:30.879792
-356	product	UPDATE	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-357	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-358	product	UPDATE	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-359	product	UPDATE	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-360	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-361	product	UPDATE	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-362	product	UPDATE	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-363	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-364	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-365	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-366	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-367	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-368	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-369	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-370	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-371	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-372	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-373	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-374	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-375	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-376	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-377	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-378	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-379	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-380	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-381	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-382	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-383	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-384	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-385	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-386	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-387	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-388	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-389	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-390	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-391	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-392	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-393	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-394	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-395	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-396	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-397	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-398	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-399	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-400	product	UPDATE	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-401	product	UPDATE	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-402	product	UPDATE	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 17:23:06.705619
-403	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	postgres	2025-12-08 17:23:06.705619
-404	product	UPDATE	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	postgres	2025-12-08 17:23:06.705619
-405	product	UPDATE	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	postgres	2025-12-08 17:23:06.705619
-406	refresh_tokens	DELETE	{"id": 90, "role": "admin", "token": "462baf2b63285c363b6d217eb1c9962adc2cb2495a269694c5a9691068b5abab", "username": "valentin_admin", "created_at": "2025-12-08T12:36:55.456698"}	\N	admin	2025-12-08 17:25:02.748657
-407	refresh_tokens	INSERT	\N	{"id": 91, "role": "admin", "token": "94191638876168d9c7aedb4d5d8c0769219ca41db4e06102d75ce16106e0c7ef", "username": "valentin_admin", "created_at": "2025-12-08T14:25:02.755384"}	admin	2025-12-08 17:25:02.755384
-408	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765203936575570958_product-placeholder.png", "id_producer": 20, "id_product_category": 3}	admin	2025-12-08 17:25:36.579025
-409	product	UPDATE	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "/static/products/1765205408580666042_9.avif", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:50:08.58171
+1274	refresh_tokens	DELETE	{"id": 294, "role": "manager", "token": "7d958e353ba2d58f47642ccce180af4350fef8015af291ffcf2295e101e9c270", "username": "anna_sokolova", "created_at": "2025-12-17T10:34:57.970164"}	\N	admin	2025-12-17 10:42:02.724612
+1275	refresh_tokens	INSERT	\N	{"id": 295, "role": "admin", "token": "1c04ee3c44d98930a16c00752b81a2b6ece3222569b7850fce16031a25b150ce", "username": "roman", "created_at": "2025-12-17T10:42:07.338403"}	admin	2025-12-17 10:42:07.338403
+1368	document	INSERT	\N	{"id": 20, "date": "2025-12-17", "id_employee": 2, "id_document_category": 3}	manager	2025-12-17 20:20:06.953566
+1369	document_content	INSERT	\N	{"id": 30, "id_batch": 12, "quantity": 100, "id_document": 20}	manager	2025-12-17 20:21:58.991941
+1370	batch	UPDATE	{"id": 12, "cost": 45, "created_at": "2025-12-17T19:53:27.255671", "id_product": 70, "expiration_date": "2035-12-17", "production_date": "2025-12-17"}	{"id": 12, "cost": 50, "created_at": "2025-12-17T19:53:27.255671", "id_product": 70, "expiration_date": "2035-12-17", "production_date": "2025-12-17"}	manager	2025-12-17 20:21:59.004898
+1372	document_content	INSERT	\N	{"id": 31, "id_batch": 12, "quantity": 32467, "id_document": 21}	manager	2025-12-17 20:24:05.902839
+1371	document	INSERT	\N	{"id": 21, "date": "2025-12-17", "id_employee": 2, "id_document_category": 2}	manager	2025-12-17 20:23:57.847855
+1290	refresh_tokens	INSERT	\N	{"id": 296, "role": "admin", "token": "f34bb06c9b51a5151a7e9dcf23998387addf4e6e92330f49c8a726ee3cbba202", "username": "roman", "created_at": "2025-12-17T11:46:08.955238"}	admin	2025-12-17 11:46:08.955238
+1373	refresh_tokens	INSERT	\N	{"id": 334, "role": "admin", "token": "2be0dde2f2cbba21224a38d67da91dd794d5cd0db45e10924078fe436953c551", "username": "roman", "created_at": "2025-12-17T20:39:59.84224"}	admin	2025-12-17 20:39:59.84224
+1291	refresh_tokens	DELETE	{"id": 296, "role": "admin", "token": "f34bb06c9b51a5151a7e9dcf23998387addf4e6e92330f49c8a726ee3cbba202", "username": "roman", "created_at": "2025-12-17T11:46:08.955238"}	\N	admin	2025-12-17 12:46:11.56546
+1292	refresh_tokens	INSERT	\N	{"id": 297, "role": "admin", "token": "62ddf251a2ce16fb97e865d1059d3f8d38f9636868a921eb8f3e55567c0aceee", "username": "roman", "created_at": "2025-12-17T12:46:11.574242"}	admin	2025-12-17 12:46:11.574242
+1293	refresh_tokens	DELETE	{"id": 297, "role": "admin", "token": "62ddf251a2ce16fb97e865d1059d3f8d38f9636868a921eb8f3e55567c0aceee", "username": "roman", "created_at": "2025-12-17T12:46:11.574242"}	\N	admin	2025-12-17 12:46:26.55477
+1374	document	DELETE	{"id": 21, "date": "2025-12-17", "id_employee": 2, "id_document_category": 2}	\N	admin	2025-12-17 20:40:09.666368
+1375	document_content	DELETE	{"id": 31, "id_batch": 12, "quantity": 32467, "id_document": 21}	\N	admin	2025-12-17 20:40:09.666368
+1294	refresh_tokens	DELETE	{"id": 286, "role": "admin", "token": "d3c9eed8183bf405befae63100d63c4deb5208600c4506c9d6d3392f2494e1ad", "username": "roman", "created_at": "2025-12-16T20:41:12.763096"}	\N	postgres	2025-12-17 12:59:07.470316
+1295	refresh_tokens	DELETE	{"id": 295, "role": "admin", "token": "1c04ee3c44d98930a16c00752b81a2b6ece3222569b7850fce16031a25b150ce", "username": "roman", "created_at": "2025-12-17T10:42:07.338403"}	\N	postgres	2025-12-17 12:59:09.696843
+1317	refresh_tokens	DELETE	{"id": 299, "role": "admin", "token": "6973563795ce417706763791ed766d38b30453071058faecd175ecdfef4cb268", "username": "roman", "created_at": "2025-12-17T13:03:22.144967"}	\N	postgres	2025-12-17 13:19:55.840765
+1318	refresh_tokens	DELETE	{"id": 300, "role": "admin", "token": "5f28641de8625f00b12aecd58083722779a897bd955d58eac998c347e501eb63", "username": "roman", "created_at": "2025-12-17T13:03:53.787962"}	\N	postgres	2025-12-17 13:19:55.840765
+1319	refresh_tokens	DELETE	{"id": 309, "role": "admin", "token": "ee0705e11653695b7f3d4794f079e8b683590207942ceaee1c966b76594e4035", "username": "roman", "created_at": "2025-12-17T13:18:35.900639"}	\N	postgres	2025-12-17 13:19:55.840765
+1326	refresh_tokens	DELETE	{"id": 312, "role": "admin", "token": "ae383d10173d10ecfce4ab883200c9a4a2772469d2ffd880bc15f9da81f46f15", "username": "roman", "created_at": "2025-12-17T14:26:52.151806"}	\N	postgres	2025-12-17 15:35:04.017121
+1376	refresh_tokens	INSERT	\N	{"id": 335, "role": "manager", "token": "eb67f4830d5ed751262a1c073dca1916ae198867a22a77d81630c038a84d21c8", "username": "anna_sokolova", "created_at": "2025-12-17T20:40:18.435497"}	admin	2025-12-17 20:40:18.435497
 597	refresh_tokens	INSERT	\N	{"id": 161, "role": "admin", "token": "43c31d509e0359bce2f9d52e7a17fdac43a29464181809727dc69b02567808e8", "username": "roman", "created_at": "2025-12-09T17:28:55.341515"}	admin	2025-12-09 20:28:55.341515
-410	product	UPDATE	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/1765205423056717632_10.webp", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:50:23.057518
-411	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205429991122927_11.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:50:29.99166
-412	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205429991122927_11.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205440110440418_11.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:50:40.11107
 860	document_content	DELETE	{"id": 17, "id_batch": 1, "quantity": 10, "id_document": 12}	\N	postgres	2025-12-14 09:43:53.443618
-413	product	UPDATE	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/1765205452018769299_12.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-08 17:50:52.019086
-414	product	UPDATE	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/1765205465161011013_13.jpg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:51:05.161558
-415	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205479544053381_14.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:51:19.545105
-416	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205479544053381_14.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205487200669926_15.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:51:27.201307
-417	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205487200669926_15.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205505533275379_16-.jpg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:51:45.533991
-418	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205505533275379_16-.jpg", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205524070403429_14.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:52:04.070957
-419	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/1765205530989364252_15.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:52:10.989805
-420	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/1765205538458021339_16-.jpg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:52:18.458462
-421	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/1765205549156924260_17.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:52:29.157203
-422	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/1765205562290618336_18.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-08 17:52:42.29117
-423	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/1765205573041308591_19.avif", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:52:53.041881
-460	refresh_tokens	DELETE	{"id": 92, "role": "admin", "token": "7f9886647cdfa4bdf84dd0954e92f457c03a8302a9c12772cb39932c088573eb", "username": "valentin_admin", "created_at": "2025-12-08T16:54:05.282923"}	\N	admin	2025-12-08 20:02:00.814436
-424	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/1765205584128660513_20.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:53:04.129114
-425	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/1765205595127459587_21.jpeg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:53:15.127741
-426	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/1765205605996546425_22.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-08 17:53:25.99684
-427	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/1765205618048903084_23.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:53:38.049306
-428	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765205628465314922_24.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:53:48.465809
-429	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/1765205640054667886_25.webp", "id_producer": 24, "id_product_category": 8}	admin	2025-12-08 17:54:00.055162
-469	refresh_tokens	INSERT	\N	{"id": 97, "role": "manager", "token": "cf949023c1695ebf656da3580d2b6c20662ca9db845c371b4fec80ae3e30b6ed", "username": "anna_sokolova", "created_at": "2025-12-09T11:42:34.342747"}	admin	2025-12-09 14:42:34.342747
-430	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/1765205655858996796_26.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:54:15.85945
-431	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/1765205673974680054_27.webp", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:54:33.975205
-432	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765205684816340587_28.webp", "id_producer": 19, "id_product_category": 1}	admin	2025-12-08 17:54:44.817134
-433	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/1765205696339956217_29.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:54:56.340262
-434	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/1765205708359142459_30.png", "id_producer": 20, "id_product_category": 3}	admin	2025-12-08 17:55:08.359932
-435	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765205719261295589_31.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:55:19.261824
-436	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765205719261295589_31.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765205722212345257_31.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:55:22.212856
-437	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/1765205734811023180_32.webp", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:55:34.811514
-438	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/1765205761391543761_34.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:56:01.391891
-439	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/1765205773609017920_35.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:56:13.609364
-440	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/1765205792574984887_38.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:56:32.575405
-441	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/1765205804730533337_39.jpg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-08 17:56:44.731434
-442	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/1765205815959577467_40.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:56:55.960041
-443	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/1765205827626538500_41.jpeg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:57:07.626784
-444	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/1765205850908937761_43.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:57:30.909499
-445	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/1765205864107465878_44.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:57:44.107855
-446	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/1765205876341915467_45.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:57:56.342985
-447	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/1765205890486289126_46.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-08 17:58:10.486865
-448	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765205904948249133_47.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-08 17:58:24.948859
-449	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/placeholder.png", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/1765205926391147379_48.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-08 17:58:46.392088
-450	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765205936483095342_49.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:58:56.483416
-451	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765205936483095342_49.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765205938523145552_49.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-08 17:58:58.523588
-452	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/1765205949295874542_50.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-08 17:59:09.296493
-453	product	UPDATE	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/1765205958320515130_51.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:59:18.321164
-454	product	UPDATE	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/1765205958320515130_51.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/1765205959722191006_51.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-08 17:59:19.722565
-455	product	UPDATE	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 2}	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "/static/products/1765205970189001719_52.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-08 17:59:30.189538
-456	product	UPDATE	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/1765205980936305918_53.jpeg", "id_producer": 20, "id_product_category": 3}	admin	2025-12-08 17:59:40.936734
-457	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765205992498019007_54.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-08 17:59:52.498468
-458	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765203936575570958_product-placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	postgres	2025-12-08 18:01:36.926421
-459	refresh_tokens	INSERT	\N	{"id": 92, "role": "admin", "token": "7f9886647cdfa4bdf84dd0954e92f457c03a8302a9c12772cb39932c088573eb", "username": "valentin_admin", "created_at": "2025-12-08T16:54:05.282923"}	admin	2025-12-08 19:54:05.282923
-461	refresh_tokens	INSERT	\N	{"id": 93, "role": "admin", "token": "e6804e775a2e5536837f154954002d97d9bcf26f8894e5c39e7a865cc16539f4", "username": "valentin_admin", "created_at": "2025-12-08T17:02:00.817486"}	admin	2025-12-08 20:02:00.817486
-462	refresh_tokens	DELETE	{"id": 91, "role": "admin", "token": "94191638876168d9c7aedb4d5d8c0769219ca41db4e06102d75ce16106e0c7ef", "username": "valentin_admin", "created_at": "2025-12-08T14:25:02.755384"}	\N	postgres	2025-12-09 13:24:46.141075
-463	refresh_tokens	DELETE	{"id": 93, "role": "admin", "token": "e6804e775a2e5536837f154954002d97d9bcf26f8894e5c39e7a865cc16539f4", "username": "valentin_admin", "created_at": "2025-12-08T17:02:00.817486"}	\N	admin	2025-12-09 13:24:52.576118
-464	refresh_tokens	INSERT	\N	{"id": 94, "role": "admin", "token": "3cab747bbc116fa2785683b39e21749b294e0f92a206b969b64dde95c36f7650", "username": "valentin_admin", "created_at": "2025-12-09T10:24:52.580623"}	admin	2025-12-09 13:24:52.580623
-465	refresh_tokens	INSERT	\N	{"id": 95, "role": "manager", "token": "ada97ea2f4660b2a007194ace869f8dad9757a5274947c81fd70eccd342b8bb7", "username": "manager_login", "created_at": "2025-12-09T10:51:34.674601"}	admin	2025-12-09 13:51:34.674601
-713	product	INSERT	\N	{"id": 60, "name": "тест", "image_url": "", "id_producer": 3, "id_product_category": 2}	admin	2025-12-10 15:55:53.9862
-466	sys_user	UPDATE	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$rgYYBEQoDW9f3dxPAgweruahkWXVL/EaX85oJaTY.SxpLHVhrRWsC"}	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$WbkGixzo3Ytz4sbIJeoWQub6aw9l1ftilNY7jUR/jwqzgNTcQ3XpW"}	postgres	2025-12-09 13:55:17.768599
-467	sys_user	UPDATE	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$WbkGixzo3Ytz4sbIJeoWQub6aw9l1ftilNY7jUR/jwqzgNTcQ3XpW"}	{"id": 2, "login": "anna_sokolova", "id_role": 2, "id_employee": 2, "password_hash": "$2a$10$ONDNHqgfrEHpioEyaVSDxOG3icMHs3nEsqP1TpzC9jYgB142ezb26"}	postgres	2025-12-09 13:55:56.899788
-468	refresh_tokens	INSERT	\N	{"id": 96, "role": "manager", "token": "1c5e24a97707e3e50ebe82592562c8ba4192e885a32afd5450a80b0aff632465", "username": "anna_sokolova", "created_at": "2025-12-09T10:56:05.522899"}	admin	2025-12-09 13:56:05.522899
-470	refresh_tokens	INSERT	\N	{"id": 98, "role": "manager", "token": "9c48d048079056764fc1f6d57477947f60c2be83ca554f2f4575ea7d1d086c64", "username": "anna_sokolova", "created_at": "2025-12-09T11:44:12.473663"}	admin	2025-12-09 14:44:12.473663
-471	refresh_tokens	INSERT	\N	{"id": 99, "role": "admin", "token": "63391c417deb86b437ff30b682adf65cb0c4ef9d8aa79df04ca882d255cf0ff7", "username": "valentin_admin", "created_at": "2025-12-09T11:46:59.050982"}	admin	2025-12-09 14:46:59.050982
-472	refresh_tokens	INSERT	\N	{"id": 100, "role": "admin", "token": "202081708e02bb629986713ba8b726bdb3e686c0f33ad2b8a0832ea0e2cd6bd0", "username": "valentin_admin", "created_at": "2025-12-09T11:49:10.804409"}	admin	2025-12-09 14:49:10.804409
-473	refresh_tokens	INSERT	\N	{"id": 101, "role": "admin", "token": "6302d72a31c382137cb182c22cae6acac0c40df1b375393c5f6c2bb6bbac63dd", "username": "valentin_admin", "created_at": "2025-12-09T11:49:36.539889"}	admin	2025-12-09 14:49:36.539889
-474	refresh_tokens	INSERT	\N	{"id": 102, "role": "admin", "token": "72f8b205fc42f51aa7b0ecbc62e5e9e95ab92769283d268b0fd2b0a2e7a28270", "username": "valentin_admin", "created_at": "2025-12-09T11:51:27.215036"}	admin	2025-12-09 14:51:27.215036
-475	refresh_tokens	INSERT	\N	{"id": 103, "role": "manager", "token": "d72b1d7c24f17d0fa3b0d8ed1ba31f9ded7973af026d4e9a98e8b075750d12c7", "username": "anna_sokolova", "created_at": "2025-12-09T12:02:01.532397"}	admin	2025-12-09 15:02:01.532397
-476	refresh_tokens	DELETE	{"id": 103, "role": "manager", "token": "d72b1d7c24f17d0fa3b0d8ed1ba31f9ded7973af026d4e9a98e8b075750d12c7", "username": "anna_sokolova", "created_at": "2025-12-09T12:02:01.532397"}	\N	admin	2025-12-09 15:02:54.89841
-477	refresh_tokens	INSERT	\N	{"id": 104, "role": "admin", "token": "4bfa627c579dee54aab5d784c0297a7cff8364b351279ae722deb9499bcc2983", "username": "valentin_admin", "created_at": "2025-12-09T12:05:21.759537"}	admin	2025-12-09 15:05:21.759537
-478	refresh_tokens	DELETE	{"id": 104, "role": "admin", "token": "4bfa627c579dee54aab5d784c0297a7cff8364b351279ae722deb9499bcc2983", "username": "valentin_admin", "created_at": "2025-12-09T12:05:21.759537"}	\N	admin	2025-12-09 15:19:37.741917
-479	refresh_tokens	INSERT	\N	{"id": 105, "role": "admin", "token": "7cd7dfd7114c1bb8ce365fb1a04769a8ca3b38b020770d832307a9465d2ca75b", "username": "valentin_admin", "created_at": "2025-12-09T12:19:37.752407"}	admin	2025-12-09 15:19:37.752407
-480	refresh_tokens	INSERT	\N	{"id": 106, "role": "manager", "token": "006c03fdfd5d3490ddd3bb9b995e0c30cb4df7d68da17b316cd074c7d4af579f", "username": "anna_sokolova", "created_at": "2025-12-09T12:22:42.57126"}	admin	2025-12-09 15:22:42.57126
-481	refresh_tokens	INSERT	\N	{"id": 107, "role": "manager", "token": "210e4eadc172f2d73ae69358b5ba22d74f2889cae684cc00af0c4b9a6ac4e979", "username": "anna_sokolova", "created_at": "2025-12-09T12:23:39.427171"}	admin	2025-12-09 15:23:39.427171
-482	refresh_tokens	DELETE	{"id": 106, "role": "manager", "token": "006c03fdfd5d3490ddd3bb9b995e0c30cb4df7d68da17b316cd074c7d4af579f", "username": "anna_sokolova", "created_at": "2025-12-09T12:22:42.57126"}	\N	admin	2025-12-09 15:24:01.820721
-483	refresh_tokens	DELETE	{"id": 107, "role": "manager", "token": "210e4eadc172f2d73ae69358b5ba22d74f2889cae684cc00af0c4b9a6ac4e979", "username": "anna_sokolova", "created_at": "2025-12-09T12:23:39.427171"}	\N	admin	2025-12-09 15:24:04.000472
-484	refresh_tokens	DELETE	{"id": 105, "role": "admin", "token": "7cd7dfd7114c1bb8ce365fb1a04769a8ca3b38b020770d832307a9465d2ca75b", "username": "valentin_admin", "created_at": "2025-12-09T12:19:37.752407"}	\N	admin	2025-12-09 15:24:05.868972
-485	refresh_tokens	INSERT	\N	{"id": 108, "role": "manager", "token": "57a748747bc4003b00ad09ba7bb0f3eadc6bcf9d8a660c1f7491499a20e9ba5a", "username": "anna_sokolova", "created_at": "2025-12-09T12:24:33.975463"}	admin	2025-12-09 15:24:33.975463
-486	refresh_tokens	DELETE	{"id": 108, "role": "manager", "token": "57a748747bc4003b00ad09ba7bb0f3eadc6bcf9d8a660c1f7491499a20e9ba5a", "username": "anna_sokolova", "created_at": "2025-12-09T12:24:33.975463"}	\N	admin	2025-12-09 15:24:56.633213
-487	refresh_tokens	INSERT	\N	{"id": 109, "role": "manager", "token": "43c4ec5f0188fc00c45ca15cef292bfc8aef26e2ffdf1522499c748f9d9fdc50", "username": "anna_sokolova", "created_at": "2025-12-09T12:25:19.624641"}	admin	2025-12-09 15:25:19.624641
-488	refresh_tokens	INSERT	\N	{"id": 110, "role": "manager", "token": "0e718980fad4114e75fa7e7016504dc15780845a011bc094d54526c5b81533d5", "username": "anna_sokolova", "created_at": "2025-12-09T12:26:50.795891"}	admin	2025-12-09 15:26:50.795891
-489	refresh_tokens	DELETE	{"id": 109, "role": "manager", "token": "43c4ec5f0188fc00c45ca15cef292bfc8aef26e2ffdf1522499c748f9d9fdc50", "username": "anna_sokolova", "created_at": "2025-12-09T12:25:19.624641"}	\N	admin	2025-12-09 15:26:56.24697
-490	refresh_tokens	INSERT	\N	{"id": 111, "role": "manager", "token": "1c2acd335ae39b160a9d8c78dc566fb2bee05f85c4a50d069fd8f6a8abbd80fd", "username": "anna_sokolova", "created_at": "2025-12-09T12:29:48.768848"}	admin	2025-12-09 15:29:48.768848
-491	refresh_tokens	DELETE	{"id": 111, "role": "manager", "token": "1c2acd335ae39b160a9d8c78dc566fb2bee05f85c4a50d069fd8f6a8abbd80fd", "username": "anna_sokolova", "created_at": "2025-12-09T12:29:48.768848"}	\N	admin	2025-12-09 15:30:08.626854
-492	refresh_tokens	DELETE	{"id": 110, "role": "manager", "token": "0e718980fad4114e75fa7e7016504dc15780845a011bc094d54526c5b81533d5", "username": "anna_sokolova", "created_at": "2025-12-09T12:26:50.795891"}	\N	admin	2025-12-09 15:34:33.060415
-493	refresh_tokens	INSERT	\N	{"id": 112, "role": "manager", "token": "a2fa5fa50c1aff9c2bbf7adec5674e5f1f47acd4bd5df5d2140dd9b6d93239fa", "username": "anna_sokolova", "created_at": "2025-12-09T12:34:45.346962"}	admin	2025-12-09 15:34:45.346962
-494	refresh_tokens	DELETE	{"id": 112, "role": "manager", "token": "a2fa5fa50c1aff9c2bbf7adec5674e5f1f47acd4bd5df5d2140dd9b6d93239fa", "username": "anna_sokolova", "created_at": "2025-12-09T12:34:45.346962"}	\N	admin	2025-12-09 15:36:03.654057
-496	refresh_tokens	DELETE	{"id": 113, "role": "manager", "token": "595cb504cdc827e0b54a79c43363c6a5e36fc89ff4a3380c5e4f4a7061f8eaf2", "username": "anna_sokolova", "created_at": "2025-12-09T12:36:19.952073"}	\N	admin	2025-12-09 15:38:39.59039
-497	refresh_tokens	INSERT	\N	{"id": 114, "role": "manager", "token": "1a7c6e8535e3827b7f532a45145bfd5af22e4b172b1e1e8d5adfb85b2a171943", "username": "anna_sokolova", "created_at": "2025-12-09T12:38:58.255596"}	admin	2025-12-09 15:38:58.255596
-498	refresh_tokens	INSERT	\N	{"id": 115, "role": "manager", "token": "420acc15ec8186fbd14fdf36da3c45d00d8159533a33577ff4df6beae6970d11", "username": "anna_sokolova", "created_at": "2025-12-09T12:42:27.696936"}	admin	2025-12-09 15:42:27.696936
-499	refresh_tokens	DELETE	{"id": 114, "role": "manager", "token": "1a7c6e8535e3827b7f532a45145bfd5af22e4b172b1e1e8d5adfb85b2a171943", "username": "anna_sokolova", "created_at": "2025-12-09T12:38:58.255596"}	\N	admin	2025-12-09 15:43:32.264007
+1296	refresh_tokens	INSERT	\N	{"id": 298, "role": "admin", "token": "4dfc38ed135d1558bc9f3e4eabdac4af436afdcf9cf56a497db827ca3a222569", "username": "roman", "created_at": "2025-12-17T13:03:11.645138"}	admin	2025-12-17 13:03:11.645138
+1297	refresh_tokens	DELETE	{"id": 298, "role": "admin", "token": "4dfc38ed135d1558bc9f3e4eabdac4af436afdcf9cf56a497db827ca3a222569", "username": "roman", "created_at": "2025-12-17T13:03:11.645138"}	\N	admin	2025-12-17 13:03:22.143324
+1298	refresh_tokens	INSERT	\N	{"id": 299, "role": "admin", "token": "6973563795ce417706763791ed766d38b30453071058faecd175ecdfef4cb268", "username": "roman", "created_at": "2025-12-17T13:03:22.144967"}	admin	2025-12-17 13:03:22.144967
+1299	refresh_tokens	INSERT	\N	{"id": 300, "role": "admin", "token": "5f28641de8625f00b12aecd58083722779a897bd955d58eac998c347e501eb63", "username": "roman", "created_at": "2025-12-17T13:03:53.787962"}	admin	2025-12-17 13:03:53.787962
+1377	document	INSERT	\N	{"id": 22, "date": "2025-12-17", "id_employee": 2, "id_document_category": 2}	manager	2025-12-17 20:41:44.601251
+1300	refresh_tokens	INSERT	\N	{"id": 301, "role": "admin", "token": "b7b16b2feed019eee53e43b203d6876d2eab800d9542734bf4d8226c0a4db54e", "username": "roman", "created_at": "2025-12-17T13:09:18.085891"}	admin	2025-12-17 13:09:18.085891
+1301	refresh_tokens	DELETE	{"id": 301, "role": "admin", "token": "b7b16b2feed019eee53e43b203d6876d2eab800d9542734bf4d8226c0a4db54e", "username": "roman", "created_at": "2025-12-17T13:09:18.085891"}	\N	admin	2025-12-17 13:09:18.120887
+1378	document_content	INSERT	\N	{"id": 32, "id_batch": 12, "quantity": 29, "id_document": 22}	manager	2025-12-17 20:47:26.16844
+1302	refresh_tokens	INSERT	\N	{"id": 302, "role": "admin", "token": "3300892c0f7e6a501803b7377f7c91fa810e0ace3867b77f6736b6454632026b", "username": "roman", "created_at": "2025-12-17T13:10:49.785765"}	admin	2025-12-17 13:10:49.785765
+1303	refresh_tokens	DELETE	{"id": 302, "role": "admin", "token": "3300892c0f7e6a501803b7377f7c91fa810e0ace3867b77f6736b6454632026b", "username": "roman", "created_at": "2025-12-17T13:10:49.785765"}	\N	admin	2025-12-17 13:10:49.834797
+1304	refresh_tokens	INSERT	\N	{"id": 303, "role": "admin", "token": "44e8a024cba028b192282e2ee6904743bfc9f9714a4617cff4cf954834f0c40d", "username": "roman", "created_at": "2025-12-17T13:12:20.5392"}	admin	2025-12-17 13:12:20.5392
 500	refresh_tokens	DELETE	{"id": 115, "role": "manager", "token": "420acc15ec8186fbd14fdf36da3c45d00d8159533a33577ff4df6beae6970d11", "username": "anna_sokolova", "created_at": "2025-12-09T12:42:27.696936"}	\N	admin	2025-12-09 15:43:34.088489
 501	refresh_tokens	INSERT	\N	{"id": 116, "role": "manager", "token": "39d923c267b97c8fe9a839b6bff815cccf89af1c2a729ea81d8b430d6a226b07", "username": "anna_sokolova", "created_at": "2025-12-09T12:43:40.456157"}	admin	2025-12-09 15:43:40.456157
 502	refresh_tokens	DELETE	{"id": 116, "role": "manager", "token": "39d923c267b97c8fe9a839b6bff815cccf89af1c2a729ea81d8b430d6a226b07", "username": "anna_sokolova", "created_at": "2025-12-09T12:43:40.456157"}	\N	admin	2025-12-09 15:44:41.165922
@@ -1847,7 +1499,7 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 594	refresh_tokens	INSERT	\N	{"id": 160, "role": "admin", "token": "019306bb2eecfcc2649d38e56be0bde178e2bbeac0ed741ca254e885bd7807a4", "username": "roman", "created_at": "2025-12-09T17:22:55.367552"}	admin	2025-12-09 20:22:55.367552
 595	refresh_tokens	DELETE	{"id": 159, "role": "admin", "token": "67af4f870982ff5e27d879bd7e78a6fd2593cfbdcaef8c419405283fd2beb711", "username": "roman", "created_at": "2025-12-09T17:22:16.662421"}	\N	postgres	2025-12-09 20:28:09.679727
 596	refresh_tokens	DELETE	{"id": 160, "role": "admin", "token": "019306bb2eecfcc2649d38e56be0bde178e2bbeac0ed741ca254e885bd7807a4", "username": "roman", "created_at": "2025-12-09T17:22:55.367552"}	\N	admin	2025-12-09 20:28:55.31882
-714	product	DELETE	{"id": 59, "name": "тест", "image_url": "", "id_producer": 3, "id_product_category": 2}	\N	postgres	2025-12-10 15:56:25.919956
+1305	refresh_tokens	DELETE	{"id": 303, "role": "admin", "token": "44e8a024cba028b192282e2ee6904743bfc9f9714a4617cff4cf954834f0c40d", "username": "roman", "created_at": "2025-12-17T13:12:20.5392"}	\N	admin	2025-12-17 13:12:20.608132
 598	batch	UPDATE	{"id": 1, "cost": 125500, "created_at": "2025-10-15T08:39:40.31846", "id_product": 1, "expiration_date": "2034-01-15", "production_date": "2024-01-15"}	{"id": 1, "cost": 125500, "created_at": "2025-10-15T08:39:40.31846", "id_product": 1, "expiration_date": "2024-01-15", "production_date": "2024-01-15"}	postgres	2025-12-09 20:41:22.216215
 599	refresh_tokens	INSERT	\N	{"id": 162, "role": "manager", "token": "aeddb994277e010f0a0059ce9edb5ee4bf48570bff564bb2d77b0dda6afc55c5", "username": "anna_sokolova", "created_at": "2025-12-09T17:47:26.57573"}	admin	2025-12-09 20:47:26.57573
 600	refresh_tokens	DELETE	{"id": 162, "role": "manager", "token": "aeddb994277e010f0a0059ce9edb5ee4bf48570bff564bb2d77b0dda6afc55c5", "username": "anna_sokolova", "created_at": "2025-12-09T17:47:26.57573"}	\N	admin	2025-12-10 07:47:51.581666
@@ -1882,13 +1534,8 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 629	refresh_tokens	DELETE	{"id": 173, "role": "admin", "token": "d83c5d2c3155982d3f1f92b676b94edb84a06ab1e07078b4cd50d72aab3d9478", "username": "artem_volkov", "created_at": "2025-12-10T07:07:47.753939"}	\N	admin	2025-12-10 11:07:16.619152
 861	document_content	INSERT	\N	{"id": 18, "id_batch": 1, "quantity": 10, "id_document": 12}	admin	2025-12-14 09:44:31.38504
 630	refresh_tokens	INSERT	\N	{"id": 178, "role": "admin", "token": "db94695ac58c98bda2a0b6ac2090df0cdf986fb771bf4046c593dd41d2c0c525", "username": "artem_volkov", "created_at": "2025-12-10T08:07:16.626705"}	admin	2025-12-10 11:07:16.626705
-631	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/placeholder.png", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765354206743876625_washing_machine.jpeg", "id_producer": 20, "id_product_category": 3}	admin	2025-12-10 11:10:06.747938
-632	product	UPDATE	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/placeholder.png", "id_producer": 19, "id_product_category": 1}	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/1765354277653639797_7-.webp", "id_producer": 19, "id_product_category": 1}	admin	2025-12-10 11:11:17.655518
-633	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/1765354399815235298_33.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-10 11:13:19.817225
-634	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/1765354467797030094_42.webp", "id_producer": 25, "id_product_category": 2}	admin	2025-12-10 11:14:27.798408
-635	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/placeholder.png", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/1765354505917253083_36.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-10 11:15:05.917799
-636	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765354556503655135_36.jpg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-10 11:15:56.506305
-637	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765354556503655135_36.jpg", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765354561164319012_37.webp", "id_producer": 21, "id_product_category": 8}	admin	2025-12-10 11:16:01.165523
+1306	refresh_tokens	INSERT	\N	{"id": 304, "role": "admin", "token": "5a9ff1fc3872f8049fdac57102339d1aa02a0ab9e5cd5db0c0020f774b6b9d66", "username": "roman", "created_at": "2025-12-17T13:13:47.791427"}	admin	2025-12-17 13:13:47.791427
+1309	refresh_tokens	DELETE	{"id": 305, "role": "admin", "token": "99ddc0c6beda7d90aaa05fbae0359bb1c0737eba291141541d6622979f61711a", "username": "roman", "created_at": "2025-12-17T13:14:04.432"}	\N	admin	2025-12-17 13:14:47.726096
 638	refresh_tokens	DELETE	{"id": 177, "role": "admin", "token": "f203907549a2e3319ebda42af8b66dc0ea27cafa6eaa470da1e7a07e6b61c702", "username": "roman", "created_at": "2025-12-10T07:21:26.578641"}	\N	admin	2025-12-10 11:16:41.541481
 639	refresh_tokens	INSERT	\N	{"id": 179, "role": "manager", "token": "9a6d99a510bdf6f3a7c93cc27586ad4315c3424782510330a66bd9344c881fd9", "username": "anna_sokolova", "created_at": "2025-12-10T08:16:49.551471"}	admin	2025-12-10 11:16:49.551471
 640	refresh_tokens	DELETE	{"id": 179, "role": "manager", "token": "9a6d99a510bdf6f3a7c93cc27586ad4315c3424782510330a66bd9344c881fd9", "username": "anna_sokolova", "created_at": "2025-12-10T08:16:49.551471"}	\N	admin	2025-12-10 11:25:48.651618
@@ -1905,7 +1552,6 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 651	refresh_tokens	INSERT	\N	{"id": 183, "role": "admin", "token": "d3029073b5bdd969dace00795bf615276e4f335c8ab493d9a62cd245f471187d", "username": "roman", "created_at": "2025-12-10T09:21:34.007808"}	admin	2025-12-10 12:21:34.007808
 652	sys_user	DELETE	{"id": 8, "login": "рома", "id_role": 1, "id_employee": 11, "password_hash": "$2a$10$D34u6E7wlrn3V4vgWC73Tuwa.spqssMjSRSXxjP9tOMRrVtaV9F.W"}	\N	admin	2025-12-10 12:21:42.387522
 653	sys_user	DELETE	{"id": 4, "login": "manager_login", "id_role": 2, "id_employee": 4, "password_hash": "$2a$10$Y5LoyZuEZ0j/GMkOtP6j3et/Ir8BBkMIjnIuJdHZ3VFT7ioiEhmbu"}	\N	admin	2025-12-10 12:26:57.530247
-715	product	DELETE	{"id": 60, "name": "тест", "image_url": "", "id_producer": 3, "id_product_category": 2}	\N	postgres	2025-12-10 15:56:28.190415
 659	refresh_tokens	DELETE	{"id": 185, "role": "manager", "token": "fc9bd9901206160d89f64a4f20687598befe31e9e5c79183cb3ff66af7e54ce1", "username": "anna_sokolova", "created_at": "2025-12-10T09:34:37.725926"}	\N	admin	2025-12-10 12:34:49.102708
 796	refresh_tokens	DELETE	{"id": 213, "role": "admin", "token": "8832c2a3675e55f9d61fcc23ac850579bad8e936c21a87fae14db6affd9df26f", "username": "roman", "created_at": "2025-12-10T19:41:05.045515"}	\N	admin	2025-12-10 19:54:23.808705
 660	refresh_tokens	INSERT	\N	{"id": 186, "role": "moderator", "token": "d8aa3644d12310df490d25020b279c1f7e8f919d6b15cf1f5eac912b6eb2e75c", "username": "moderator_login", "created_at": "2025-12-10T09:34:59.826734"}	admin	2025-12-10 12:34:59.826734
@@ -1956,45 +1602,22 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 707	refresh_tokens	INSERT	\N	{"id": 199, "role": "admin", "token": "0e9bae1bacdd4c705a529e7c202c56e2f072f4dd5c768d6743ba3f8e1ddc6108", "username": "artem_volkov", "created_at": "2025-12-10T12:04:50.5637"}	admin	2025-12-10 15:04:50.5637
 708	refresh_tokens	DELETE	{"id": 198, "role": "admin", "token": "def2e6b322bee4116cb407d5062a10f588c3da0feb927d2d31c98bc9aacbd758", "username": "roman", "created_at": "2025-12-10T11:54:06.583138"}	\N	admin	2025-12-10 15:54:30.02306
 709	refresh_tokens	INSERT	\N	{"id": 200, "role": "admin", "token": "f586dcf7f2e3e55923bf03c439e84982bbe607509a27ef666df1cce238592bfc", "username": "roman", "created_at": "2025-12-10T12:54:30.047903"}	admin	2025-12-10 15:54:30.047903
-710	product	INSERT	\N	{"id": 57, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 15:54:30.065446
-711	product	INSERT	\N	{"id": 58, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 15:54:45.204504
-712	product	INSERT	\N	{"id": 59, "name": "тест", "image_url": "", "id_producer": 3, "id_product_category": 2}	admin	2025-12-10 15:55:42.732558
-719	product	UPDATE	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 15:58:37.197515
-720	product	UPDATE	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 16:02:43.689711
-721	product	UPDATE	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 16:03:57.165964
-722	product	UPDATE	{"id": 61, "name": "тест", "image_url": "", "id_producer": 2, "id_product_category": 1}	{"id": 61, "name": "тест", "image_url": "/static/products/1765371837304980715_ChatGPT Image 1 дек. 2025 г., 20_44_55.png", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 16:03:57.311062
-723	product	INSERT	\N	{"id": 62, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:04:40.895658
-724	product	UPDATE	{"id": 62, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 3}	{"id": 62, "name": "test", "image_url": "/static/products/1765371880975374596_photo_2025-12-01 19.13.31.jpeg", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:04:40.978631
-725	product	UPDATE	{"id": 62, "name": "test", "image_url": "/static/products/1765371880975374596_photo_2025-12-01 19.13.31.jpeg", "id_producer": 21, "id_product_category": 3}	{"id": 62, "name": "tes", "image_url": "", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:04:48.282274
-726	product	UPDATE	{"id": 62, "name": "tes", "image_url": "", "id_producer": 21, "id_product_category": 3}	{"id": 62, "name": "tes", "image_url": "", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:05:14.001898
-727	product	UPDATE	{"id": 62, "name": "tes", "image_url": "", "id_producer": 21, "id_product_category": 3}	{"id": 62, "name": "tes", "image_url": "/static/products/1765371914141222875_placeholder.png", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:05:14.151675
+1307	refresh_tokens	DELETE	{"id": 304, "role": "admin", "token": "5a9ff1fc3872f8049fdac57102339d1aa02a0ab9e5cd5db0c0020f774b6b9d66", "username": "roman", "created_at": "2025-12-17T13:13:47.791427"}	\N	admin	2025-12-17 13:14:04.406544
+1308	refresh_tokens	INSERT	\N	{"id": 305, "role": "admin", "token": "99ddc0c6beda7d90aaa05fbae0359bb1c0737eba291141541d6622979f61711a", "username": "roman", "created_at": "2025-12-17T13:14:04.432"}	admin	2025-12-17 13:14:04.432
 797	refresh_tokens	INSERT	\N	{"id": 214, "role": "moderator", "token": "5fcf6d8687bef4a39aa9a45600f67b217aa242d8d4b48dcc3491edb08df78a6b", "username": "moderator_login", "created_at": "2025-12-10T19:54:30.673316"}	admin	2025-12-10 19:54:30.673316
-728	product	UPDATE	{"id": 62, "name": "tes", "image_url": "/static/products/1765371914141222875_placeholder.png", "id_producer": 21, "id_product_category": 3}	{"id": 62, "name": "te", "image_url": "", "id_producer": 21, "id_product_category": 3}	admin	2025-12-10 16:05:18.476539
-729	product	DELETE	{"id": 62, "name": "te", "image_url": "", "id_producer": 21, "id_product_category": 3}	\N	admin	2025-12-10 16:10:47.103671
-730	product	DELETE	{"id": 61, "name": "тест", "image_url": "/static/products/1765371837304980715_ChatGPT Image 1 дек. 2025 г., 20_44_55.png", "id_producer": 2, "id_product_category": 1}	\N	admin	2025-12-10 16:11:54.779179
-731	product	INSERT	\N	{"id": 63, "name": "тест", "image_url": "/static/products/placeholder.png", "id_producer": 1, "id_product_category": 1}	admin	2025-12-10 16:12:08.625531
-732	product	UPDATE	{"id": 63, "name": "тест", "image_url": "/static/products/placeholder.png", "id_producer": 1, "id_product_category": 1}	{"id": 63, "name": "тест", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 1, "id_product_category": 1}	admin	2025-12-10 16:12:08.74213
-733	product	UPDATE	{"id": 63, "name": "тест", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 1, "id_product_category": 1}	{"id": 63, "name": "тес", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 1, "id_product_category": 1}	admin	2025-12-10 16:12:13.65638
-734	product	UPDATE	{"id": 63, "name": "тес", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 1, "id_product_category": 1}	{"id": 63, "name": "тес", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 2, "id_product_category": 1}	admin	2025-12-10 16:12:17.939922
-735	product	DELETE	{"id": 63, "name": "тес", "image_url": "/static/products/1765372328739177387_photo_2025-11-28 22.11.30.jpeg", "id_producer": 2, "id_product_category": 1}	\N	admin	2025-12-10 16:12:21.133785
-736	product	INSERT	\N	{"id": 64, "name": "те", "image_url": "/static/products/placeholder.png", "id_producer": 5, "id_product_category": 2}	admin	2025-12-10 16:12:40.344099
-737	product	DELETE	{"id": 64, "name": "те", "image_url": "/static/products/placeholder.png", "id_producer": 5, "id_product_category": 2}	\N	admin	2025-12-10 16:12:43.92176
+1310	refresh_tokens	INSERT	\N	{"id": 306, "role": "admin", "token": "e7b49c23b1613fab8a5454da2d49c6256004012f245fe09f487b038f18e0bce0", "username": "roman", "created_at": "2025-12-17T13:15:01.550886"}	admin	2025-12-17 13:15:01.550886
 738	refresh_tokens	DELETE	{"id": 200, "role": "admin", "token": "f586dcf7f2e3e55923bf03c439e84982bbe607509a27ef666df1cce238592bfc", "username": "roman", "created_at": "2025-12-10T12:54:30.047903"}	\N	admin	2025-12-10 16:22:16.959593
 739	refresh_tokens	INSERT	\N	{"id": 201, "role": "manager", "token": "4a57c27bea5495e62cb3be3f8dda576706c5db9c0c668fd50d4fa7d3ddb8e0fe", "username": "anna_sokolova", "created_at": "2025-12-10T13:22:23.466726"}	admin	2025-12-10 16:22:23.466726
 740	refresh_tokens	DELETE	{"id": 201, "role": "manager", "token": "4a57c27bea5495e62cb3be3f8dda576706c5db9c0c668fd50d4fa7d3ddb8e0fe", "username": "anna_sokolova", "created_at": "2025-12-10T13:22:23.466726"}	\N	admin	2025-12-10 16:23:12.551108
 741	refresh_tokens	INSERT	\N	{"id": 202, "role": "moderator", "token": "ad0c8ce65da7299d59769e98dec9daa5e1b91d04aea060ba368f8f686d0cc4c4", "username": "moderator_login", "created_at": "2025-12-10T13:23:29.447706"}	admin	2025-12-10 16:23:29.447706
 742	refresh_tokens	DELETE	{"id": 202, "role": "moderator", "token": "ad0c8ce65da7299d59769e98dec9daa5e1b91d04aea060ba368f8f686d0cc4c4", "username": "moderator_login", "created_at": "2025-12-10T13:23:29.447706"}	\N	admin	2025-12-10 16:24:04.344023
 743	refresh_tokens	INSERT	\N	{"id": 203, "role": "admin", "token": "598e6a2f016fffe4094993aad1207027e87bdede47d2f79e0dafb4859f57b21e", "username": "roman", "created_at": "2025-12-10T13:24:08.564651"}	admin	2025-12-10 16:24:08.564651
-744	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765354206743876625_washing_machine.jpeg", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	admin	2025-12-10 16:27:03.963448
-745	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765373224025730926_8.jpeg", "id_producer": 20, "id_product_category": 3}	admin	2025-12-10 16:27:04.09224
 748	refresh_tokens	DELETE	{"id": 199, "role": "admin", "token": "0e9bae1bacdd4c705a529e7c202c56e2f072f4dd5c768d6743ba3f8e1ddc6108", "username": "artem_volkov", "created_at": "2025-12-10T12:04:50.5637"}	\N	admin	2025-12-10 16:44:46.782929
 749	refresh_tokens	INSERT	\N	{"id": 204, "role": "admin", "token": "85516cd64f8aa03b58757e5278c437d23604ccb86b06031a66152a9e53fee6d6", "username": "artem_volkov", "created_at": "2025-12-10T16:44:46.78871"}	admin	2025-12-10 16:44:46.78871
 750	product_category	INSERT	\N	{"id": 10, "name": "тест"}	admin	2025-12-10 16:52:44.523289
 751	product_category	UPDATE	{"id": 10, "name": "тест"}	{"id": 10, "name": "тес"}	admin	2025-12-10 16:53:53.871093
 752	product_category	DELETE	{"id": 10, "name": "тес"}	\N	admin	2025-12-10 16:53:57.537549
 753	product_category	INSERT	\N	{"id": 11, "name": "test"}	admin	2025-12-10 16:54:07.809085
-754	product	INSERT	\N	{"id": 65, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 2, "id_product_category": 11}	admin	2025-12-10 16:54:17.651653
-755	product	DELETE	{"id": 65, "name": "test", "image_url": "/static/products/placeholder.png", "id_producer": 2, "id_product_category": 11}	\N	admin	2025-12-10 16:54:37.285683
 756	product_category	DELETE	{"id": 11, "name": "test"}	\N	admin	2025-12-10 16:54:45.682839
 757	employee	UPDATE	{"id": 14, "inn": "111111111112", "surname": "Михайлов", "firstname": "Роман", "id_gender": 1, "birth_date": "2005-07-22", "id_address": 1, "patronymic": "Александрович", "id_position": 9, "phone_number": "+7 921 693-19-54"}	{"id": 14, "inn": "111111111112", "surname": "Михайлов", "firstname": "Роман", "id_gender": 1, "birth_date": "2005-07-22", "id_address": 1, "patronymic": "Александрович", "id_position": 4, "phone_number": "+7 921 693-19-54"}	admin	2025-12-10 16:56:12.215641
 798	refresh_tokens	INSERT	\N	{"id": 215, "role": "admin", "token": "a5e258eef5226161bdab1d10e48a41b74a858c48e73ee0fca55722a2af558598", "username": "roman", "created_at": "2025-12-11T09:36:43.690361"}	admin	2025-12-11 09:36:43.690361
@@ -2064,10 +1687,9 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 824	refresh_tokens	INSERT	\N	{"id": 228, "role": "manager", "token": "a3fd5514da28ad089ef35ba7e76ae3c2fc4b110fc1b92a75ff3a349f5f92d70f", "username": "anna_sokolova", "created_at": "2025-12-11T14:29:31.914279"}	admin	2025-12-11 14:29:31.914279
 825	refresh_tokens	DELETE	{"id": 228, "role": "manager", "token": "a3fd5514da28ad089ef35ba7e76ae3c2fc4b110fc1b92a75ff3a349f5f92d70f", "username": "anna_sokolova", "created_at": "2025-12-11T14:29:31.914279"}	\N	admin	2025-12-11 14:53:51.179201
 826	refresh_tokens	INSERT	\N	{"id": 229, "role": "admin", "token": "13fda6fff23f9211746573a3bff14f4ea3014cfa0df0c1dfcc6061dcb9f9ff7e", "username": "roman", "created_at": "2025-12-11T14:53:57.744773"}	admin	2025-12-11 14:53:57.744773
-827	product	INSERT	\N	{"id": 66, "name": "temp", "image_url": "/static/products/placeholder.png", "id_producer": 1, "id_product_category": 1}	admin	2025-12-11 15:09:11.051929
+1311	refresh_tokens	DELETE	{"id": 306, "role": "admin", "token": "e7b49c23b1613fab8a5454da2d49c6256004012f245fe09f487b038f18e0bce0", "username": "roman", "created_at": "2025-12-17T13:15:01.550886"}	\N	admin	2025-12-17 13:15:17.039856
 828	role	DELETE	{"id": 6, "name": "тест", "sys_role": "тест", "description": "тест"}	\N	postgres	2025-12-11 15:15:18.679369
 829	refresh_tokens	INSERT	\N	{"id": 230, "role": "admin", "token": "718fc4aba671be934b3de1d05ead93c6736e12b1b4b47b839c93e77f28bc29d8", "username": "roman", "created_at": "2025-12-11T16:17:36.189206"}	admin	2025-12-11 16:17:36.189206
-830	product	DELETE	{"id": 66, "name": "temp", "image_url": "/static/products/placeholder.png", "id_producer": 1, "id_product_category": 1}	\N	admin	2025-12-11 16:29:37.348726
 832	refresh_tokens	INSERT	\N	{"id": 231, "role": "admin", "token": "5a1b2b03e8843648da7d60c17c43570ea353a72549fe48ef28f6103f1bfbb224", "username": "roman", "created_at": "2025-12-12T08:29:33.730885"}	admin	2025-12-12 08:29:33.730885
 833	refresh_tokens	DELETE	{"id": 231, "role": "admin", "token": "5a1b2b03e8843648da7d60c17c43570ea353a72549fe48ef28f6103f1bfbb224", "username": "roman", "created_at": "2025-12-12T08:29:33.730885"}	\N	admin	2025-12-12 08:33:43.4265
 834	refresh_tokens	INSERT	\N	{"id": 232, "role": "admin", "token": "a022fe3a0bf27f7e0e42516e5327863c3ed53c5922ecf21850bf20ee9844db10", "username": "roman", "created_at": "2025-12-12T12:10:15.386483"}	admin	2025-12-12 12:10:15.386483
@@ -2215,85 +1837,12 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 1020	refresh_tokens	INSERT	\N	{"id": 280, "role": "admin", "token": "768e3431afbbd650f057963af27a4259d0638f63a43b41b9ac842b789ec0391f", "username": "roman", "created_at": "2025-12-16T16:28:50.699704"}	admin	2025-12-16 16:28:50.699704
 1021	refresh_tokens	DELETE	{"id": 280, "role": "admin", "token": "768e3431afbbd650f057963af27a4259d0638f63a43b41b9ac842b789ec0391f", "username": "roman", "created_at": "2025-12-16T16:28:50.699704"}	\N	admin	2025-12-16 19:31:43.182876
 1022	refresh_tokens	INSERT	\N	{"id": 281, "role": "admin", "token": "73d82c395bf907611cdd0534d56218451e66cbab713e5ffa2fbad50e2a36983c", "username": "roman", "created_at": "2025-12-16T19:31:46.587314"}	admin	2025-12-16 19:31:46.587314
-1023	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765205524070403429_14.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:34:44.381504
-1024	product	UPDATE	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 14, "name": "Дрель \\"PowerTool 300\\"", "image_url": "/static/products/1765902884396074001_14.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:34:44.397322
-1025	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/1765205530989364252_15.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:34:49.22012
-1026	product	UPDATE	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 15, "name": "Постельное белье \\"Luxury\\"", "image_url": "/static/products/1765902889238710628_15.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:34:49.239189
-1027	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/1765205538458021339_16-.jpg", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:34:52.988982
-1028	product	UPDATE	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 16, "name": "Газонокосилка \\"GreenCut\\"", "image_url": "/static/products/1765902893007872922_16.jpg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:34:53.008442
-1029	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/1765205549156924260_17.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:34:56.196824
-1030	product	UPDATE	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 17, "name": "Стул \\"WoodChair\\"", "image_url": "/static/products/1765902896208012382_17.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:34:56.208415
-1031	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/1765205562290618336_18.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:35:01.673813
-1032	product	UPDATE	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 18, "name": "Тумба под ТВ \\"Classic\\"", "image_url": "/static/products/1765902901690138259_18.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:35:01.690832
-1033	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/1765205573041308591_19.avif", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:35:05.070915
-1034	product	UPDATE	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 19, "name": "Плита \\"HeatMaster\\"", "image_url": "/static/products/1765902905078576511_19.avif", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:35:05.078918
-1035	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/1765205584128660513_20.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:35:08.99265
-1036	product	UPDATE	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 20, "name": "Холодильник \\"FreezePlus\\"", "image_url": "/static/products/1765902909008158846_20.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:35:09.008653
-1037	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/1765205595127459587_21.jpeg", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:35:14.3602
-1038	product	UPDATE	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 21, "name": "Телевизор \\"SmartVision\\"", "image_url": "/static/products/1765902914378054293_21.jpeg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:35:14.378286
-1039	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/1765205605996546425_22.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:35:18.935056
-1040	product	UPDATE	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 22, "name": "Сковорода \\"PanExpert\\"", "image_url": "/static/products/1765902918947207586_22.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:35:18.947745
-1041	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/1765205618048903084_23.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:35:24.331081
-1042	product	UPDATE	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 23, "name": "Лампа \\"BrightHome\\"", "image_url": "/static/products/1765902924337540214_23.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:35:24.3377
-1045	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/1765205640054667886_25.webp", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "", "id_producer": 24, "id_product_category": 8}	admin	2025-12-16 19:35:38.577399
-1046	product	UPDATE	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "", "id_producer": 24, "id_product_category": 8}	{"id": 25, "name": "Полотенца \\"SoftLine\\"", "image_url": "/static/products/1765902938592861846_25.webp", "id_producer": 24, "id_product_category": 8}	admin	2025-12-16 19:35:38.593748
-1047	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765902928661990549_25.webp", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:43.191152
-1048	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765902943202935500_24.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:43.203502
-1049	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/1765205655858996796_26.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:49.348545
-1050	product	UPDATE	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 26, "name": "Газонокосилка \\"EcoCut\\"", "image_url": "/static/products/1765902949354806378_26.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:49.355091
-1053	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765205684816340587_28.webp", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:36:00.37785
-1054	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765902960388504509_28.webp", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:36:00.388857
-1057	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/1765205696339956217_29.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:36:11.163398
-1058	product	UPDATE	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 29, "name": "Микроволновка \\"QuickHeat\\"", "image_url": "/static/products/1765902971176220014_29.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:36:11.177013
-1061	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765205722212345257_31.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:36:23.950667
-1062	product	UPDATE	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 31, "name": "Материнская плата \\"ProBoard\\"", "image_url": "/static/products/1765902983964183755_31.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:36:23.964865
-1067	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/1765205761391543761_34.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:36:42.71343
-1068	product	UPDATE	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 34, "name": "Лампа потолочная \\"SkyLight\\"", "image_url": "/static/products/1765903002725423000_34.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:36:42.725808
-1069	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/1765205773609017920_35.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:36:47.898281
-1070	product	UPDATE	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 35, "name": "Дрель \\"MaxDrill\\"", "image_url": "/static/products/1765903007913705919_35.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:36:47.914234
-1073	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765354561164319012_37.webp", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:36:56.90863
-1074	product	UPDATE	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 37, "name": "Сковорода \\"Chef Pro 30\\"", "image_url": "/static/products/1765903016922236132_37.webp", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:36:56.92246
-1043	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765205628465314922_24.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:28.647403
-1044	product	UPDATE	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 24, "name": "Шуруповерт \\"DrillMax\\"", "image_url": "/static/products/1765902928661990549_25.webp", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:35:28.662542
-1051	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/1765205673974680054_27.webp", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:35:55.859887
-1052	product	UPDATE	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 27, "name": "Диван \\"Relax\\"", "image_url": "/static/products/1765902955871612256_27.webp", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:35:55.872093
-1055	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765902960388504509_28.webp", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:36:06.856204
-1056	product	UPDATE	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 28, "name": "Кухонный стол \\"Classic\\"", "image_url": "/static/products/1765902966870945595_28.webp", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:36:06.871189
-1059	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/1765205708359142459_30.png", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	admin	2025-12-16 19:36:19.302319
-1060	product	UPDATE	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 30, "name": "Стиральная машина \\"UltraWash\\"", "image_url": "/static/products/1765902979319774753_30.png", "id_producer": 20, "id_product_category": 3}	admin	2025-12-16 19:36:19.320429
-1063	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/1765205734811023180_32.webp", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:36:30.942471
-1064	product	UPDATE	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 32, "name": "Стул \\"Office\\"", "image_url": "/static/products/1765902990957545800_32.webp", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:36:30.957854
-1065	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/1765354399815235298_33.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:36:36.820065
-1066	product	UPDATE	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 33, "name": "Кастрюля \\"CookMaster\\"", "image_url": "/static/products/1765902996829507053_33.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:36:36.829919
-1071	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/1765354505917253083_36.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:36:51.981465
-1072	product	UPDATE	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 36, "name": "Постельное белье \\"Comfort\\"", "image_url": "/static/products/1765903011995595088_36.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:36:51.995889
-1075	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/1765205792574984887_38.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:38:34.360643
-1076	product	UPDATE	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 38, "name": "Стул \\"Comfort Plus\\"", "image_url": "/static/products/1765903114376768427_38.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:38:34.37756
-1077	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/1765205804730533337_39.jpg", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:38:39.702053
-1078	product	UPDATE	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 39, "name": "Кухонный гарнитур \\"Элегант\\"", "image_url": "/static/products/1765903119722697138_39.jpg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:38:39.723352
-1079	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/1765205815959577467_40.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:38:45.160386
-1080	product	UPDATE	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 40, "name": "Холодильник \\"Arctic 500\\"", "image_url": "/static/products/1765903125172666585_40.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:38:45.173183
-1081	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/1765205827626538500_41.jpeg", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:38:50.422853
-1082	product	UPDATE	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 41, "name": "Телевизор \\"UltraHD 55\\"", "image_url": "/static/products/1765903130437245420_41.jpeg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:38:50.437743
-1083	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/1765354467797030094_42.webp", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:38:55.983316
-1084	product	UPDATE	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 42, "name": "Дрель \\"HandyDrill\\"", "image_url": "/static/products/1765903136001616381_42.webp", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:38:56.002014
-1085	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/1765205850908937761_43.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:39:00.944602
-1086	product	UPDATE	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 43, "name": "Лампа \\"DeskLight\\"", "image_url": "/static/products/1765903140958636092_43.jpeg", "id_producer": 24, "id_product_category": 2}	admin	2025-12-16 19:39:00.959495
-1087	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/1765205864107465878_44.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:07.811669
-1088	product	UPDATE	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 44, "name": "Диван \\"SoftRelax\\"", "image_url": "/static/products/1765903147824702137_44.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:07.825204
+1312	refresh_tokens	INSERT	\N	{"id": 307, "role": "admin", "token": "ac86d72900c7df2616c3f412181ca7fefa6d962ff6016adfd03e774e8e896cfa", "username": "roman", "created_at": "2025-12-17T13:15:17.105626"}	admin	2025-12-17 13:15:17.105626
+1313	refresh_tokens	DELETE	{"id": 307, "role": "admin", "token": "ac86d72900c7df2616c3f412181ca7fefa6d962ff6016adfd03e774e8e896cfa", "username": "roman", "created_at": "2025-12-17T13:15:17.105626"}	\N	admin	2025-12-17 13:15:17.16562
+1142	refresh_tokens	DELETE	{"id": 288, "role": "moderator", "token": "d733773086db9a71b77756b8b2f6c084e2fc5bc52d8ac4401e5b70685676495f", "username": "artem_volkov", "created_at": "2025-12-17T09:06:11.396519"}	\N	admin	2025-12-17 09:10:57.344868
 1109	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765205992498019007_54.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:40:27.596085
 1110	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765903227626256966_placeholder.png", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:40:27.626852
-1089	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/1765205876341915467_45.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:13.820858
-1090	product	UPDATE	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 45, "name": "Постельное белье \\"Premium\\"", "image_url": "/static/products/1765903153843628542_45.jpg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:13.844294
-1091	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/1765205890486289126_46.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:39:19.599106
-1092	product	UPDATE	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 46, "name": "Кастрюля \\"ProCook\\"", "image_url": "/static/products/1765903159611992045_46.jpeg", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:39:19.612427
-1093	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765205904948249133_47.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:39:27.018443
-1094	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765903167041147924_46.jpg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:39:27.041569
-1095	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765903167041147924_46.jpg", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:39:36.512781
-1096	product	UPDATE	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 47, "name": "Шкаф для одежды \\"Classic Wardrobe\\"", "image_url": "/static/products/1765903176524594261_47.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:39:36.52481
-1097	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/1765205926391147379_48.jpeg", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:39:41.747666
-1098	product	UPDATE	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 48, "name": "Микроволновка \\"SpeedHeat\\"", "image_url": "/static/products/1765903181767449666_48.jpeg", "id_producer": 26, "id_product_category": 3}	admin	2025-12-16 19:39:41.768945
-1099	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765205938523145552_49.jpg", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:39:47.130121
+1314	refresh_tokens	INSERT	\N	{"id": 308, "role": "admin", "token": "e07c9f6a0df0437e144b8768930cbe02924f98805cc9683782f5a134efd2dd89", "username": "roman", "created_at": "2025-12-17T13:15:53.20631"}	admin	2025-12-17 13:15:53.20631
 1100	product	UPDATE	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 49, "name": "Материнская плата \\"Extreme Gamer\\"", "image_url": "/static/products/1765903187145978752_49.jpg", "id_producer": 20, "id_product_category": 2}	admin	2025-12-16 19:39:47.146283
 1101	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/1765205949295874542_50.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:52.945716
 1102	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/1765903192956568255_50.jpeg", "id_producer": 24, "id_product_category": 1}	admin	2025-12-16 19:39:52.957003
@@ -2306,6 +1855,8 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 1108	product	UPDATE	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/1765903206868323303_53.jpeg", "id_producer": 20, "id_product_category": 3}	admin	2025-12-16 19:40:06.869029
 1115	product	UPDATE	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "/static/products/placeholder.png", "id_producer": 25, "id_product_category": 2}	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:42:50.060423
 1116	product	UPDATE	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "/static/products/1765903370070236504_56.jpeg", "id_producer": 25, "id_product_category": 2}	admin	2025-12-16 19:42:50.070681
+1315	refresh_tokens	DELETE	{"id": 308, "role": "admin", "token": "e07c9f6a0df0437e144b8768930cbe02924f98805cc9683782f5a134efd2dd89", "username": "roman", "created_at": "2025-12-17T13:15:53.20631"}	\N	admin	2025-12-17 13:18:35.887868
+1316	refresh_tokens	INSERT	\N	{"id": 309, "role": "admin", "token": "ee0705e11653695b7f3d4794f079e8b683590207942ceaee1c966b76594e4035", "username": "roman", "created_at": "2025-12-17T13:18:35.900639"}	admin	2025-12-17 13:18:35.900639
 1112	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765903292312522884_54.jpeg", "id_producer": 19, "id_product_category": 1}	admin	2025-12-16 19:41:32.313133
 1113	product	UPDATE	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "/static/products/placeholder.png", "id_producer": 21, "id_product_category": 8}	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:42:46.013048
 1114	product	UPDATE	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "/static/products/1765903366034484502_55.webp", "id_producer": 21, "id_product_category": 8}	admin	2025-12-16 19:42:46.03533
@@ -2329,6 +1880,58 @@ COPY public.audit_log (id, table_name, action, old_data, new_data, changed_by, c
 1134	refresh_tokens	INSERT	\N	{"id": 285, "role": "admin", "token": "046c94b38f41d2e249153f40abaaf43016583f20bc4170f441e692e1b4b6c519", "username": "roman", "created_at": "2025-12-16T19:59:57.126094"}	admin	2025-12-16 19:59:57.126094
 1135	sys_user	DELETE	{"id": 5, "login": "moderator_login", "id_role": 1, "id_employee": 5, "password_hash": "$2a$10$Pw6ZaIDf.CT.lKiRy8RYWOuV5SB14tmuCmwBYCwQ7KnOaCgJCclOK"}	\N	admin	2025-12-16 20:00:08.196864
 1136	refresh_tokens	DELETE	{"id": 285, "role": "admin", "token": "046c94b38f41d2e249153f40abaaf43016583f20bc4170f441e692e1b4b6c519", "username": "roman", "created_at": "2025-12-16T19:59:57.126094"}	\N	admin	2025-12-16 20:00:20.481519
+1137	refresh_tokens	INSERT	\N	{"id": 286, "role": "admin", "token": "d3c9eed8183bf405befae63100d63c4deb5208600c4506c9d6d3392f2494e1ad", "username": "roman", "created_at": "2025-12-16T20:41:12.763096"}	admin	2025-12-16 20:41:12.763096
+1138	refresh_tokens	INSERT	\N	{"id": 287, "role": "admin", "token": "50da8766aae56e3b685885ed5445fab6e0f0304ecf0eb56f17157c51b210c2f4", "username": "roman", "created_at": "2025-12-17T08:38:41.014909"}	admin	2025-12-17 08:38:41.014909
+1139	refresh_tokens	DELETE	{"id": 287, "role": "admin", "token": "50da8766aae56e3b685885ed5445fab6e0f0304ecf0eb56f17157c51b210c2f4", "username": "roman", "created_at": "2025-12-17T08:38:41.014909"}	\N	admin	2025-12-17 08:39:03.336651
+1140	refresh_tokens	INSERT	\N	{"id": 288, "role": "moderator", "token": "d733773086db9a71b77756b8b2f6c084e2fc5bc52d8ac4401e5b70685676495f", "username": "artem_volkov", "created_at": "2025-12-17T09:06:11.396519"}	admin	2025-12-17 09:06:11.396519
+1143	refresh_tokens	INSERT	\N	{"id": 289, "role": "admin", "token": "54c4c9a6a5a42c44f15b4a4dc6d1481d0f1d0afd76538cc42eab36acf37fe28b", "username": "roman", "created_at": "2025-12-17T09:11:00.813721"}	admin	2025-12-17 09:11:00.813721
+1144	refresh_tokens	DELETE	{"id": 289, "role": "admin", "token": "54c4c9a6a5a42c44f15b4a4dc6d1481d0f1d0afd76538cc42eab36acf37fe28b", "username": "roman", "created_at": "2025-12-17T09:11:00.813721"}	\N	admin	2025-12-17 09:12:52.147709
+1145	refresh_tokens	INSERT	\N	{"id": 290, "role": "moderator", "token": "2ac10167cd31fce685a662cba074eb25ccbaf2d9e7c2b7e134d5fa8f44e9a891", "username": "artem_volkov", "created_at": "2025-12-17T09:13:01.261524"}	admin	2025-12-17 09:13:01.261524
+1150	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765205440110440418_11.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:14:58.842624
+1151	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765952098865444795_11.jpg", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:14:58.8674
+1152	product	UPDATE	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/1765354277653639797_7-.webp", "id_producer": 19, "id_product_category": 1}	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	moderator	2025-12-17 09:17:41.622992
+1153	product	UPDATE	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 7, "name": "Кухонный гарнитур \\"Модерн\\"", "image_url": "/static/products/1765952261638764217_7.webp", "id_producer": 19, "id_product_category": 1}	moderator	2025-12-17 09:17:41.641359
+1154	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765373224025730926_8.jpeg", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	moderator	2025-12-17 09:17:45.551919
+1155	product	UPDATE	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 8, "name": "Стиральная машина \\"EcoWash 3000\\"", "image_url": "/static/products/1765952265565825719_8.jpeg", "id_producer": 20, "id_product_category": 3}	moderator	2025-12-17 09:17:45.566557
+1156	product	UPDATE	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "/static/products/1765205408580666042_9.avif", "id_producer": 26, "id_product_category": 3}	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	moderator	2025-12-17 09:17:49.027523
+1157	product	UPDATE	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "", "id_producer": 26, "id_product_category": 3}	{"id": 9, "name": "Холодильник \\"CoolFridge X\\"", "image_url": "/static/products/1765952269041604596_9.avif", "id_producer": 26, "id_product_category": 3}	moderator	2025-12-17 09:17:49.041991
+1158	product	UPDATE	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/1765205423056717632_10.webp", "id_producer": 20, "id_product_category": 2}	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	moderator	2025-12-17 09:17:53.738164
+1159	product	UPDATE	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "", "id_producer": 20, "id_product_category": 2}	{"id": 10, "name": "Материнская плата \\"Gamer Pro\\"", "image_url": "/static/products/1765952273760593959_10.webp", "id_producer": 20, "id_product_category": 2}	moderator	2025-12-17 09:17:53.761217
+1160	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765952098865444795_11.jpg", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:17:58.321154
+1161	product	UPDATE	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 11, "name": "Офисное кресло \\"Comfort\\"", "image_url": "/static/products/1765952278342195878_11.jpg", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:17:58.343186
+1162	product	UPDATE	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/1765205452018769299_12.jpeg", "id_producer": 21, "id_product_category": 8}	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	moderator	2025-12-17 09:18:01.518978
+1163	product	UPDATE	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 12, "name": "Сковорода \\"Chef 28\\"", "image_url": "/static/products/1765952281530386879_12.jpeg", "id_producer": 21, "id_product_category": 8}	moderator	2025-12-17 09:18:01.5306
+1164	product	UPDATE	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/1765205465161011013_13.jpg", "id_producer": 24, "id_product_category": 2}	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	moderator	2025-12-17 09:18:05.031315
+1165	product	UPDATE	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 13, "name": "Лампа настольная \\"LightUp\\"", "image_url": "/static/products/1765952285042678923_13.jpg", "id_producer": 24, "id_product_category": 2}	moderator	2025-12-17 09:18:05.04308
+1166	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/1765903192956568255_50.jpeg", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:18:27.412158
+1167	product	UPDATE	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "", "id_producer": 24, "id_product_category": 1}	{"id": 50, "name": "Стул \\"ErgoChair\\"", "image_url": "/static/products/1765952307421766044_50.jpeg", "id_producer": 24, "id_product_category": 1}	moderator	2025-12-17 09:18:27.42193
+1172	product	UPDATE	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/1765903206868323303_53.jpeg", "id_producer": 20, "id_product_category": 3}	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	moderator	2025-12-17 09:18:39.055534
+1173	product	UPDATE	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "", "id_producer": 20, "id_product_category": 3}	{"id": 53, "name": "Стиральная машина \\"WashMaster 4000\\"", "image_url": "/static/products/1765952319066905883_53.jpeg", "id_producer": 20, "id_product_category": 3}	moderator	2025-12-17 09:18:39.068044
+1176	product	UPDATE	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "/static/products/1765903366034484502_55.webp", "id_producer": 21, "id_product_category": 8}	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	moderator	2025-12-17 09:18:50.560863
+1177	product	UPDATE	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "", "id_producer": 21, "id_product_category": 8}	{"id": 55, "name": "Сковорода \\"Chef Classic\\"", "image_url": "/static/products/1765952330576268638_55.webp", "id_producer": 21, "id_product_category": 8}	moderator	2025-12-17 09:18:50.576662
+1178	product	UPDATE	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "/static/products/1765903370070236504_56.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	moderator	2025-12-17 09:18:55.362814
+1179	product	UPDATE	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 56, "name": "Дрель \\"ProDrill 500\\"", "image_url": "/static/products/1765952335376777793_56.jpeg", "id_producer": 25, "id_product_category": 2}	moderator	2025-12-17 09:18:55.377289
+1320	refresh_tokens	INSERT	\N	{"id": 310, "role": "admin", "token": "67719c17fff288e97d1341a8ae98907f958bc05a8fbecb3b877a2fc4b5c5acaf", "username": "roman", "created_at": "2025-12-17T13:22:19.328692"}	admin	2025-12-17 13:22:19.328692
+1168	product	UPDATE	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/1765903198101334341_51.jpeg", "id_producer": 25, "id_product_category": 2}	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	moderator	2025-12-17 09:18:32.015669
+1169	product	UPDATE	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "", "id_producer": 25, "id_product_category": 2}	{"id": 51, "name": "Газонокосилка \\"PowerCut\\"", "image_url": "/static/products/1765952312028675296_51.jpeg", "id_producer": 25, "id_product_category": 2}	moderator	2025-12-17 09:18:32.029227
+1170	product	UPDATE	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "/static/products/1765903202264020468_52.jpeg", "id_producer": 24, "id_product_category": 2}	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	moderator	2025-12-17 09:18:35.429257
+1171	product	UPDATE	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "", "id_producer": 24, "id_product_category": 2}	{"id": 52, "name": "Лампа потолочная \\"BrightSky\\"", "image_url": "/static/products/1765952315441670964_52.jpeg", "id_producer": 24, "id_product_category": 2}	moderator	2025-12-17 09:18:35.442119
+1174	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765903292312522884_54.jpeg", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	moderator	2025-12-17 09:18:47.003064
+1175	product	UPDATE	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "", "id_producer": 19, "id_product_category": 1}	{"id": 54, "name": "Кухонный стол \\"Modern\\"", "image_url": "/static/products/1765952327015113345_54.jpeg", "id_producer": 19, "id_product_category": 1}	moderator	2025-12-17 09:18:47.015573
+1180	product	UPDATE	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "/static/products/1765011046095675919_a4c7c78c78a454e231f7718718ae6195.jpg", "id_producer": 1, "id_product_category": 1}	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "", "id_producer": 1, "id_product_category": 1}	moderator	2025-12-17 09:25:13.699417
+1181	product	UPDATE	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "", "id_producer": 1, "id_product_category": 1}	{"id": 1, "name": "Кухонный гарнитур \\"Уют\\"", "image_url": "/static/products/1765952713714676218_1.jpg", "id_producer": 1, "id_product_category": 1}	moderator	2025-12-17 09:25:13.715903
+1182	product	UPDATE	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "/static/products/1765011070099983639_images (3).jpeg", "id_producer": 2, "id_product_category": 2}	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "", "id_producer": 2, "id_product_category": 2}	moderator	2025-12-17 09:25:17.06117
+1183	product	UPDATE	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "", "id_producer": 2, "id_product_category": 2}	{"id": 2, "name": "Стиральная машина \\"SM-5000\\"", "image_url": "/static/products/1765952717072174470_2.jpeg", "id_producer": 2, "id_product_category": 2}	moderator	2025-12-17 09:25:17.07247
+1184	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765008872100895552_7179111216.jpg", "id_producer": 3, "id_product_category": 2}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "", "id_producer": 3, "id_product_category": 2}	moderator	2025-12-17 09:25:20.355397
+1185	product	UPDATE	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "", "id_producer": 3, "id_product_category": 2}	{"id": 3, "name": "Материнская плата \\"Gamer XTREME\\"", "image_url": "/static/products/1765952720374941263_3.jpg", "id_producer": 3, "id_product_category": 2}	moderator	2025-12-17 09:25:20.376696
+1186	product	UPDATE	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "/static/products/1765011089390225675_images (2).jpeg", "id_producer": 1, "id_product_category": 1}	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "", "id_producer": 1, "id_product_category": 1}	moderator	2025-12-17 09:25:24.751859
+1187	product	UPDATE	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "", "id_producer": 1, "id_product_category": 1}	{"id": 4, "name": "Офисное кресло \\"Director\\"", "image_url": "/static/products/1765952724762478626_4.jpeg", "id_producer": 1, "id_product_category": 1}	moderator	2025-12-17 09:25:24.762718
+1188	product	UPDATE	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "/static/products/1765011109815931171_images.jpeg", "id_producer": 2, "id_product_category": 2}	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "", "id_producer": 2, "id_product_category": 2}	moderator	2025-12-17 09:25:28.175456
+1189	product	UPDATE	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "", "id_producer": 2, "id_product_category": 2}	{"id": 5, "name": "Холодильник \\"Frost+ 300\\"", "image_url": "/static/products/1765952728186622503_5.jpeg", "id_producer": 2, "id_product_category": 2}	moderator	2025-12-17 09:25:28.186725
+1190	refresh_tokens	DELETE	{"id": 290, "role": "moderator", "token": "2ac10167cd31fce685a662cba074eb25ccbaf2d9e7c2b7e134d5fa8f44e9a891", "username": "artem_volkov", "created_at": "2025-12-17T09:13:01.261524"}	\N	admin	2025-12-17 09:26:03.008851
+1191	refresh_tokens	INSERT	\N	{"id": 291, "role": "admin", "token": "7eed6ac88f19552f91f848632cab3eb6161dc315a7e42a7a0903802ba0e2399a", "username": "roman", "created_at": "2025-12-17T09:26:07.116055"}	admin	2025-12-17 09:26:07.116055
+1321	refresh_tokens	DELETE	{"id": 310, "role": "admin", "token": "67719c17fff288e97d1341a8ae98907f958bc05a8fbecb3b877a2fc4b5c5acaf", "username": "roman", "created_at": "2025-12-17T13:22:19.328692"}	\N	admin	2025-12-17 14:22:32.40487
+1322	refresh_tokens	INSERT	\N	{"id": 311, "role": "admin", "token": "6a44bcf71b471d39c9991269246ef74522afc48b234155fcab9b6cb5d05d2b6f", "username": "roman", "created_at": "2025-12-17T14:22:32.411505"}	admin	2025-12-17 14:22:32.411505
 \.
 
 
@@ -2346,6 +1949,7 @@ COPY public.batch (id, cost, production_date, expiration_date, id_product, creat
 10	10	2025-11-29	2025-12-30	4	2025-11-30 15:25:23.003956
 11	134	2024-12-06	2024-12-05	3	2025-12-06 13:45:45.295078
 1	125500	2024-01-15	2024-01-15	1	2025-10-15 08:39:40.31846
+12	50	2025-12-17	2035-12-17	70	2025-12-17 19:53:27.255671
 \.
 
 
@@ -2365,6 +1969,9 @@ COPY public.document (id, date, id_employee, id_document_category) FROM stdin;
 15	2025-12-14	14	1
 16	2025-12-14	14	3
 17	2025-12-14	14	2
+19	2025-12-17	2	1
+20	2025-12-17	2	3
+22	2025-12-17	2	2
 \.
 
 
@@ -2403,6 +2010,9 @@ COPY public.document_content (id, id_document, id_batch, quantity) FROM stdin;
 26	16	10	10
 27	17	10	9
 28	17	10	1
+29	19	12	100
+30	20	12	100
+32	22	12	29
 \.
 
 
@@ -2463,6 +2073,7 @@ COPY public.producer (id, name, id_address, inn, surname, firstname, patronymic)
 24	ООО "МебельЛюкс"	7	7890123456	Федоров	Сергей	Иванович
 25	ИП "ТехМаркет"	8	8911234567	Григорьев	Павел	Викторович
 26	ООО "ХолодСервис"	9	9012345678	Васильева	Елена	Александровна
+28	ООО "Первый класс"	9	6456387568	Иванов	Петр	Сидорович
 \.
 
 
@@ -2471,61 +2082,64 @@ COPY public.producer (id, name, id_address, inn, surname, firstname, patronymic)
 --
 
 COPY public.product (id, name, id_product_category, id_producer, image_url) FROM stdin;
-1	Кухонный гарнитур "Уют"	1	1	/static/products/1765011046095675919_a4c7c78c78a454e231f7718718ae6195.jpg
-2	Стиральная машина "SM-5000"	2	2	/static/products/1765011070099983639_images (3).jpeg
-4	Офисное кресло "Director"	1	1	/static/products/1765011089390225675_images (2).jpeg
-5	Холодильник "Frost+ 300"	2	2	/static/products/1765011109815931171_images.jpeg
-7	Кухонный гарнитур "Модерн"	1	19	/static/products/1765354277653639797_7-.webp
-8	Стиральная машина "EcoWash 3000"	3	20	/static/products/1765373224025730926_8.jpeg
-3	Материнская плата "Gamer XTREME"	2	3	/static/products/1765008872100895552_7179111216.jpg
-9	Холодильник "CoolFridge X"	3	26	/static/products/1765205408580666042_9.avif
-10	Материнская плата "Gamer Pro"	2	20	/static/products/1765205423056717632_10.webp
-11	Офисное кресло "Comfort"	1	24	/static/products/1765205440110440418_11.jpg
-12	Сковорода "Chef 28"	8	21	/static/products/1765205452018769299_12.jpeg
-13	Лампа настольная "LightUp"	2	24	/static/products/1765205465161011013_13.jpg
-31	Материнская плата "ProBoard"	2	20	/static/products/1765902983964183755_31.jpg
-14	Дрель "PowerTool 300"	2	25	/static/products/1765902884396074001_14.jpeg
-16	Газонокосилка "GreenCut"	2	25	/static/products/1765902893007872922_16.jpg
-15	Постельное белье "Luxury"	1	24	/static/products/1765902889238710628_15.jpeg
-18	Тумба под ТВ "Classic"	1	19	/static/products/1765902901690138259_18.jpeg
-17	Стул "WoodChair"	1	24	/static/products/1765902896208012382_17.jpeg
-20	Холодильник "FreezePlus"	3	26	/static/products/1765902909008158846_20.jpeg
-19	Плита "HeatMaster"	3	26	/static/products/1765902905078576511_19.avif
-22	Сковорода "PanExpert"	8	21	/static/products/1765902918947207586_22.jpeg
-21	Телевизор "SmartVision"	2	20	/static/products/1765902914378054293_21.jpeg
-27	Диван "Relax"	1	24	/static/products/1765902955871612256_27.webp
-23	Лампа "BrightHome"	2	24	/static/products/1765902924337540214_23.jpeg
-24	Шуруповерт "DrillMax"	2	25	/static/products/1765902943202935500_24.jpeg
-25	Полотенца "SoftLine"	8	24	/static/products/1765902938592861846_25.webp
-28	Кухонный стол "Classic"	1	19	/static/products/1765902966870945595_28.webp
-26	Газонокосилка "EcoCut"	2	25	/static/products/1765902949354806378_26.jpeg
-30	Стиральная машина "UltraWash"	3	20	/static/products/1765902979319774753_30.png
-33	Кастрюля "CookMaster"	8	21	/static/products/1765902996829507053_33.jpeg
-29	Микроволновка "QuickHeat"	3	26	/static/products/1765902971176220014_29.jpeg
-40	Холодильник "Arctic 500"	3	26	/static/products/1765903125172666585_40.jpeg
-32	Стул "Office"	1	24	/static/products/1765902990957545800_32.webp
-35	Дрель "MaxDrill"	2	25	/static/products/1765903007913705919_35.jpeg
-34	Лампа потолочная "SkyLight"	2	24	/static/products/1765903002725423000_34.jpeg
-37	Сковорода "Chef Pro 30"	8	21	/static/products/1765903016922236132_37.webp
-36	Постельное белье "Comfort"	1	24	/static/products/1765903011995595088_36.jpg
-39	Кухонный гарнитур "Элегант"	1	19	/static/products/1765903119722697138_39.jpg
-38	Стул "Comfort Plus"	1	24	/static/products/1765903114376768427_38.jpg
-45	Постельное белье "Premium"	1	24	/static/products/1765903153843628542_45.jpg
-42	Дрель "HandyDrill"	2	25	/static/products/1765903136001616381_42.webp
-41	Телевизор "UltraHD 55"	2	20	/static/products/1765903130437245420_41.jpeg
-44	Диван "SoftRelax"	1	24	/static/products/1765903147824702137_44.jpeg
-43	Лампа "DeskLight"	2	24	/static/products/1765903140958636092_43.jpeg
-47	Шкаф для одежды "Classic Wardrobe"	1	19	/static/products/1765903176524594261_47.jpeg
-51	Газонокосилка "PowerCut"	2	25	/static/products/1765903198101334341_51.jpeg
-46	Кастрюля "ProCook"	8	21	/static/products/1765903159611992045_46.jpeg
-49	Материнская плата "Extreme Gamer"	2	20	/static/products/1765903187145978752_49.jpg
-48	Микроволновка "SpeedHeat"	3	26	/static/products/1765903181767449666_48.jpeg
-50	Стул "ErgoChair"	1	24	/static/products/1765903192956568255_50.jpeg
-56	Дрель "ProDrill 500"	2	25	/static/products/1765903370070236504_56.jpeg
-53	Стиральная машина "WashMaster 4000"	3	20	/static/products/1765903206868323303_53.jpeg
-52	Лампа потолочная "BrightSky"	2	24	/static/products/1765903202264020468_52.jpeg
-55	Сковорода "Chef Classic"	8	21	/static/products/1765903366034484502_55.webp
-54	Кухонный стол "Modern"	1	19	/static/products/1765903292312522884_54.jpeg
+31	Материнская плата "ProBoard"	2	20	/static/products/1765957184719296760_31.jpg
+14	Дрель "PowerTool 300"	2	25	/static/products/1765957117118564756_14.jpeg
+16	Газонокосилка "GreenCut"	2	25	/static/products/1765957123605219718_16.jpg
+15	Постельное белье "Luxury"	1	24	/static/products/1765957120820601966_15.jpeg
+18	Тумба под ТВ "Classic"	1	19	/static/products/1765957131997504097_18.jpeg
+17	Стул "WoodChair"	1	24	/static/products/1765957127035473261_17.jpeg
+20	Холодильник "FreezePlus"	3	26	/static/products/1765957138526011169_20.jpeg
+19	Плита "HeatMaster"	3	26	/static/products/1765957135057974126_19.avif
+22	Сковорода "PanExpert"	8	21	/static/products/1765957146260570714_22.jpeg
+21	Телевизор "SmartVision"	2	20	/static/products/1765957141710564754_21.jpeg
+27	Диван "Relax"	1	24	/static/products/1765957167032808710_27.webp
+23	Лампа "BrightHome"	2	24	/static/products/1765957150151930841_23.jpeg
+24	Шуруповерт "DrillMax"	2	25	/static/products/1765957154192326426_24.jpeg
+25	Полотенца "SoftLine"	8	24	/static/products/1765957158257484678_25.webp
+28	Кухонный стол "Classic"	1	19	/static/products/1765957172116750046_28.webp
+26	Газонокосилка "EcoCut"	2	25	/static/products/1765957163376438333_26.jpeg
+30	Стиральная машина "UltraWash"	3	20	/static/products/1765957180690130300_30.png
+33	Кастрюля "CookMaster"	8	21	/static/products/1765957193732642500_33.jpeg
+29	Микроволновка "QuickHeat"	3	26	/static/products/1765957177103111631_29.jpeg
+2	Стиральная машина "SM-5000"	3	2	/static/products/1765952717072174470_2.jpeg
+32	Стул "Office"	1	24	/static/products/1765957189862935304_32.webp
+35	Дрель "MaxDrill"	2	25	/static/products/1765957203287260630_35.jpeg
+34	Лампа потолочная "SkyLight"	2	24	/static/products/1765957198478194169_34.jpeg
+37	Сковорода "Chef Pro 30"	8	21	/static/products/1765957211474830383_37.webp
+36	Постельное белье "Comfort"	1	24	/static/products/1765957207099011173_36.jpg
+39	Кухонный гарнитур "Элегант"	1	19	/static/products/1765957223068063458_39.jpg
+38	Стул "Comfort Plus"	1	24	/static/products/1765957218945988429_38.jpg
+46	Кастрюля "ProCook"	8	21	/static/products/1765957256316873918_46.jpeg
+43	Лампа "DeskLight"	2	24	/static/products/1765957240945953466_43.jpeg
+42	Дрель "HandyDrill"	2	25	/static/products/1765957236865497715_42.webp
+45	Постельное белье "Premium"	1	24	/static/products/1765957251431221846_45.jpg
+44	Диван "SoftRelax"	1	24	/static/products/1765957246858076386_44.jpeg
+47	Шкаф для одежды "Classic Wardrobe"	1	19	/static/products/1765957268661142799_47.jpeg
+48	Микроволновка "SpeedHeat"	3	26	/static/products/1765957273217070551_48.jpeg
+49	Материнская плата "Extreme Gamer"	2	20	/static/products/1765957277688558595_49.jpg
+52	Лампа потолочная "BrightSky"	2	24	/static/products/1765952315441670964_52.jpeg
+1	Кухонный гарнитур "Уют"	1	1	/static/products/1765952713714676218_1.jpg
+54	Кухонный стол "Modern"	1	19	/static/products/1765952327015113345_54.jpeg
+53	Стиральная машина "WashMaster 4000"	3	20	/static/products/1765952319066905883_53.jpeg
+56	Дрель "ProDrill 500"	2	25	/static/products/1765952335376777793_56.jpeg
+55	Сковорода "Chef Classic"	8	21	/static/products/1765952330576268638_55.webp
+11	Офисное кресло "Comfort"	1	24	/static/products/1765952278342195878_11.jpg
+8	Стиральная машина "EcoWash 3000"	3	20	/static/products/1765952265565825719_8.jpeg
+7	Кухонный гарнитур "Модерн"	1	19	/static/products/1765952261638764217_7.webp
+9	Холодильник "CoolFridge X"	3	26	/static/products/1765952269041604596_9.avif
+10	Материнская плата "Gamer Pro"	2	20	/static/products/1765952273760593959_10.webp
+51	Газонокосилка "PowerCut"	2	25	/static/products/1765952312028675296_51.jpeg
+13	Лампа настольная "LightUp"	2	24	/static/products/1765952285042678923_13.jpg
+12	Сковорода "Chef 28"	8	21	/static/products/1765952281530386879_12.jpeg
+50	Стул "ErgoChair"	1	24	/static/products/1765952307421766044_50.jpeg
+3	Материнская плата "Gamer XTREME"	2	3	/static/products/1765952720374941263_3.jpg
+4	Офисное кресло "Director"	1	1	/static/products/1765952724762478626_4.jpeg
+5	Холодильник "Frost+ 300"	2	2	/static/products/1765952728186622503_5.jpeg
+67	Утюг "Ceramic Heat"	3	25	/static/products/1765955252842400588_6.jpeg
+41	Телевизор "UltraHD 55"	2	20	/static/products/1765957230863736670_41.jpeg
+40	Холодильник "Arctic 500"	3	26	/static/products/1765957226645823668_40.jpeg
+69	Ноутбук	2	20	/static/products/1765978256093059347_1.jpeg
+70	Тетрадь в клетку	13	28	/static/products/1765989317015642669_70.jpg
 \.
 
 
@@ -2538,6 +2152,7 @@ COPY public.product_category (id, name) FROM stdin;
 2	Электроника
 3	Бытовая техника
 8	Посуда
+13	Канцелярские принадлежности
 \.
 
 
@@ -2546,6 +2161,34 @@ COPY public.product_category (id, name) FROM stdin;
 --
 
 COPY public.refresh_tokens (id, token, username, role, created_at) FROM stdin;
+313	fd6b15a551b1714519b9afaca22e47acc810045307a2b672a64fb6ec998f01c8	roman	admin	2025-12-17 15:34:43.388973
+314	75a0792e162f4b741e384d45e20290cf68d77ac8128a72f3f408d6de09e108d0	roman	admin	2025-12-17 15:39:23.392631
+315	70b481b63070d94342fd7a7f4f0e1f180ceffe4d8b047e9ae99f1e46301cb486	roman	admin	2025-12-17 15:40:35.762648
+316	7f67c832795a36f1caa4ede536ee9196cb98af87d9d1dfe071ba8ab672697b98	roman	admin	2025-12-17 15:41:41.499096
+317	2ed9311c9f5e64b0bdc0f82db18960f431067a3010ed8b51dc3431d5cabf32d0	roman	admin	2025-12-17 15:42:59.676015
+318	010be9a2336420cb1b95a67b3f803953bc6f567331abddc2b4bd9b7aaac25768	roman	admin	2025-12-17 16:21:59.827534
+319	ef901f70f8e4428bf2e19c5bf5bef4628dc4d523e0cdbeb55e0c426d9b042072	test	moderator	2025-12-17 16:26:19.405285
+320	6663ea65dfc816f809e2bf72cde8101277259979c11f01cc660787af7cd1346a	anna_sokolova	manager	2025-12-17 16:26:49.504421
+321	f594e892406be435a604e34e28db4c2f635c543a3e2d66bcdd87928999fe461c	roman	admin	2025-12-17 16:28:58.804567
+322	e9d189671e08e2ad52a146812d3fc28e802e6969bc668f4bfad16ccf8a3dd4d0	anna_sokolova	manager	2025-12-17 16:30:34.28805
+323	7cc6ca11a4749409ab53415bd26ad8b1ebb543a389e9e6c4c60b6c1f23a7e9d3	roman	admin	2025-12-17 16:31:07.814227
+324	f34ece8a737481660d0fe055d834d36416cb807ffd1117e8fa8385c885411f75	roman	admin	2025-12-17 17:15:58.961162
+325	97f3ee44bc606e32645dfa792ce539a85bbeaa340eee8e4ef7574aee4915676d	roman	admin	2025-12-17 17:35:38.623463
+326	16ad8077cb7e7c2b34a0a2c7b403420c8ffe10d238066af6bcc30790d304b27c	anna_sokolova	manager	2025-12-17 17:35:53.899284
+327	d80cc6b149f248d049d58ae3b076de2d82723bc3fcb6b8ebaac651c34a9cc7d9	anna_sokolova	manager	2025-12-17 19:09:05.835201
+328	80f9ae9cba6e8843e6f082f090f19814b151a304d54dac12c50a05414c22959a	artem_volkov	moderator	2025-12-17 19:11:03.047322
+329	5655dc24a82080cb21b335ee356630c0c2bb7a306dba5437c880e67cb211a38c	anna_sokolova	manager	2025-12-17 19:12:43.774039
+330	d3708f6357e5a0e80f2cb0c4c723fa015a9506409a5807d729a48e4bfcbd499f	roman	admin	2025-12-17 19:57:02.656177
+331	e2f90a931eeaf3784b5ae2f998bf308b83dc49341b1f233d9ae05400cc145d4c	anna_sokolova	manager	2025-12-17 19:59:23.802914
+332	f3255461bbe89584e7bd063ced5a36f07008212985714469fc433882f30fc7b3	roman	admin	2025-12-17 20:06:06.971254
+333	d1b24a2fe9fa9992ed480f0b28a74c1e448d9fb19617d5636373f83eb660905e	anna_sokolova	manager	2025-12-17 20:06:20.544899
+334	2be0dde2f2cbba21224a38d67da91dd794d5cd0db45e10924078fe436953c551	roman	admin	2025-12-17 20:39:59.84224
+335	eb67f4830d5ed751262a1c073dca1916ae198867a22a77d81630c038a84d21c8	anna_sokolova	manager	2025-12-17 20:40:18.435497
+336	089ee28b14dbee52f31f722c086b4f9ea69c5fddff6abc55e7aa91c2f72dabf5	anna_sokolova	manager	2025-12-18 11:56:20.588464
+337	c1cfb326b2dd510bd2bd0fade9ab922d52febd8967f6165e1e7c8fe31fcca69f	artem_volkov	moderator	2025-12-18 12:43:13.448528
+339	80147c40e86e60963dd7cb8af0760a61c4f7516c7e9494d49b9a3dc5ad98fc10	artem_volkov	moderator	2025-12-18 12:54:36.238138
+340	442f66368cb47cf445190b787eb9a4c4e4fe297f3c4ec0404a780a08471d7ecd	roman	admin	2025-12-18 12:58:20.912379
+341	3ed44c11de507638488207485956ccb91a91076e1f3c3f2a4a80ac5cb7d32e14	roman	admin	2025-12-18 13:22:00.92475
 \.
 
 
@@ -2568,6 +2211,8 @@ COPY public.sys_user (id, login, password_hash, id_role, id_employee) FROM stdin
 7	roman	$2a$10$4MWSzOFhEH9X4P25w7YgCeJkH5FoB8lx4S69iRPsnFunJiPOXWYDa	4	14
 1	artem_volkov	$2a$10$5UxxvAoCY9Duk7C5SakPaOQUArxR3AdVoR.a7/JbXJmVn2KjvanXO	1	1
 2	anna_sokolova	$2a$10$n95Lbm6e056TuzpxKSpAxeaATN8.zIHrhpCBVDXBBWsl4afz11J4m	2	2
+11	test	$2a$10$NSThg/ovlf5fqE0WNhfEEu38UtXoVgy.ZNHh1hyLEg0dM9lJR7iU6	1	3
+12	denis_orlov	$2a$10$ZKe3pjOAPtB5CIMWcvT0q.B8/gldZefclTGV9ruv60CvI/RHKtWeO	4	4
 \.
 
 
@@ -2582,14 +2227,14 @@ SELECT pg_catalog.setval('public.address_id_seq', 27, true);
 -- Name: audit_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.audit_log_id_seq', 1136, true);
+SELECT pg_catalog.setval('public.audit_log_id_seq', 1392, true);
 
 
 --
 -- Name: batch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.batch_id_seq', 11, true);
+SELECT pg_catalog.setval('public.batch_id_seq', 12, true);
 
 
 --
@@ -2603,14 +2248,14 @@ SELECT pg_catalog.setval('public.document_category_id_seq', 13, true);
 -- Name: document_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_content_id_seq', 28, true);
+SELECT pg_catalog.setval('public.document_content_id_seq', 32, true);
 
 
 --
 -- Name: document_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_id_seq', 17, true);
+SELECT pg_catalog.setval('public.document_id_seq', 22, true);
 
 
 --
@@ -2638,28 +2283,28 @@ SELECT pg_catalog.setval('public.position_id_seq', 18, true);
 -- Name: producer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.producer_id_seq', 27, true);
+SELECT pg_catalog.setval('public.producer_id_seq', 28, true);
 
 
 --
 -- Name: product_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.product_category_id_seq', 12, true);
+SELECT pg_catalog.setval('public.product_category_id_seq', 13, true);
 
 
 --
 -- Name: product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.product_id_seq', 66, true);
+SELECT pg_catalog.setval('public.product_id_seq', 73, true);
 
 
 --
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 285, true);
+SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 341, true);
 
 
 --
@@ -2673,7 +2318,7 @@ SELECT pg_catalog.setval('public.role_id_seq', 6, true);
 -- Name: sys_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sys_user_id_seq', 10, true);
+SELECT pg_catalog.setval('public.sys_user_id_seq', 12, true);
 
 
 --
@@ -2837,17 +2482,38 @@ ALTER TABLE ONLY public.sys_user
 
 
 --
+-- Name: idx_audit_action; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_audit_action ON public.audit_log USING btree (action);
+
+
+--
+-- Name: idx_audit_changed_at; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_audit_changed_at ON public.audit_log USING btree (changed_at DESC);
+
+
+--
+-- Name: idx_audit_changed_by; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_audit_changed_by ON public.audit_log USING btree (changed_by);
+
+
+--
+-- Name: idx_audit_table; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_audit_table ON public.audit_log USING btree (table_name);
+
+
+--
 -- Name: idx_batch_id_product; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX idx_batch_id_product ON public.batch USING btree (id_product);
-
-
---
--- Name: idx_product_name_trgm; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX idx_product_name_trgm ON public.product USING gin (lower((name)::text) public.gin_trgm_ops);
 
 
 --
@@ -3089,8 +2755,8 @@ GRANT SELECT,USAGE ON SEQUENCE public.address_id_seq TO manager;
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.audit_log TO admin;
-GRANT INSERT ON TABLE public.audit_log TO moderator;
-GRANT INSERT ON TABLE public.audit_log TO manager;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.audit_log TO moderator;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.audit_log TO manager;
 
 
 --
@@ -3442,5 +3108,5 @@ GRANT ALL ON SEQUENCE public.sys_user_id_seq TO admin;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict nilbHQB73wdEagUv0GXwg0xiKeRtgKv31ycOxVapj654xtW0TLiG3b4w7wmLyTt
+\unrestrict 73PNpKlNZ9wEJvGh3PwHWGRq7fvnmIGv7lDG7DBSbguer83bScxDfzHOFQ7FheM
 
