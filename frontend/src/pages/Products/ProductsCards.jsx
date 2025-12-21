@@ -303,6 +303,8 @@ export default function ProductsCards() {
               <Form.Label>Название</Form.Label>
               <Form.Control
                 value={form.name}
+                maxLenght={100}
+                minLenght={1}
                 onChange={e => setForm({ ...form, name: e.target.value })}
               />
             </Form.Group>

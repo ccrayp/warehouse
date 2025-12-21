@@ -85,3 +85,21 @@ server-1  | [GIN-debug] GET    /info/me                  --> warehouse/internal/
 server-1  | [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 server-1  | Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
 server-1  | [GIN-debug] Listening and serving HTTP on :8080
+server-1  | [GIN] 2025/12/21 - 12:28:52 | 200 |   92.717583ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/21 - 12:28:52 | 200 |   95.787459ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/21 - 14:33:52 | 200 |   12.960417ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/21 - 14:33:52 | 200 |    15.17175ms |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/21 - 14:36:26 | 200 |     820.958µs |    192.168.65.1 | GET      "/info/homepage"
+server-1  | [GIN] 2025/12/21 - 14:36:26 | 200 |    1.131334ms |    192.168.65.1 | GET      "/products?limit=50&offset=0"
+server-1  | [GIN] 2025/12/21 - 14:36:47 | 401 |     520.334µs |    192.168.65.1 | GET      "/report/interface_grants"
+server-1  | [GIN] 2025/12/21 - 14:37:13 | 500 |  107.036916ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/21 - 14:37:25 | 401 |   99.898458ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/21 - 14:37:31 | 500 |  101.105584ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/21 - 14:37:59 | 200 |  110.822167ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/21 - 14:38:07 | 200 |   13.467167ms |    192.168.65.1 | GET      "/report/interface_grants"
+server-1  | [GIN] 2025/12/21 - 14:40:15 | 404 |       2.167µs |    192.168.65.1 | GET      "/auth/me"
+server-1  | [GIN] 2025/12/21 - 14:40:19 | 200 |    7.027208ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/21 - 14:40:46 | 200 |  102.952375ms |    192.168.65.1 | POST     "/auth/login"
+server-1  | [GIN] 2025/12/21 - 14:40:53 | 200 |    5.169083ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/21 - 14:40:58 | 200 |    4.592916ms |    192.168.65.1 | POST     "/auth/me"
+server-1  | [GIN] 2025/12/21 - 14:57:53 | 200 |   102.70175ms |    192.168.65.1 | POST     "/auth/login"
