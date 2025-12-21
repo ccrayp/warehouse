@@ -304,3 +304,4 @@ nginx-1  | 192.168.65.1 - - [21/Dec/2025:14:40:46 +0300] "POST /api/auth/login H
 nginx-1  | 192.168.65.1 - - [21/Dec/2025:14:40:53 +0300] "POST /api/auth/me HTTP/1.1" 200 1592 "-" "PostmanRuntime/7.51.0"
 nginx-1  | 192.168.65.1 - - [21/Dec/2025:14:40:58 +0300] "POST /api/auth/me HTTP/1.1" 200 1592 "-" "PostmanRuntime/7.51.0"
 nginx-1  | 192.168.65.1 - - [21/Dec/2025:14:57:53 +0300] "POST /api/auth/login HTTP/1.1" 200 441 "-" "PostmanRuntime/7.51.0"
+[Knginx-1 exited with code 0
